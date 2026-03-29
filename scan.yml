@@ -1,0 +1,40 @@
+name: SuperTrend Scanner
+
+on:
+  schedule:
+    - cron: "0 1 * * 1-5"   # 每週一到週五 UTC 01:00（台灣時間 09:00）
+  workflow_dispatch:          # 也可以在 GitHub 網頁手動觸發
+
+permissions:
+  contents: write             # 允許 push data.json 回 repo
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install finvizfinance yfinance pandas requests
+
+      - name: Run scanner
+        run: python scanner_export.py
+        env:
+          PYTHONUNBUFFERED: "1"
+
+      - name: Commit & push data.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --cached --quiet || git commit -m "chore: update scan data $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push
