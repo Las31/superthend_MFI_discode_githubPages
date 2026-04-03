@@ -11,7 +11,7 @@
   --bg:#07090d;--surface:#0e1117;--surface2:#13171f;
   --border:#1c2130;--border2:#252d3d;
   --accent:#00e5a0;--accent2:#ff6b35;--accent3:#7b6cff;
-  --text:#dce3ef;--text2:#6b7a99;--text3:#3d4a63;
+  --text:#dce3ef;--text2:#8a9ab8;--text3:#5a6a85;
   --strong:#00e5a0;--normal:#f5a623;--weak:#4a5878;
   --up:#3ddc84;--down:#ff5c5c;
   --font:'IBM Plex Mono',monospace;
@@ -29,7 +29,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* ── Header ── */
 header{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  padding:24px 32px 20px;border-bottom:1px solid var(--border);
+  padding:16px 32px;border-bottom:1px solid var(--border);
   background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
 }
 .logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--text)}
@@ -39,13 +39,13 @@ header{
   font-size:11px;color:var(--text2);border:1px solid var(--border2);
   padding:4px 10px;letter-spacing:.5px;
 }
-#scan-time{font-size:11px;color:var(--text3);letter-spacing:.3px}
+#scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
 
 /* ── Stats ── */
 #stats{display:flex;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
-.stat{flex:1;background:var(--surface);padding:16px 20px;text-align:center;min-width:80px}
-.stat-n{font-family:var(--display);font-size:28px;font-weight:800;line-height:1}
-.stat-l{font-size:10px;color:var(--text2);margin-top:5px;letter-spacing:1px;text-transform:uppercase}
+.stat{flex:1;max-width:220px;background:var(--surface);padding:14px 20px;text-align:center;min-width:80px}
+.stat-n{font-family:var(--display);font-size:26px;font-weight:800;line-height:1}
+.stat-l{font-size:11px;color:var(--text2);margin-top:5px;letter-spacing:1px;text-transform:uppercase}
 .s-total .stat-n{color:var(--text)}
 .s-strong .stat-n{color:var(--strong)}
 .s-normal .stat-n{color:var(--normal)}
@@ -110,8 +110,8 @@ header{
 }
 .grid-row:hover{background:var(--surface2)}
 .grid-th{
-  padding:9px 16px;font-size:10px;letter-spacing:1px;
-  text-transform:uppercase;color:var(--text3);font-weight:600;
+  padding:9px 16px;font-size:11px;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--text2);font-weight:600;
   white-space:nowrap;cursor:pointer;user-select:none;
 }
 .grid-th:hover{color:var(--text2)}
