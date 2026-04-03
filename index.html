@@ -56,6 +56,11 @@ header{
   display:flex;align-items:center;flex-wrap:wrap;gap:8px;
   padding:12px 32px;border-bottom:1px solid var(--border);
   background:var(--surface);position:sticky;top:0;z-index:100;
+  justify-content:center;
+}
+.controls-inner{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  width:1060px;max-width:100%;
 }
 .search-wrap{position:relative;flex-shrink:0}
 .search-wrap::before{
@@ -212,22 +217,24 @@ footer a:hover{color:var(--accent)}
 </div>
 
 <div id="controls">
-  <div class="search-wrap">
-    <input id="search" type="text" placeholder="ticker..." oninput="render()">
-  </div>
-  <div class="tabs">
-    <button class="tab active-all"    data-g="All"    onclick="setTab(this)">All</button>
-    <button class="tab"               data-g="Strong" onclick="setTab(this)">Strong</button>
-    <button class="tab"               data-g="Normal" onclick="setTab(this)">Normal</button>
-    <button class="tab"               data-g="Weak"   onclick="setTab(this)">Weak</button>
-  </div>
-  <span class="count-badge" id="count-badge"></span>
-  <div class="sort-group">
-    <span class="sort-lbl">Sort</span>
-    <button class="sort-btn active" data-k="change_pct"  onclick="setSort(this)">Change%</button>
-    <button class="sort-btn"        data-k="mfi"         onclick="setSort(this)">MFI</button>
-    <button class="sort-btn"        data-k="flip_date"   onclick="setSort(this)">Date</button>
-    <button class="sort-btn"        data-k="last_price"  onclick="setSort(this)">Price</button>
+  <div class="controls-inner">
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="ticker..." oninput="render()">
+    </div>
+    <div class="tabs">
+      <button class="tab active-all"    data-g="All"    onclick="setTab(this)">All</button>
+      <button class="tab"               data-g="Strong" onclick="setTab(this)">Strong</button>
+      <button class="tab"               data-g="Normal" onclick="setTab(this)">Normal</button>
+      <button class="tab"               data-g="Weak"   onclick="setTab(this)">Weak</button>
+    </div>
+    <span class="count-badge" id="count-badge"></span>
+    <div class="sort-group">
+      <span class="sort-lbl">Sort</span>
+      <button class="sort-btn active" data-k="change_pct"  onclick="setSort(this)">Change%</button>
+      <button class="sort-btn"        data-k="mfi"         onclick="setSort(this)">MFI</button>
+      <button class="sort-btn"        data-k="flip_date"   onclick="setSort(this)">Date</button>
+      <button class="sort-btn"        data-k="last_price"  onclick="setSort(this)">Price</button>
+    </div>
   </div>
 </div>
 
