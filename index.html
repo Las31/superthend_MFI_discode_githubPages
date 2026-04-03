@@ -138,6 +138,61 @@ header{
 .mfi-bar{width:48px;height:3px;background:var(--border2);flex-shrink:0}
 .mfi-fill{height:100%;transition:width .5s}
 
+/* ── Mobile Card Layout ── */
+@media(max-width:700px){
+  header{padding:12px 16px}
+  .logo{font-size:16px}
+  .param-pill{font-size:10px;padding:3px 8px}
+  #scan-time{font-size:10px}
+
+  #stats{flex-wrap:wrap}
+  .stat{width:50%;min-width:0;padding:10px 8px}
+  .stat-n{font-size:22px}
+  .stat-l{font-size:10px}
+
+  #controls{padding:8px 12px}
+  .controls-inner{width:100%;gap:6px}
+  #search{width:130px;font-size:11px}
+  .tab{font-size:10px;padding:5px 10px}
+  .sort-lbl{display:none}
+  .sort-btn{font-size:10px;padding:5px 8px}
+
+  /* 隱藏桌面版表格 */
+  #grid-table{display:none}
+
+  /* 卡片容器 */
+  #card-list{display:block;padding:8px 12px}
+
+  .stock-card{
+    background:var(--surface);border:1px solid var(--border2);
+    margin-bottom:10px;padding:14px 16px;cursor:pointer;
+    transition:border-color .15s;
+  }
+  .stock-card:hover{border-color:var(--accent)}
+  .card-top{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .card-ticker{font-family:var(--display);font-size:18px;font-weight:800}
+  .card-ticker a{color:var(--text);text-decoration:none}
+  .card-right{display:flex;align-items:center;gap:8px}
+  .card-grid{
+    display:grid;grid-template-columns:1fr 1fr 1fr;
+    gap:8px 0;
+  }
+  .card-item .lbl{font-size:9px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
+  .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
+  .card-mfi-bar{
+    height:2px;background:var(--border2);margin-top:6px;border-radius:1px;
+  }
+  .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
+}
+
+/* 桌面版隱藏卡片列表 */
+@media(min-width:701px){
+  #card-list{display:none}
+}
+
 /* ── Empty / Loading ── */
 #empty{
   display:none;padding:80px 32px;text-align:center;
@@ -166,6 +221,14 @@ header{
   background:var(--surface);border:1px solid var(--border2);
   width:100%;max-width:900px;max-height:90vh;overflow:auto;
   position:relative;
+}
+@media(max-width:700px){
+  #modal-backdrop{padding:0}
+  #modal{max-height:100vh;max-width:100%;border:none}
+  #modal-head{padding:14px 16px 12px}
+  #modal-ticker{font-size:18px}
+  #chart-wrap{padding:10px 12px 0}
+  #modal-cards{grid-template-columns:repeat(2,1fr);padding:10px 12px 16px;gap:6px}
 }
 #modal-head{
   display:flex;align-items:baseline;gap:12px;
@@ -255,6 +318,7 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="grid-tbody" id="tbody"></div>
 </div>
+<div id="card-list"></div>
 
 <!-- Chart modal -->
 <div id="modal-backdrop">
@@ -382,6 +446,38 @@ function render() {
   }).join('');
 
   updateThArrows();
+
+  // ── Mobile card list ──
+  const mfiFillColor = v => v >= 70 ? '#00e5a0' : v >= 50 ? '#f5a623' : '#4a5878';
+  document.getElementById('card-list').innerHTML = rows.map((r, idx) => {
+    const chg = r.change_pct;
+    const cls = chg > 0 ? 'up' : chg < 0 ? 'down' : 'neutral';
+    const sign = chg >= 0 ? '+' : '';
+    const mfiPct = Math.min(100, r.mfi).toFixed(0);
+    return `<div class="stock-card" onclick="openModalByIndex(${idx})">
+      <div class="card-top">
+        <div class="card-ticker">
+          <a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank"
+             onclick="event.stopPropagation()">${r.ticker}</a>
+        </div>
+        <div class="card-right">
+          <span class="${cls}" style="font-size:15px;font-weight:700">${sign}${chg.toFixed(2)}%</span>
+          <span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card-item"><div class="lbl">Flip Date</div><div class="val">${r.flip_date}</div></div>
+        <div class="card-item"><div class="lbl">Flip $</div><div class="val">$${r.flip_price.toFixed(2)}</div></div>
+        <div class="card-item"><div class="lbl">Last $</div><div class="val">$${r.last_price.toFixed(2)}</div></div>
+        <div class="card-item"><div class="lbl">MFI</div>
+          <div class="val" style="color:${mfiFillColor(r.mfi)}">${r.mfi.toFixed(1)}</div>
+          <div class="card-mfi-bar"><div class="card-mfi-fill" style="width:${mfiPct}%;background:${mfiFillColor(r.mfi)}"></div></div>
+        </div>
+        <div class="card-item"><div class="lbl">SuperTrend</div><div class="val">$${r.supertrend.toFixed(2)}</div></div>
+        <div class="card-item"><div class="lbl">ATR</div><div class="val">${r.atr.toFixed(2)}</div></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function setTab(btn) {
