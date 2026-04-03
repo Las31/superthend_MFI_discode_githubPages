@@ -94,7 +94,7 @@ header{
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Grid Table ── */
-:root{--cols:140px 110px 90px 90px 100px 130px 90px 90px 80px 110px}
+:root{--cols:1fr 110px 90px 90px 100px 130px 90px 90px 80px 110px}
 #grid-table{width:100%;overflow-x:auto}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
@@ -426,6 +426,10 @@ function openModal(jsonStr) {
   document.getElementById('modal-backdrop').classList.add('open');
 
   if (chartInst) { chartInst.destroy(); chartInst = null; }
+
+  // Replace canvas to fully reset Chart.js state (prevents resize bug on 2nd open)
+  const wrap = document.getElementById('chart-wrap');
+  wrap.innerHTML = '<canvas id="chart" height="300"></canvas>';
 
   const c = r.chart || {};
   const dates = c.dates || [];
