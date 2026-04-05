@@ -83,44 +83,10 @@ header{
 }
 .tab:last-child{border-right:1px solid var(--border2)}
 .tab:hover{color:var(--text);background:var(--surface2)}
-.tab.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
-
-/* ── Filter Dropdown ── */
-.filter-wrap{position:relative}
-.filter-btn{
-  font-family:var(--font);font-size:11px;padding:7px 14px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--text2);cursor:pointer;letter-spacing:.5px;
-  transition:all .15s;display:flex;align-items:center;gap:6px;
-}
-.filter-btn:hover{color:var(--text);border-color:var(--text2)}
-.filter-btn.has-active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.08)}
-.filter-badge{
-  background:var(--accent);color:#000;font-size:9px;font-weight:700;
-  border-radius:8px;padding:1px 5px;min-width:14px;text-align:center;
-}
-.filter-panel{
-  display:none;position:absolute;top:calc(100% + 6px);left:0;
-  background:var(--surface);border:1px solid var(--border2);
-  min-width:240px;z-index:200;padding:12px;
-}
-.filter-panel.open{display:block}
-.filter-group-label{
-  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--text3);margin-bottom:6px;margin-top:10px;
-}
-.filter-group-label:first-child{margin-top:0}
-.filter-item{
-  display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer;
-}
-.filter-item input[type=checkbox]{
-  accent-color:var(--accent);width:13px;height:13px;cursor:pointer;flex-shrink:0;
-}
-.filter-item label{
-  font-size:11px;color:var(--text2);cursor:pointer;letter-spacing:.3px;
-}
-.filter-item:hover label{color:var(--text)}
-.filter-divider{height:1px;background:var(--border);margin:8px 0}
+.tab.active-all   {background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
+.tab.active-strong{background:rgba(0,229,160,.08);border-color:var(--strong);color:var(--strong)}
+.tab.active-normal{background:rgba(245,166,35,.08);border-color:var(--normal);color:var(--normal)}
+.tab.active-weak  {background:rgba(74,88,120,.15); border-color:var(--weak);  color:var(--text2)}
 .sort-group{display:flex;gap:4px;margin-left:auto;align-items:center}
 .sort-lbl{font-size:10px;color:var(--text3);letter-spacing:1px;margin-right:2px}
 .sort-btn{
@@ -133,7 +99,7 @@ header{
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Grid Table ── */
-:root{--cols:36px 160px 110px 90px 90px 100px 130px 90px 90px 80px 110px}
+:root{--cols:160px 110px 90px 90px 100px 130px 90px 90px 80px 110px}
 #grid-table{overflow-x:auto}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
@@ -147,9 +113,7 @@ header{
   border-bottom:1px solid var(--border);cursor:pointer;
   transition:background .12s;
 }
-.grid-row:hover{background:rgba(255,255,255,.05)}
-.grid-row.selected{background:rgba(0,229,160,.07);border-left:2px solid var(--accent)}
-.stock-card.selected{border-color:var(--accent);background:rgba(0,229,160,.05)}
+.grid-row:hover{background:var(--surface2)}
 .grid-th{
   padding:9px 16px;font-size:11px;letter-spacing:.8px;
   text-transform:uppercase;color:var(--text2);font-weight:600;
@@ -280,9 +244,6 @@ header{
 #modal-close:hover{color:var(--text)}
 #chart-wrap{padding:16px 20px 0}
 canvas#chart{width:100%!important}
-#mfi-wrap{padding:8px 20px 0;border-top:1px solid var(--border);margin-top:8px}
-#mfi-wrap .mfi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-canvas#mfi-chart{width:100%!important}
 #modal-cards{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
   gap:6px;padding:16px 20px 20px;
@@ -290,20 +251,6 @@ canvas#mfi-chart{width:100%!important}
 .info-card{background:var(--bg);border:1px solid var(--border);padding:10px 12px}
 .info-card .lbl{font-size:10px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
 .info-card .val{font-family:var(--display);font-size:15px;font-weight:700;margin-top:3px;color:var(--text)}
-
-/* ── Pin ── */
-.pin-btn{
-  background:none;border:none;cursor:pointer;padding:2px 6px;
-  font-size:16px;color:var(--text3);transition:color .15s;flex-shrink:0;
-  line-height:1;
-}
-.pin-btn:hover{color:var(--text2)}
-.pin-btn.pinned{color:var(--accent)}
-.grid-row.pinned-row{border-left:2px solid var(--accent)}
-.pin-separator{
-  border-top:1px dashed var(--accent);
-  margin:0;opacity:.4;
-}
 
 /* ── Footer ── */
 footer{
@@ -337,71 +284,12 @@ footer a:hover{color:var(--accent)}
     <div class="search-wrap">
       <input id="search" type="text" placeholder="ticker..." oninput="render()">
     </div>
-
-    <!-- Filter Dropdown -->
-    <div class="filter-wrap">
-      <button class="filter-btn" id="filter-btn" onclick="toggleFilterPanel()">
-        篩選條件 <span class="filter-badge" id="filter-badge" style="display:none">0</span> ▾
-      </button>
-      <div class="filter-panel" id="filter-panel">
-
-        <div class="filter-group-label">趨勢</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-price-ema50"  onchange="render()">
-          <label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-price-ema200" onchange="render()">
-          <label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-ema-golden"   onchange="render()">
-          <label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-flip-ema50"   onchange="render()">
-          <label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-flip-ema200"  onchange="render()">
-          <label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label>
-        </label>
-
-        <div class="filter-divider"></div>
-        <div class="filter-group-label">量能</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi50"    onchange="render()">
-          <label for="f-mfi50">翻多當天 MFI ≥ 50</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi70"    onchange="render()">
-          <label for="f-mfi70">翻多當天 MFI ≥ 70</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi-rising" onchange="render()">
-          <label for="f-mfi-rising">MFI 持續上升（近 3 日）</label>
-        </label>
-
-        <div class="filter-divider"></div>
-        <div class="filter-group-label">價格表現</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-chg-pos"  onchange="render()">
-          <label for="f-chg-pos">翻多後漲幅 &gt; 0%</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-chg-3"    onchange="render()">
-          <label for="f-chg-3">翻多後漲幅 &gt; 3%</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-hold2"    onchange="render()">
-          <label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label>
-        </label>
-
-        <div class="filter-divider"></div>
-        <button onclick="clearFilters()" style="font-family:var(--font);font-size:10px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
-      </div>
+    <div class="tabs">
+      <button class="tab active-all"    data-g="All"    onclick="setTab(this)">All</button>
+      <button class="tab"               data-g="Strong" onclick="setTab(this)">Strong</button>
+      <button class="tab"               data-g="Normal" onclick="setTab(this)">Normal</button>
+      <button class="tab"               data-g="Weak"   onclick="setTab(this)">Weak</button>
     </div>
-
     <span class="count-badge" id="count-badge"></span>
     <div class="sort-group">
       <span class="sort-lbl">Sort</span>
@@ -417,7 +305,6 @@ footer a:hover{color:var(--accent)}
 <div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
 <div id="grid-table">
   <div class="grid-thead" id="grid-thead" style="display:none">
-    <div class="grid-th"></div>
     <div class="grid-th col-sorted" data-k="ticker"      onclick="thSort(this)">Ticker<span class="arr"></span></div>
     <div class="grid-th" data-k="flip_date"   onclick="thSort(this)">Flip Date<span class="arr"></span></div>
     <div class="grid-th" data-k="flip_price"  onclick="thSort(this)">Flip $<span class="arr"></span></div>
@@ -439,14 +326,9 @@ footer a:hover{color:var(--accent)}
     <div id="modal-head">
       <span id="modal-ticker"></span>
       <span id="modal-sub"></span>
-      <button id="modal-pin-btn" class="pin-btn" onclick="togglePinFromModal()" title="釘選">☐</button>
       <button id="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div id="chart-wrap"><canvas id="chart" height="260"></canvas></div>
-    <div id="mfi-wrap">
-      <div class="mfi-label">MFI</div>
-      <canvas id="mfi-chart" height="80"></canvas>
-    </div>
+    <div id="chart-wrap"><canvas id="chart" height="300"></canvas></div>
     <div id="modal-cards"></div>
   </div>
 </div>
@@ -457,45 +339,11 @@ footer a:hover{color:var(--accent)}
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
-let curSort = 'change_pct', sortAsc = false;
+let curGrade = 'All', curSort = 'change_pct', sortAsc = false;
 let chartInst = null;
-let mfiChartInst = null;
-
-// ── Pin state (persisted in localStorage) ──
-const PIN_KEY = 'st_pinned_tickers';
-function getPinned() {
-  try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY) || '[]')); }
-  catch { return new Set(); }
-}
-function savePinned(set) {
-  localStorage.setItem(PIN_KEY, JSON.stringify([...set]));
-}
-function togglePin(ticker) {
-  const pins = getPinned();
-  if (pins.has(ticker)) pins.delete(ticker);
-  else pins.add(ticker);
-  savePinned(pins);
-  render();
-}
-let _currentModalTicker = null;
-function togglePinFromModal() {
-  if (_currentModalTicker) {
-    togglePin(_currentModalTicker);
-    updateModalPinBtn(_currentModalTicker);
-  }
-}
-function updateModalPinBtn(ticker) {
-  const btn = document.getElementById('modal-pin-btn');
-  if (!btn) return;
-  const pinned = getPinned().has(ticker);
-  btn.classList.toggle('pinned', pinned);
-  btn.textContent = pinned ? '☑' : '☐';
-  btn.title = pinned ? '取消釘選' : '釘選';
-}
 
 const GRADE_COLOR = {Strong:'#00e5a0', Normal:'#f5a623', Weak:'#4a5878'};
 
@@ -536,78 +384,11 @@ function initMeta() {
 }
 
 /* ── Filter + Sort + Render ── */
-function getActiveFilters() {
-  return {
-    priceEma50  : document.getElementById('f-price-ema50')?.checked,
-    priceEma200 : document.getElementById('f-price-ema200')?.checked,
-    emaGolden   : document.getElementById('f-ema-golden')?.checked,
-    flipEma50   : document.getElementById('f-flip-ema50')?.checked,
-    flipEma200  : document.getElementById('f-flip-ema200')?.checked,
-    mfi50       : document.getElementById('f-mfi50')?.checked,
-    mfi70       : document.getElementById('f-mfi70')?.checked,
-    mfiRising   : document.getElementById('f-mfi-rising')?.checked,
-    chgPos      : document.getElementById('f-chg-pos')?.checked,
-    chg3        : document.getElementById('f-chg-3')?.checked,
-    hold2       : document.getElementById('f-hold2')?.checked,
-  };
-}
-
-function applyFilters(r, f) {
-  const fl = r.filters || {};
-  if (f.priceEma50  && !fl.price_above_ema50)        return false;
-  if (f.priceEma200 && !fl.price_above_ema200)        return false;
-  if (f.emaGolden   && !fl.ema50_above_ema200)        return false;
-  if (f.flipEma50   && !fl.flip_price_above_ema50)    return false;
-  if (f.flipEma200  && !fl.flip_price_above_ema200)   return false;
-  if (f.mfi50       && r.mfi < 50)                    return false;
-  if (f.mfi70       && r.mfi < 70)                    return false;
-  if (f.mfiRising   && !fl.mfi_rising)                return false;
-  if (f.chgPos      && r.change_pct <= 0)             return false;
-  if (f.chg3        && r.change_pct <= 3)             return false;
-  if (f.hold2       && (fl.hold_days || 0) < 2)       return false;
-  return true;
-}
-
-function updateFilterBadge(f) {
-  const count = Object.values(f).filter(Boolean).length;
-  const badge = document.getElementById('filter-badge');
-  const btn   = document.getElementById('filter-btn');
-  if (count > 0) {
-    badge.textContent = count;
-    badge.style.display = '';
-    btn.classList.add('has-active');
-  } else {
-    badge.style.display = 'none';
-    btn.classList.remove('has-active');
-  }
-}
-
-function toggleFilterPanel() {
-  document.getElementById('filter-panel').classList.toggle('open');
-}
-
-function clearFilters() {
-  document.querySelectorAll('#filter-panel input[type=checkbox]')
-    .forEach(cb => cb.checked = false);
-  render();
-}
-
-// 點 panel 外面關閉
-document.addEventListener('click', e => {
-  const wrap = document.querySelector('.filter-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    document.getElementById('filter-panel')?.classList.remove('open');
-  }
-});
-
 function render() {
   const q = document.getElementById('search').value.toUpperCase().trim();
-  const f = getActiveFilters();
-  updateFilterBadge(f);
-
   let rows = ALL.filter(r => {
+    if (curGrade !== 'All' && r.mfi_grade !== curGrade) return false;
     if (q && !r.ticker.includes(q)) return false;
-    if (!applyFilters(r, f))        return false;
     return true;
   });
   rows.sort((a, b) => {
@@ -615,14 +396,6 @@ function render() {
     if (typeof av === 'string') av = av.toLowerCase();
     if (typeof bv === 'string') bv = bv.toLowerCase();
     return sortAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
-  });
-
-  // 釘選的股票置頂
-  const pins = getPinned();
-  rows.sort((a, b) => {
-    const ap = pins.has(a.ticker) ? 0 : 1;
-    const bp = pins.has(b.ticker) ? 0 : 1;
-    return ap - bp;
   });
 
   document.getElementById('count-badge').textContent = rows.length + ' result' + (rows.length !== 1 ? 's' : '');
@@ -639,7 +412,6 @@ function render() {
   document.getElementById('grid-thead').style.display = '';
 
   const mfiFill = v => v >= 70 ? '#00e5a0' : v >= 50 ? '#f5a623' : '#4a5878';
-  const pinnedCount = rows.filter(r => pins.has(r.ticker)).length;
 
   tbody._rows = rows;
 
@@ -649,15 +421,7 @@ function render() {
     const sign = chg >= 0 ? '+' : '';
     const mfi = r.mfi.toFixed(1);
     const mfiPct = Math.min(100, r.mfi).toFixed(0);
-    const isPinned = pins.has(r.ticker);
-    const separator = (idx === pinnedCount - 1 && pinnedCount > 0 && pinnedCount < rows.length)
-      ? '<div class="pin-separator" style="grid-column:1/-1"></div>' : '';
-    return `${separator}<div class="grid-row${isPinned ? ' pinned-row' : ''}" onclick="openModalByIndex(${idx})">
-      <div class="grid-td" style="justify-content:center">
-        <button class="pin-btn${isPinned ? ' pinned' : ''}"
-          onclick="event.stopPropagation();togglePin('${r.ticker}')"
-          title="${isPinned ? '取消釘選' : '釘選'}">${isPinned ? '☑' : '☐'}</button>
-      </div>
+    return `<div class="grid-row" onclick="openModalByIndex(${idx})">
       <div class="grid-td td-ticker">
         <a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank"
            onclick="event.stopPropagation()">${r.ticker}</a>
@@ -716,6 +480,13 @@ function render() {
   }).join('');
 }
 
+function setTab(btn) {
+  document.querySelectorAll('.tab').forEach(b => b.className = 'tab');
+  curGrade = btn.dataset.g;
+  btn.className = 'tab active-' + curGrade.toLowerCase();
+  render();
+}
+
 function setSort(btn) {
   sortAsc = curSort === btn.dataset.k ? !sortAsc : false;
   curSort = btn.dataset.k;
@@ -743,25 +514,9 @@ function updateThArrows() {
 }
 
 /* ── Chart Modal ── */
-let _selectedRowEl = null;
-
 function openModalByIndex(idx) {
   const tbody = document.getElementById('tbody');
-  const r = tbody._rows ? tbody._rows[idx] : null;
-
-  // 清除舊的高亮
-  if (_selectedRowEl) {
-    _selectedRowEl.classList.remove('selected');
-    _selectedRowEl = null;
-  }
-
-  // 反白點擊的行（表格或卡片）
-  const rows = document.querySelectorAll('.grid-row, .stock-card');
-  if (rows[idx]) {
-    rows[idx].classList.add('selected');
-    _selectedRowEl = rows[idx];
-  }
-
+  const r = tbody._rows[idx];
   if (r) openModal(r);
 }
 
@@ -772,20 +527,12 @@ function openModal(jsonStr) {
     `Flip: ${r.flip_date}  ·  MFI: ${r.mfi.toFixed(1)}  ·  Grade: ${r.mfi_grade}`;
   document.getElementById('modal-sub').style.color = GRADE_COLOR[r.mfi_grade] || '#6b7a99';
   document.getElementById('modal-backdrop').classList.add('open');
-  document.body.style.overflow = 'hidden';
 
-  // 記錄當前 ticker，更新圖釘按鈕狀態
-  _currentModalTicker = r.ticker;
-  updateModalPinBtn(r.ticker);
-
-  if (chartInst)    { chartInst.destroy();    chartInst    = null; }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
+  if (chartInst) { chartInst.destroy(); chartInst = null; }
 
   // Replace canvas to fully reset Chart.js state (prevents resize bug on 2nd open)
   const wrap = document.getElementById('chart-wrap');
-  wrap.innerHTML = '<canvas id="chart" height="260"></canvas>';
-  const mfiWrap = document.getElementById('mfi-wrap');
-  mfiWrap.innerHTML = '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="80"></canvas>';
+  wrap.innerHTML = '<canvas id="chart" height="300"></canvas>';
 
   const c = r.chart || {};
   const dates = c.dates || [];
@@ -801,53 +548,27 @@ function openModal(jsonStr) {
   } : {};
 
   const ctx = document.getElementById('chart').getContext('2d');
-
-  // 組裝 K 線資料格式：{x, o, h, l, c}
-  const ohlc = dates.map((d, i) => ({
-    x: d,
-    o: c.open?.[i]  ?? null,
-    h: c.high?.[i]  ?? null,
-    l: c.low?.[i]   ?? null,
-    c: c.close?.[i] ?? null,
-  })).filter(d => d.o !== null);
-
   chartInst = new Chart(ctx, {
+    type:'line',
     data:{
+      labels: dates,
       datasets:[
-        {
-          type:'candlestick',
-          label:'OHLC',
-          data: ohlc,
-          color:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
-          borderColor:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
-          yAxisID:'y',
-        },
-        {label:'SuperTrend', type:'line', data:c.supertrend, borderColor:'#00e5a0',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 50',     type:'line', data:c.ema50,      borderColor:'#7b6cff',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 150',    type:'line', data:c.ema150,     borderColor:'#ff9f40',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 200',    type:'line', data:c.ema200,     borderColor:'#ff5c5c',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'Close',      data:c.close,      borderColor:'#dce3ef',borderWidth:1.5,pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'SuperTrend', data:c.supertrend, borderColor:'#00e5a0',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 50',     data:c.ema50,      borderColor:'#7b6cff',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 150',    data:c.ema150,     borderColor:'#ff9f40',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 200',    data:c.ema200,     borderColor:'#ff5c5c',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'MFI',        data:c.mfi,        borderColor:'#f5a623',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y2'},
       ]
     },
     options:{
       animation:{duration:350},responsive:true,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{labels:{color:'#6b7a99',font:{family:'IBM Plex Mono',size:11},boxWidth:14,
-          filter: item => item.text !== 'OHLC'}},
-        tooltip:{
-          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-          titleColor:'#dce3ef',bodyColor:'#6b7a99',
-          titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11},
-          callbacks:{
-            label: ctx => {
-              if (ctx.dataset.label === 'OHLC') {
-                const d = ctx.raw;
-                return `O:${d.o}  H:${d.h}  L:${d.l}  C:${d.c}`;
-              }
-              return `${ctx.dataset.label}: ${ctx.parsed?.y?.toFixed(2) ?? ''}`;
-            }
-          }
-        },
+        legend:{labels:{color:'#6b7a99',font:{family:'IBM Plex Mono',size:11},boxWidth:14}},
+        tooltip:{backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+                 titleColor:'#dce3ef',bodyColor:'#6b7a99',
+                 titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11}},
         annotation:{annotations}
       },
       scales:{
@@ -855,41 +576,8 @@ function openModal(jsonStr) {
            grid:{color:'#1c2130'}},
         y:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10}},
            grid:{color:'#1c2130'},position:'left'},
-      }
-    },
-    plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
-  });
-
-  // ── 獨立 MFI 圖 ──
-  const mfiCtx = document.getElementById('mfi-chart').getContext('2d');
-  mfiChartInst = new Chart(mfiCtx, {
-    type:'line',
-    data:{
-      labels: dates,
-      datasets:[{
-        label:'MFI', data:c.mfi,
-        borderColor:'#f5a623', backgroundColor:'rgba(245,166,35,.08)',
-        borderWidth:1.5, pointRadius:0, tension:.3, fill:true
-      }]
-    },
-    options:{
-      animation:{duration:350},responsive:true,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-                 titleColor:'#dce3ef',bodyColor:'#f5a623',
-                 titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11}},
-        annotation:{annotations:{
-          ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
-          os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
-        }}
-      },
-      scales:{
-        x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8},
-           grid:{color:'#1c2130'}},
-        y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},
-           grid:{color:'#1c2130'},min:0,max:100},
+        y2:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:10}},
+            grid:{display:false},position:'right',min:0,max:100},
       }
     },
     plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
@@ -918,11 +606,7 @@ function openModal(jsonStr) {
 
 function closeModal() {
   document.getElementById('modal-backdrop').classList.remove('open');
-  document.body.style.overflow = '';
-  if (chartInst)    { chartInst.destroy();    chartInst    = null; }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
-  _currentModalTicker = null;
-  // 保持高亮，直到點擊下一支股票才切換
+  if (chartInst) { chartInst.destroy(); chartInst = null; }
 }
 document.getElementById('modal-backdrop').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
