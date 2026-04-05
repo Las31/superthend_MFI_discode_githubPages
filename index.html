@@ -279,7 +279,7 @@ header{
 }
 #modal-close:hover{color:var(--text)}
 #chart-wrap{padding:16px 20px 0}
-#chart-container{width:100%;height:260px}
+canvas#chart{width:100%!important}
 #mfi-wrap{padding:8px 20px 0;border-top:1px solid var(--border);margin-top:8px}
 #mfi-wrap .mfi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 canvas#mfi-chart{width:100%!important}
@@ -442,7 +442,7 @@ footer a:hover{color:var(--accent)}
       <button id="modal-pin-btn" class="pin-btn" onclick="togglePinFromModal()" title="釘選">☐</button>
       <button id="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div id="chart-wrap"><div id="chart-container" style="width:100%;height:260px"></div></div>
+    <div id="chart-wrap"><canvas id="chart" height="260"></canvas></div>
     <div id="mfi-wrap">
       <div class="mfi-label">MFI</div>
       <canvas id="mfi-chart" height="80"></canvas>
@@ -457,7 +457,7 @@ footer a:hover{color:var(--accent)}
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
@@ -781,9 +781,9 @@ function openModal(jsonStr) {
   if (chartInst)    { chartInst.destroy();    chartInst    = null; }
   if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
 
-  // Reset containers
+  // Replace canvas to fully reset Chart.js state (prevents resize bug on 2nd open)
   const wrap = document.getElementById('chart-wrap');
-  wrap.innerHTML = '<div id="chart-container" style="width:100%;height:260px"></div>';
+  wrap.innerHTML = '<canvas id="chart" height="260"></canvas>';
   const mfiWrap = document.getElementById('mfi-wrap');
   mfiWrap.innerHTML = '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="80"></canvas>';
 
@@ -791,105 +791,74 @@ function openModal(jsonStr) {
   const dates = c.dates || [];
   const flipIdx = dates.indexOf(r.flip_date);
 
-  // ── lightweight-charts K 線圖 ──
-  const lwContainer = document.getElementById('chart-container');
-
-  // 圖例 HTML（放在圖表上方）
-  const legendHtml = `
-    <div style="display:flex;gap:14px;flex-wrap:wrap;padding:0 4px 8px;font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px">
-      <span><span style="display:inline-block;width:12px;height:2px;border-top:2px dashed #facc15;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
-      <span><span style="display:inline-block;width:12px;height:2px;background:#7b6cff;vertical-align:middle;margin-right:4px"></span>EMA 50</span>
-      <span><span style="display:inline-block;width:12px;height:2px;background:#ff9f40;vertical-align:middle;margin-right:4px"></span>EMA 150</span>
-      <span><span style="display:inline-block;width:12px;height:2px;background:#e05555;vertical-align:middle;margin-right:4px"></span>EMA 200</span>
-      <span><span style="display:inline-block;width:2px;height:10px;background:rgba(255,107,53,.8);vertical-align:middle;margin-right:4px"></span>FLIP</span>
-    </div>`;
-  lwContainer.insertAdjacentHTML('beforebegin', legendHtml);
-
-  const lwChart = LightweightCharts.createChart(lwContainer, {
-    width: lwContainer.clientWidth,
-    height: 260,
-    layout: { background:{color:'transparent'}, textColor:'#6b7a99' },
-    grid: { vertLines:{color:'#1c2130'}, horzLines:{color:'#1c2130'} },
-    rightPriceScale: { borderColor:'#1c2130' },
-    timeScale: { borderColor:'#1c2130', timeVisible:true },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-  });
-  chartInst = lwChart;
-
-  // K 線
-  const candleSeries = lwChart.addCandlestickSeries({
-    upColor:'#3ddc84', downColor:'#ff5c5c',
-    borderUpColor:'#3ddc84', borderDownColor:'#ff5c5c',
-    wickUpColor:'#3ddc84', wickDownColor:'#ff5c5c',
-  });
-  const ohlcData = dates.map((d, i) => ({
-    time: d,
-    open:  c.open?.[i]  ?? null,
-    high:  c.high?.[i]  ?? null,
-    low:   c.low?.[i]   ?? null,
-    close: c.close?.[i] ?? null,
-  })).filter(d => d.open !== null);
-  candleSeries.setData(ohlcData);
-
-  // SuperTrend — 亮黃色虛線
-  let stSeriesRef = null;
-  if (c.supertrend) {
-    stSeriesRef = lwChart.addLineSeries({
-      color: '#facc15', lineWidth: 1.5,
-      lineStyle: LightweightCharts.LineStyle.Dashed,
-      priceLineVisible: false, lastValueVisible: false,
-    });
-    stSeriesRef.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value !== null));
-  }
-  // EMA 50
-  if (c.ema50) {
-    const e50 = lwChart.addLineSeries({color:'#7b6cff', lineWidth:1, priceLineVisible:false, lastValueVisible:false});
-    e50.setData(dates.map((d,i) => ({time:d, value:c.ema50[i]})).filter(d => d.value !== null));
-  }
-  // EMA 150
-  if (c.ema150) {
-    const e150 = lwChart.addLineSeries({color:'#ff9f40', lineWidth:1, priceLineVisible:false, lastValueVisible:false});
-    e150.setData(dates.map((d,i) => ({time:d, value:c.ema150[i]})).filter(d => d.value !== null));
-  }
-  // EMA 200
-  if (c.ema200) {
-    const e200 = lwChart.addLineSeries({color:'#e05555', lineWidth:1, priceLineVisible:false, lastValueVisible:false});
-    e200.setData(dates.map((d,i) => ({time:d, value:c.ema200[i]})).filter(d => d.value !== null));
-  }
-
-  // FLIP 標記 — 在 SuperTrend 線的價格位置標示箭頭（貼著 SuperTrend 線下方）
-  if (flipIdx >= 0 && stSeriesRef) {
-    const flipStValue = c.supertrend[flipIdx];
-    if (flipStValue !== null && flipStValue !== undefined) {
-      stSeriesRef.setMarkers([{
-        time: dates[flipIdx],
-        position: 'belowBar',
-        color: '#ff6b35',
-        shape: 'arrowUp',
-        text: 'FLIP',
-        size: 2,
-      }]);
+  const annotations = flipIdx >= 0 ? {
+    flip: {
+      type:'line', xMin:flipIdx, xMax:flipIdx,
+      borderColor:'rgba(255,107,53,.7)', borderWidth:1.5, borderDash:[3,3],
+      label:{content:'FLIP',display:true,color:'#ff6b35',
+             font:{size:10,family:'IBM Plex Mono'},position:'start'}
     }
-  } else if (flipIdx >= 0) {
-    // fallback：SuperTrend 資料不存在時標在 K 線上
-    candleSeries.setMarkers([{
-      time: dates[flipIdx],
-      position: 'belowBar',
-      color: '#ff6b35',
-      shape: 'arrowUp',
-      text: 'FLIP',
-      size: 2,
-    }]);
-  }
+  } : {};
 
-  lwChart.timeScale().fitContent();
+  const ctx = document.getElementById('chart').getContext('2d');
 
-  // resize observer
-  const resizeObs = new ResizeObserver(() => {
-    lwChart.applyOptions({width: lwContainer.clientWidth});
+  // 組裝 K 線資料格式：{x, o, h, l, c}
+  const ohlc = dates.map((d, i) => ({
+    x: d,
+    o: c.open?.[i]  ?? null,
+    h: c.high?.[i]  ?? null,
+    l: c.low?.[i]   ?? null,
+    c: c.close?.[i] ?? null,
+  })).filter(d => d.o !== null);
+
+  chartInst = new Chart(ctx, {
+    data:{
+      datasets:[
+        {
+          type:'candlestick',
+          label:'OHLC',
+          data: ohlc,
+          color:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
+          borderColor:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
+          yAxisID:'y',
+        },
+        {label:'SuperTrend', type:'line', data:c.supertrend, borderColor:'#00e5a0',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 50',     type:'line', data:c.ema50,      borderColor:'#7b6cff',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 150',    type:'line', data:c.ema150,     borderColor:'#ff9f40',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+        {label:'EMA 200',    type:'line', data:c.ema200,     borderColor:'#ff5c5c',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
+      ]
+    },
+    options:{
+      animation:{duration:350},responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'#6b7a99',font:{family:'IBM Plex Mono',size:11},boxWidth:14,
+          filter: item => item.text !== 'OHLC'}},
+        tooltip:{
+          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+          titleColor:'#dce3ef',bodyColor:'#6b7a99',
+          titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11},
+          callbacks:{
+            label: ctx => {
+              if (ctx.dataset.label === 'OHLC') {
+                const d = ctx.raw;
+                return `O:${d.o}  H:${d.h}  L:${d.l}  C:${d.c}`;
+              }
+              return `${ctx.dataset.label}: ${ctx.parsed?.y?.toFixed(2) ?? ''}`;
+            }
+          }
+        },
+        annotation:{annotations}
+      },
+      scales:{
+        x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:8},
+           grid:{color:'#1c2130'}},
+        y:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10}},
+           grid:{color:'#1c2130'},position:'left'},
+      }
+    },
+    plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
   });
-  resizeObs.observe(lwContainer);
-  lwChart._resizeObs = resizeObs;
 
   // ── 獨立 MFI 圖 ──
   const mfiCtx = document.getElementById('mfi-chart').getContext('2d');
@@ -950,11 +919,7 @@ function openModal(jsonStr) {
 function closeModal() {
   document.getElementById('modal-backdrop').classList.remove('open');
   document.body.style.overflow = '';
-  if (chartInst) {
-    if (chartInst._resizeObs) chartInst._resizeObs.disconnect();
-    chartInst.remove();
-    chartInst = null;
-  }
+  if (chartInst)    { chartInst.destroy();    chartInst    = null; }
   if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
   _currentModalTicker = null;
   // 保持高亮，直到點擊下一支股票才切換
