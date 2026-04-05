@@ -797,10 +797,7 @@ function openModal(jsonStr) {
   // 圖例 HTML（放在圖表上方）
   const legendHtml = `
     <div style="display:flex;gap:14px;flex-wrap:wrap;padding:0 4px 8px;font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px">
-      <span><span style="display:inline-block;width:12px;height:3px;background:#3ddc84;vertical-align:middle;margin-right:4px"></span>K線 上漲</span>
-      <span><span style="display:inline-block;width:12px;height:3px;background:#ff5c5c;vertical-align:middle;margin-right:4px"></span>K線 下跌</span>
-      <span><span style="display:inline-block;width:12px;height:2px;border-top:2px dashed #3ddc84;vertical-align:middle;margin-right:4px"></span>ST 做多</span>
-      <span><span style="display:inline-block;width:12px;height:2px;border-top:2px dashed #ff5c5c;vertical-align:middle;margin-right:4px"></span>ST 做空</span>
+      <span><span style="display:inline-block;width:12px;height:2px;border-top:2px dashed #facc15;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#7b6cff;vertical-align:middle;margin-right:4px"></span>EMA 50</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#ff9f40;vertical-align:middle;margin-right:4px"></span>EMA 150</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#e05555;vertical-align:middle;margin-right:4px"></span>EMA 200</span>
@@ -834,45 +831,16 @@ function openModal(jsonStr) {
   })).filter(d => d.open !== null);
   candleSeries.setData(ohlcData);
 
-  // SuperTrend — 雙色虛線：做多段綠色，做空段紅色
-  let stBullSeries = null;
-  let stBearSeries = null;
-  if (c.supertrend && c.close) {
-    // 根據收盤價與 SuperTrend 的相對位置分段
-    const stBullData = [];
-    const stBearData = [];
-    dates.forEach((d, i) => {
-      const stVal = c.supertrend[i];
-      const cl    = c.close[i];
-      if (stVal === null || cl === null) return;
-      if (cl >= stVal) {
-        stBullData.push({time: d, value: stVal});
-        // 在切換點補一個點讓兩段無縫銜接
-        if (stBearData.length > 0) stBearData.push({time: d, value: stVal});
-      } else {
-        stBearData.push({time: d, value: stVal});
-        if (stBullData.length > 0) stBullData.push({time: d, value: stVal});
-      }
+  // SuperTrend — 亮黃色虛線
+  let stSeriesRef = null;
+  if (c.supertrend) {
+    stSeriesRef = lwChart.addLineSeries({
+      color: '#facc15', lineWidth: 1.5,
+      lineStyle: LightweightCharts.LineStyle.Dashed,
+      priceLineVisible: false, lastValueVisible: false,
     });
-
-    if (stBullData.length > 0) {
-      stBullSeries = lwChart.addLineSeries({
-        color: '#3ddc84', lineWidth: 1.5,
-        lineStyle: LightweightCharts.LineStyle.Dashed,
-        priceLineVisible: false, lastValueVisible: false,
-      });
-      stBullSeries.setData(stBullData);
-    }
-    if (stBearData.length > 0) {
-      stBearSeries = lwChart.addLineSeries({
-        color: '#ff5c5c', lineWidth: 1.5,
-        lineStyle: LightweightCharts.LineStyle.Dashed,
-        priceLineVisible: false, lastValueVisible: false,
-      });
-      stBearSeries.setData(stBearData);
-    }
+    stSeriesRef.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value !== null));
   }
-  const stSeriesRef = stBullSeries || stBearSeries;
   // EMA 50
   if (c.ema50) {
     const e50 = lwChart.addLineSeries({color:'#7b6cff', lineWidth:1, priceLineVisible:false, lastValueVisible:false});
