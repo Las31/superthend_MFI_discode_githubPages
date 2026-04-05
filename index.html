@@ -799,7 +799,7 @@ function openModal(jsonStr) {
     <div style="display:flex;gap:14px;flex-wrap:wrap;padding:0 4px 8px;font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px">
       <span><span style="display:inline-block;width:12px;height:3px;background:#3ddc84;vertical-align:middle;margin-right:4px"></span>K線 上漲</span>
       <span><span style="display:inline-block;width:12px;height:3px;background:#ff5c5c;vertical-align:middle;margin-right:4px"></span>K線 下跌</span>
-      <span><span style="display:inline-block;width:12px;height:3px;background:#00e5a0;border-top:2px dashed #00e5a0;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
+      <span><span style="display:inline-block;width:12px;height:3px;background:#22d3ee;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#7b6cff;vertical-align:middle;margin-right:4px"></span>EMA 50</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#ff9f40;vertical-align:middle;margin-right:4px"></span>EMA 150</span>
       <span><span style="display:inline-block;width:12px;height:2px;background:#e05555;vertical-align:middle;margin-right:4px"></span>EMA 200</span>
@@ -833,14 +833,15 @@ function openModal(jsonStr) {
   })).filter(d => d.open !== null);
   candleSeries.setData(ohlcData);
 
-  // SuperTrend — 加粗虛線，與 EMA 明顯區分
+  // SuperTrend — 青色細線，與 EMA 和 K 線都區分
+  let stSeriesRef = null;
   if (c.supertrend) {
-    const stSeries = lwChart.addLineSeries({
-      color:'#00e5a0', lineWidth:2,
-      lineStyle: LightweightCharts.LineStyle.LargeDashed,
+    stSeriesRef = lwChart.addLineSeries({
+      color:'#22d3ee', lineWidth:1.5,
+      lineStyle: LightweightCharts.LineStyle.Solid,
       priceLineVisible:false, lastValueVisible:false,
     });
-    stSeries.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value !== null));
+    stSeriesRef.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value !== null));
   }
   // EMA 50
   if (c.ema50) {
@@ -858,24 +859,28 @@ function openModal(jsonStr) {
     e200.setData(dates.map((d,i) => ({time:d, value:c.ema200[i]})).filter(d => d.value !== null));
   }
 
-  // FLIP 標記 — 用 createPriceLine 在 K 線上打標，不影響 Y 軸
-  if (flipIdx >= 0) {
-    candleSeries.createPriceLine({
-      price: ohlcData.find(d => d.time === dates[flipIdx])?.high ?? ohlcData[ohlcData.length-1]?.high,
-      color: 'rgba(255,107,53,.0)',
-      lineWidth: 0,
-      lineStyle: LightweightCharts.LineStyle.Solid,
-      axisLabelVisible: false,
-      title: '',
-    });
-    // 用 marker 標示翻多點
+  // FLIP 標記 — 在 SuperTrend 線的價格位置標示箭頭（貼著 SuperTrend 線下方）
+  if (flipIdx >= 0 && stSeriesRef) {
+    const flipStValue = c.supertrend[flipIdx];
+    if (flipStValue !== null && flipStValue !== undefined) {
+      stSeriesRef.setMarkers([{
+        time: dates[flipIdx],
+        position: 'belowBar',
+        color: '#ff6b35',
+        shape: 'arrowUp',
+        text: 'FLIP',
+        size: 2,
+      }]);
+    }
+  } else if (flipIdx >= 0) {
+    // fallback：SuperTrend 資料不存在時標在 K 線上
     candleSeries.setMarkers([{
       time: dates[flipIdx],
       position: 'belowBar',
       color: '#ff6b35',
       shape: 'arrowUp',
       text: 'FLIP',
-      size: 1,
+      size: 2,
     }]);
   }
 
