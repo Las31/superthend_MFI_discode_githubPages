@@ -279,7 +279,7 @@ header{
 }
 #modal-close:hover{color:var(--text)}
 #chart-wrap{padding:16px 20px 0}
-canvas#chart{width:100%!important}
+#chart-container{width:100%;height:260px}
 #mfi-wrap{padding:8px 20px 0;border-top:1px solid var(--border);margin-top:8px}
 #mfi-wrap .mfi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 canvas#mfi-chart{width:100%!important}
@@ -442,7 +442,7 @@ footer a:hover{color:var(--accent)}
       <button id="modal-pin-btn" class="pin-btn" onclick="togglePinFromModal()" title="釘選">☐</button>
       <button id="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div id="chart-wrap"><canvas id="chart" height="260"></canvas></div>
+    <div id="chart-wrap"><div id="chart-container" style="width:100%;height:260px"></div></div>
     <div id="mfi-wrap">
       <div class="mfi-label">MFI</div>
       <canvas id="mfi-chart" height="80"></canvas>
@@ -457,7 +457,7 @@ footer a:hover{color:var(--accent)}
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
@@ -465,29 +465,16 @@ let curSort = 'change_pct', sortAsc = false;
 let chartInst = null;
 let mfiChartInst = null;
 
-// ── Pin state (persisted in localStorage) ──
+/* ── Pin ── */
 const PIN_KEY = 'st_pinned_tickers';
 function getPinned() {
   try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY) || '[]')); }
   catch { return new Set(); }
 }
-function savePinned(set) {
-  localStorage.setItem(PIN_KEY, JSON.stringify([...set]));
-}
-function togglePin(ticker) {
-  const pins = getPinned();
-  if (pins.has(ticker)) pins.delete(ticker);
-  else pins.add(ticker);
-  savePinned(pins);
-  render();
-}
+function savePinned(set) { localStorage.setItem(PIN_KEY, JSON.stringify([...set])); }
+function togglePin(ticker) { const p=getPinned(); p.has(ticker)?p.delete(ticker):p.add(ticker); savePinned(p); render(); }
 let _currentModalTicker = null;
-function togglePinFromModal() {
-  if (_currentModalTicker) {
-    togglePin(_currentModalTicker);
-    updateModalPinBtn(_currentModalTicker);
-  }
-}
+function togglePinFromModal() { if(_currentModalTicker){ togglePin(_currentModalTicker); updateModalPinBtn(_currentModalTicker); } }
 function updateModalPinBtn(ticker) {
   const btn = document.getElementById('modal-pin-btn');
   if (!btn) return;
@@ -512,8 +499,7 @@ fetch('data.json?_=' + Date.now())
       document.getElementById('grid-thead').style.display = '';
     } catch(err) {
       document.getElementById('loading').innerHTML =
-        '<span style="color:#ff5c5c">JS Error: ' + err.message +
-        '<br><small style="color:#6b7a99">' + (err.stack||'').split('\n')[1] + '</small></span>';
+        '<span style="color:#ff5c5c">JS Error: ' + err.message + '</span>';
     }
   })
   .catch(e => {
@@ -535,7 +521,7 @@ function initMeta() {
   document.getElementById('s-weak')  .textContent = meta.weak   ?? '—';
 }
 
-/* ── Filter + Sort + Render ── */
+/* ── Filters ── */
 function getActiveFilters() {
   return {
     priceEma50  : document.getElementById('f-price-ema50')?.checked,
@@ -551,54 +537,40 @@ function getActiveFilters() {
     hold2       : document.getElementById('f-hold2')?.checked,
   };
 }
-
 function applyFilters(r, f) {
   const fl = r.filters || {};
-  if (f.priceEma50  && !fl.price_above_ema50)        return false;
-  if (f.priceEma200 && !fl.price_above_ema200)        return false;
-  if (f.emaGolden   && !fl.ema50_above_ema200)        return false;
-  if (f.flipEma50   && !fl.flip_price_above_ema50)    return false;
-  if (f.flipEma200  && !fl.flip_price_above_ema200)   return false;
-  if (f.mfi50       && r.mfi < 50)                    return false;
-  if (f.mfi70       && r.mfi < 70)                    return false;
-  if (f.mfiRising   && !fl.mfi_rising)                return false;
-  if (f.chgPos      && r.change_pct <= 0)             return false;
-  if (f.chg3        && r.change_pct <= 3)             return false;
-  if (f.hold2       && (fl.hold_days || 0) < 2)       return false;
+  if (f.priceEma50  && !fl.price_above_ema50)       return false;
+  if (f.priceEma200 && !fl.price_above_ema200)       return false;
+  if (f.emaGolden   && !fl.ema50_above_ema200)       return false;
+  if (f.flipEma50   && !fl.flip_price_above_ema50)   return false;
+  if (f.flipEma200  && !fl.flip_price_above_ema200)  return false;
+  if (f.mfi50       && r.mfi < 50)                   return false;
+  if (f.mfi70       && r.mfi < 70)                   return false;
+  if (f.mfiRising   && !fl.mfi_rising)               return false;
+  if (f.chgPos      && r.change_pct <= 0)            return false;
+  if (f.chg3        && r.change_pct <= 3)            return false;
+  if (f.hold2       && (fl.hold_days || 0) < 2)      return false;
   return true;
 }
-
 function updateFilterBadge(f) {
   const count = Object.values(f).filter(Boolean).length;
   const badge = document.getElementById('filter-badge');
   const btn   = document.getElementById('filter-btn');
-  if (count > 0) {
-    badge.textContent = count;
-    badge.style.display = '';
-    btn.classList.add('has-active');
-  } else {
-    badge.style.display = 'none';
-    btn.classList.remove('has-active');
-  }
+  if (count > 0) { badge.textContent=count; badge.style.display=''; btn.classList.add('has-active'); }
+  else           { badge.style.display='none'; btn.classList.remove('has-active'); }
 }
-
-function toggleFilterPanel() {
-  document.getElementById('filter-panel').classList.toggle('open');
-}
-
+function toggleFilterPanel() { document.getElementById('filter-panel').classList.toggle('open'); }
 function clearFilters() {
-  document.querySelectorAll('#filter-panel input[type=checkbox]')
-    .forEach(cb => cb.checked = false);
+  document.querySelectorAll('#filter-panel input[type=checkbox]').forEach(cb => cb.checked=false);
   render();
 }
-
-// 點 panel 外面關閉
 document.addEventListener('click', e => {
   const wrap = document.querySelector('.filter-wrap');
-  if (wrap && !wrap.contains(e.target)) {
-    document.getElementById('filter-panel')?.classList.remove('open');
-  }
+  if (wrap && !wrap.contains(e.target)) document.getElementById('filter-panel')?.classList.remove('open');
 });
+
+/* ── Render ── */
+let _selectedRowEl = null;
 
 function render() {
   const q = document.getElementById('search').value.toUpperCase().trim();
@@ -610,6 +582,7 @@ function render() {
     if (!applyFilters(r, f))        return false;
     return true;
   });
+
   rows.sort((a, b) => {
     let av = a[curSort], bv = b[curSort];
     if (typeof av === 'string') av = av.toLowerCase();
@@ -617,15 +590,10 @@ function render() {
     return sortAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
   });
 
-  // 釘選的股票置頂
   const pins = getPinned();
-  rows.sort((a, b) => {
-    const ap = pins.has(a.ticker) ? 0 : 1;
-    const bp = pins.has(b.ticker) ? 0 : 1;
-    return ap - bp;
-  });
+  rows.sort((a, b) => (pins.has(a.ticker)?0:1) - (pins.has(b.ticker)?0:1));
 
-  document.getElementById('count-badge').textContent = rows.length + ' result' + (rows.length !== 1 ? 's' : '');
+  document.getElementById('count-badge').textContent = rows.length + ' result' + (rows.length!==1?'s':'');
   const empty = document.getElementById('empty');
   const tbody = document.getElementById('tbody');
 
@@ -638,25 +606,24 @@ function render() {
   empty.style.display = 'none';
   document.getElementById('grid-thead').style.display = '';
 
-  const mfiFill = v => v >= 70 ? '#00e5a0' : v >= 50 ? '#f5a623' : '#4a5878';
+  const mfiFill = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
   const pinnedCount = rows.filter(r => pins.has(r.ticker)).length;
-
   tbody._rows = rows;
 
   tbody.innerHTML = rows.map((r, idx) => {
     const chg = r.change_pct;
-    const cls = chg > 0 ? 'up' : chg < 0 ? 'down' : 'neutral';
-    const sign = chg >= 0 ? '+' : '';
+    const cls = chg>0?'up':chg<0?'down':'neutral';
+    const sign = chg>=0?'+':'';
     const mfi = r.mfi.toFixed(1);
     const mfiPct = Math.min(100, r.mfi).toFixed(0);
     const isPinned = pins.has(r.ticker);
-    const separator = (idx === pinnedCount - 1 && pinnedCount > 0 && pinnedCount < rows.length)
+    const sep = (idx===pinnedCount-1 && pinnedCount>0 && pinnedCount<rows.length)
       ? '<div class="pin-separator" style="grid-column:1/-1"></div>' : '';
-    return `${separator}<div class="grid-row${isPinned ? ' pinned-row' : ''}" onclick="openModalByIndex(${idx})">
+    return `${sep}<div class="grid-row${isPinned?' pinned-row':''}" onclick="openModalByIndex(${idx})">
       <div class="grid-td" style="justify-content:center">
-        <button class="pin-btn${isPinned ? ' pinned' : ''}"
+        <button class="pin-btn${isPinned?' pinned':''}"
           onclick="event.stopPropagation();togglePin('${r.ticker}')"
-          title="${isPinned ? '取消釘選' : '釘選'}">${isPinned ? '☑' : '☐'}</button>
+          title="${isPinned?'取消釘選':'釘選'}">${isPinned?'☑':'☐'}</button>
       </div>
       <div class="grid-td td-ticker">
         <a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank"
@@ -669,9 +636,7 @@ function render() {
       <div class="grid-td">
         <div class="mfi-wrap">
           ${mfi}
-          <div class="mfi-bar">
-            <div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div>
-          </div>
+          <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
       <div class="grid-td"><span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span></div>
@@ -683,12 +648,12 @@ function render() {
 
   updateThArrows();
 
-  // ── Mobile card list ──
-  const mfiFillColor = v => v >= 70 ? '#00e5a0' : v >= 50 ? '#f5a623' : '#4a5878';
+  /* Mobile cards */
+  const mfiFillColor = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
   document.getElementById('card-list').innerHTML = rows.map((r, idx) => {
     const chg = r.change_pct;
-    const cls = chg > 0 ? 'up' : chg < 0 ? 'down' : 'neutral';
-    const sign = chg >= 0 ? '+' : '';
+    const cls = chg>0?'up':chg<0?'down':'';
+    const sign = chg>=0?'+':'';
     const mfiPct = Math.min(100, r.mfi).toFixed(0);
     return `<div class="stock-card" onclick="openModalByIndex(${idx})">
       <div class="card-top">
@@ -717,7 +682,7 @@ function render() {
 }
 
 function setSort(btn) {
-  sortAsc = curSort === btn.dataset.k ? !sortAsc : false;
+  sortAsc = curSort===btn.dataset.k ? !sortAsc : false;
   curSort = btn.dataset.k;
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -726,47 +691,32 @@ function setSort(btn) {
 
 function thSort(th) {
   const k = th.dataset.k;
-  sortAsc = curSort === k ? !sortAsc : false;
+  sortAsc = curSort===k ? !sortAsc : false;
   curSort = k;
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  const match = document.querySelector(`.sort-btn[data-k="${k}"]`);
-  if (match) match.classList.add('active');
   render();
 }
 
 function updateThArrows() {
   document.querySelectorAll('.grid-th[data-k]').forEach(th => {
-    th.classList.toggle('col-sorted', th.dataset.k === curSort);
-    th.querySelector('.arr').textContent =
-      th.dataset.k === curSort ? (sortAsc ? ' ↑' : ' ↓') : '';
+    th.classList.toggle('col-sorted', th.dataset.k===curSort);
+    th.querySelector('.arr').textContent = th.dataset.k===curSort ? (sortAsc?' ↑':' ↓') : '';
   });
 }
 
-/* ── Chart Modal ── */
-let _selectedRowEl = null;
-
+/* ── Modal ── */
 function openModalByIndex(idx) {
   const tbody = document.getElementById('tbody');
   const r = tbody._rows ? tbody._rows[idx] : null;
-
-  // 清除舊的高亮
-  if (_selectedRowEl) {
-    _selectedRowEl.classList.remove('selected');
-    _selectedRowEl = null;
-  }
-
-  // 反白點擊的行（表格或卡片）
+  if (_selectedRowEl) { _selectedRowEl.classList.remove('selected'); _selectedRowEl=null; }
   const rows = document.querySelectorAll('.grid-row, .stock-card');
-  if (rows[idx]) {
-    rows[idx].classList.add('selected');
-    _selectedRowEl = rows[idx];
-  }
-
+  if (rows[idx]) { rows[idx].classList.add('selected'); _selectedRowEl=rows[idx]; }
   if (r) openModal(r);
 }
 
 function openModal(jsonStr) {
-  const r = typeof jsonStr === 'string' ? JSON.parse(jsonStr) : jsonStr;
+  const r = typeof jsonStr==='string' ? JSON.parse(jsonStr) : jsonStr;
+
   document.getElementById('modal-ticker').textContent = r.ticker;
   document.getElementById('modal-sub').textContent =
     `Flip: ${r.flip_date}  ·  MFI: ${r.mfi.toFixed(1)}  ·  Grade: ${r.mfi_grade}`;
@@ -774,160 +724,158 @@ function openModal(jsonStr) {
   document.getElementById('modal-backdrop').classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // 記錄當前 ticker，更新圖釘按鈕狀態
   _currentModalTicker = r.ticker;
   updateModalPinBtn(r.ticker);
 
-  if (chartInst)    { chartInst.destroy();    chartInst    = null; }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
+  if (chartInst) {
+    if (chartInst._resizeObs) chartInst._resizeObs.disconnect();
+    try { chartInst.remove(); } catch(e) {}
+    chartInst = null;
+  }
+  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst=null; }
 
-  // Replace canvas to fully reset Chart.js state (prevents resize bug on 2nd open)
-  const wrap = document.getElementById('chart-wrap');
-  wrap.innerHTML = '<canvas id="chart" height="260"></canvas>';
-  const mfiWrap = document.getElementById('mfi-wrap');
-  mfiWrap.innerHTML = '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="80"></canvas>';
+  document.getElementById('chart-wrap').innerHTML =
+    '<div id="chart-container" style="width:100%;height:260px"></div>';
+  document.getElementById('mfi-wrap').innerHTML =
+    '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="80"></canvas>';
 
-  const c = r.chart || {};
-  const dates = c.dates || [];
-  const flipIdx = dates.indexOf(r.flip_date);
-
-  const annotations = flipIdx >= 0 ? {
-    flip: {
-      type:'line', xMin:flipIdx, xMax:flipIdx,
-      borderColor:'rgba(255,107,53,.7)', borderWidth:1.5, borderDash:[3,3],
-      label:{content:'FLIP',display:true,color:'#ff6b35',
-             font:{size:10,family:'IBM Plex Mono'},position:'start'}
-    }
-  } : {};
-
-  const ctx = document.getElementById('chart').getContext('2d');
-
-  // 組裝 K 線資料格式：{x, o, h, l, c}
-  const ohlc = dates.map((d, i) => ({
-    x: d,
-    o: c.open?.[i]  ?? null,
-    h: c.high?.[i]  ?? null,
-    l: c.low?.[i]   ?? null,
-    c: c.close?.[i] ?? null,
-  })).filter(d => d.o !== null);
-
-  chartInst = new Chart(ctx, {
-    data:{
-      datasets:[
-        {
-          type:'candlestick',
-          label:'OHLC',
-          data: ohlc,
-          color:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
-          borderColor:{ up:'#3ddc84', down:'#ff5c5c', unchanged:'#6b7a99' },
-          yAxisID:'y',
-        },
-        {label:'SuperTrend', type:'line', data:c.supertrend, borderColor:'#00e5a0',borderWidth:1.5,borderDash:[5,3],pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 50',     type:'line', data:c.ema50,      borderColor:'#7b6cff',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 150',    type:'line', data:c.ema150,     borderColor:'#ff9f40',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
-        {label:'EMA 200',    type:'line', data:c.ema200,     borderColor:'#ff5c5c',borderWidth:1,  pointRadius:0,tension:.3,yAxisID:'y'},
-      ]
-    },
-    options:{
-      animation:{duration:350},responsive:true,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{labels:{color:'#6b7a99',font:{family:'IBM Plex Mono',size:11},boxWidth:14,
-          filter: item => item.text !== 'OHLC'}},
-        tooltip:{
-          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-          titleColor:'#dce3ef',bodyColor:'#6b7a99',
-          titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11},
-          callbacks:{
-            label: ctx => {
-              if (ctx.dataset.label === 'OHLC') {
-                const d = ctx.raw;
-                return `O:${d.o}  H:${d.h}  L:${d.l}  C:${d.c}`;
-              }
-              return `${ctx.dataset.label}: ${ctx.parsed?.y?.toFixed(2) ?? ''}`;
-            }
-          }
-        },
-        annotation:{annotations}
-      },
-      scales:{
-        x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:8},
-           grid:{color:'#1c2130'}},
-        y:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10}},
-           grid:{color:'#1c2130'},position:'left'},
-      }
-    },
-    plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
-  });
-
-  // ── 獨立 MFI 圖 ──
-  const mfiCtx = document.getElementById('mfi-chart').getContext('2d');
-  mfiChartInst = new Chart(mfiCtx, {
-    type:'line',
-    data:{
-      labels: dates,
-      datasets:[{
-        label:'MFI', data:c.mfi,
-        borderColor:'#f5a623', backgroundColor:'rgba(245,166,35,.08)',
-        borderWidth:1.5, pointRadius:0, tension:.3, fill:true
-      }]
-    },
-    options:{
-      animation:{duration:350},responsive:true,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{display:false},
-        tooltip:{backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-                 titleColor:'#dce3ef',bodyColor:'#f5a623',
-                 titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11}},
-        annotation:{annotations:{
-          ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
-          os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
-        }}
-      },
-      scales:{
-        x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8},
-           grid:{color:'#1c2130'}},
-        y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},
-           grid:{color:'#1c2130'},min:0,max:100},
-      }
-    },
-    plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
-  });
-
+  /* Info cards */
   const cards = [
     {l:'Flip Date',   v: r.flip_date},
     {l:'Flip Price',  v:'$'+r.flip_price.toFixed(2)},
     {l:'Last Price',  v:'$'+r.last_price.toFixed(2)},
-    {l:'Change',      v:(r.change_pct>=0?'+':'')+r.change_pct.toFixed(2)+'%',
-                      c: r.change_pct>=0?'#3ddc84':'#ff5c5c'},
-    {l:'MFI',         v: r.mfi.toFixed(1), c: GRADE_COLOR[r.mfi_grade]},
-    {l:'Grade',       v: r.mfi_grade,      c: GRADE_COLOR[r.mfi_grade]},
-    {l:'Dyn Mult',    v: r.dyn_mult.toFixed(3)},
-    {l:'Best Weight', v: r.best_weight},
+    {l:'Change',      v:(r.change_pct>=0?'+':'')+r.change_pct.toFixed(2)+'%', c:r.change_pct>=0?'#3ddc84':'#ff5c5c'},
+    {l:'MFI',         v:r.mfi.toFixed(1), c:GRADE_COLOR[r.mfi_grade]},
+    {l:'Grade',       v:r.mfi_grade,      c:GRADE_COLOR[r.mfi_grade]},
+    {l:'Dyn Mult',    v:r.dyn_mult.toFixed(3)},
+    {l:'Best Weight', v:r.best_weight},
     {l:'SuperTrend',  v:'$'+r.supertrend.toFixed(2)},
-    {l:'ATR',         v: r.atr.toFixed(2)},
+    {l:'ATR',         v:r.atr.toFixed(2)},
   ];
   document.getElementById('modal-cards').innerHTML = cards.map(c =>
-    `<div class="info-card">
-       <div class="lbl">${c.l}</div>
-       <div class="val" style="${c.c?'color:'+c.c:''}">${c.v}</div>
-     </div>`
+    `<div class="info-card"><div class="lbl">${c.l}</div><div class="val" style="${c.c?'color:'+c.c:''}">${c.v}</div></div>`
   ).join('');
+
+  const c = r.chart || {};
+  const dates = c.dates || [];
+  const flipIdx = dates.indexOf(r.flip_date);
+  requestAnimationFrame(() => requestAnimationFrame(() => _initCharts(c, dates, flipIdx)));
+}
+
+function _initCharts(c, dates, flipIdx) {
+  const lwContainer = document.getElementById('chart-container');
+  if (!lwContainer || typeof LightweightCharts === 'undefined') return;
+
+  lwContainer.insertAdjacentHTML('beforebegin', `
+    <div style="display:flex;gap:14px;flex-wrap:wrap;padding:0 4px 8px;font-size:10px;
+                font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;color:#6b7a99">
+      <span><span style="display:inline-block;width:14px;height:0;border-top:2px dashed #facc15;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
+      <span><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle;margin-right:4px"></span>EMA 50</span>
+      <span><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle;margin-right:4px"></span>EMA 150</span>
+      <span><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle;margin-right:4px"></span>EMA 200</span>
+      <span style="color:#ff6b35">▲ FLIP</span>
+    </div>`);
+
+  const lwChart = LightweightCharts.createChart(lwContainer, {
+    width: lwContainer.clientWidth || 600,
+    height: 260,
+    layout: { background:{color:'transparent'}, textColor:'#6b7a99' },
+    grid: { vertLines:{color:'#1c2130'}, horzLines:{color:'#1c2130'} },
+    rightPriceScale: { borderColor:'#1c2130' },
+    timeScale: { borderColor:'#1c2130', timeVisible:true },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+  });
+  chartInst = lwChart;
+
+  const candleSeries = lwChart.addCandlestickSeries({
+    upColor:'#3ddc84', downColor:'#ff5c5c',
+    borderUpColor:'#3ddc84', borderDownColor:'#ff5c5c',
+    wickUpColor:'#3ddc84', wickDownColor:'#ff5c5c',
+  });
+  candleSeries.setData(
+    dates.map((d,i) => ({time:d, open:c.open?.[i]??null, high:c.high?.[i]??null, low:c.low?.[i]??null, close:c.close?.[i]??null}))
+         .filter(d => d.open!==null)
+  );
+
+  let stRef = null;
+  if (c.supertrend) {
+    stRef = lwChart.addLineSeries({color:'#facc15', lineWidth:1.5,
+      lineStyle:LightweightCharts.LineStyle.Dashed, priceLineVisible:false, lastValueVisible:false});
+    stRef.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value!==null));
+  }
+  if (c.ema50) {
+    lwChart.addLineSeries({color:'#7b6cff', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
+           .setData(dates.map((d,i) => ({time:d, value:c.ema50[i]})).filter(d => d.value!==null));
+  }
+  if (c.ema150) {
+    lwChart.addLineSeries({color:'#ff9f40', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
+           .setData(dates.map((d,i) => ({time:d, value:c.ema150[i]})).filter(d => d.value!==null));
+  }
+  if (c.ema200) {
+    lwChart.addLineSeries({color:'#e05555', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
+           .setData(dates.map((d,i) => ({time:d, value:c.ema200[i]})).filter(d => d.value!==null));
+  }
+
+  if (flipIdx >= 0) {
+    (stRef || candleSeries).setMarkers([{
+      time:dates[flipIdx], position:'belowBar', color:'#ff6b35', shape:'arrowUp', text:'FLIP', size:1
+    }]);
+  }
+
+  lwChart.timeScale().fitContent();
+  const ro = new ResizeObserver(() => lwChart.applyOptions({width:lwContainer.clientWidth}));
+  ro.observe(lwContainer);
+  lwChart._resizeObs = ro;
+
+  /* MFI chart */
+  const mfiCtx = document.getElementById('mfi-chart')?.getContext('2d');
+  if (mfiCtx) {
+    mfiChartInst = new Chart(mfiCtx, {
+      type:'line',
+      data:{ labels:dates, datasets:[{
+        label:'MFI', data:c.mfi,
+        borderColor:'#f5a623', backgroundColor:'rgba(245,166,35,.08)',
+        borderWidth:1.5, pointRadius:0, tension:.3, fill:true
+      }]},
+      options:{
+        animation:{duration:350}, responsive:true,
+        interaction:{mode:'index', intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{backgroundColor:'#0e1117', borderColor:'#1c2130', borderWidth:1,
+            titleColor:'#dce3ef', bodyColor:'#f5a623',
+            titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono', size:11}},
+          annotation:{annotations:{
+            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
+            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
+          }}
+        },
+        scales:{
+          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8},grid:{color:'#1c2130'}},
+          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#1c2130'},min:0,max:100},
+        }
+      },
+      plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
+    });
+  }
 }
 
 function closeModal() {
   document.getElementById('modal-backdrop').classList.remove('open');
   document.body.style.overflow = '';
-  if (chartInst)    { chartInst.destroy();    chartInst    = null; }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst = null; }
+  if (chartInst) {
+    if (chartInst._resizeObs) chartInst._resizeObs.disconnect();
+    try { chartInst.remove(); } catch(e) {}
+    chartInst = null;
+  }
+  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst=null; }
   _currentModalTicker = null;
-  // 保持高亮，直到點擊下一支股票才切換
 }
+
 document.getElementById('modal-backdrop').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
