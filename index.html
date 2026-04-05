@@ -147,7 +147,9 @@ header{
   border-bottom:1px solid var(--border);cursor:pointer;
   transition:background .12s;
 }
-.grid-row:hover{background:var(--surface2)}
+.grid-row:hover{background:rgba(255,255,255,.05)}
+.grid-row.selected{background:rgba(0,229,160,.07);border-left:2px solid var(--accent)}
+.stock-card.selected{border-color:var(--accent);background:rgba(0,229,160,.05)}
 .grid-th{
   padding:9px 16px;font-size:11px;letter-spacing:.8px;
   text-transform:uppercase;color:var(--text2);font-weight:600;
@@ -667,9 +669,25 @@ function updateThArrows() {
 }
 
 /* ── Chart Modal ── */
+let _selectedRowEl = null;
+
 function openModalByIndex(idx) {
   const tbody = document.getElementById('tbody');
-  const r = tbody._rows[idx];
+  const r = tbody._rows ? tbody._rows[idx] : null;
+
+  // 清除舊的高亮
+  if (_selectedRowEl) {
+    _selectedRowEl.classList.remove('selected');
+    _selectedRowEl = null;
+  }
+
+  // 反白點擊的行（表格或卡片）
+  const rows = document.querySelectorAll('.grid-row, .stock-card');
+  if (rows[idx]) {
+    rows[idx].classList.add('selected');
+    _selectedRowEl = rows[idx];
+  }
+
   if (r) openModal(r);
 }
 
@@ -680,6 +698,7 @@ function openModal(jsonStr) {
     `Flip: ${r.flip_date}  ·  MFI: ${r.mfi.toFixed(1)}  ·  Grade: ${r.mfi_grade}`;
   document.getElementById('modal-sub').style.color = GRADE_COLOR[r.mfi_grade] || '#6b7a99';
   document.getElementById('modal-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
 
   if (chartInst) { chartInst.destroy(); chartInst = null; }
 
@@ -759,7 +778,13 @@ function openModal(jsonStr) {
 
 function closeModal() {
   document.getElementById('modal-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
   if (chartInst) { chartInst.destroy(); chartInst = null; }
+  // 移除選中高亮
+  if (_selectedRowEl) {
+    _selectedRowEl.classList.remove('selected');
+    _selectedRowEl = null;
+  }
 }
 document.getElementById('modal-backdrop').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
