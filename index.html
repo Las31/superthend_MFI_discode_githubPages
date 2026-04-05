@@ -780,11 +780,7 @@ function closeModal() {
   document.getElementById('modal-backdrop').classList.remove('open');
   document.body.style.overflow = '';
   if (chartInst) { chartInst.destroy(); chartInst = null; }
-  // 移除選中高亮
-  if (_selectedRowEl) {
-    _selectedRowEl.classList.remove('selected');
-    _selectedRowEl = null;
-  }
+  // 保持高亮，直到點擊下一支股票才切換
 }
 document.getElementById('modal-backdrop').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
