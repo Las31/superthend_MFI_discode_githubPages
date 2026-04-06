@@ -133,7 +133,7 @@ header{
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Grid Table ── */
-:root{--cols:36px 160px 110px 90px 90px 100px 130px 90px 90px 80px 110px}
+:root{--cols:36px 160px 120px 100px 110px 120px}
 #grid-table{overflow-x:auto}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
@@ -403,13 +403,6 @@ footer a:hover{color:var(--accent)}
     </div>
 
     <span class="count-badge" id="count-badge"></span>
-    <div class="sort-group">
-      <span class="sort-lbl">Sort</span>
-      <button class="sort-btn active" data-k="change_pct"  onclick="setSort(this)">Change%</button>
-      <button class="sort-btn"        data-k="mfi"         onclick="setSort(this)">MFI</button>
-      <button class="sort-btn"        data-k="flip_date"   onclick="setSort(this)">Date</button>
-      <button class="sort-btn"        data-k="last_price"  onclick="setSort(this)">Price</button>
-    </div>
   </div>
 </div>
 
@@ -418,16 +411,11 @@ footer a:hover{color:var(--accent)}
 <div id="grid-table">
   <div class="grid-thead" id="grid-thead" style="display:none">
     <div class="grid-th"></div>
-    <div class="grid-th col-sorted" data-k="ticker"      onclick="thSort(this)">Ticker<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_date"   onclick="thSort(this)">Flip Date<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_price"  onclick="thSort(this)">Flip $<span class="arr"></span></div>
-    <div class="grid-th" data-k="last_price"  onclick="thSort(this)">Last $<span class="arr"></span></div>
-    <div class="grid-th" data-k="change_pct"  onclick="thSort(this)">Change %<span class="arr"></span></div>
-    <div class="grid-th" data-k="mfi"         onclick="thSort(this)">MFI<span class="arr"></span></div>
-    <div class="grid-th" data-k="mfi_grade"   onclick="thSort(this)">Grade<span class="arr"></span></div>
-    <div class="grid-th" data-k="dyn_mult"    onclick="thSort(this)">Dyn Mult<span class="arr"></span></div>
-    <div class="grid-th" data-k="best_weight" onclick="thSort(this)">Weight<span class="arr"></span></div>
-    <div class="grid-th" data-k="supertrend"  onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
+    <div class="grid-th col-sorted" data-k="ticker"     onclick="thSort(this)">Ticker<span class="arr"></span></div>
+    <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
+    <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
+    <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
+    <div class="grid-th" data-k="supertrend" onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
   </div>
   <div class="grid-tbody" id="tbody"></div>
 </div>
@@ -461,7 +449,7 @@ footer a:hover{color:var(--accent)}
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
-let curSort = 'change_pct', sortAsc = false;
+let curSort = 'mfi', sortAsc = false;
 let chartInst = null;
 let mfiChartInst = null;
 
@@ -631,17 +619,12 @@ function render() {
       </div>
       <div class="grid-td">${r.flip_date}</div>
       <div class="grid-td">$${r.flip_price.toFixed(2)}</div>
-      <div class="grid-td">$${r.last_price.toFixed(2)}</div>
-      <div class="grid-td ${cls}">${sign}${chg.toFixed(2)}%</div>
       <div class="grid-td">
         <div class="mfi-wrap">
           ${mfi}
           <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
-      <div class="grid-td"><span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span></div>
-      <div class="grid-td">${r.dyn_mult.toFixed(3)}</div>
-      <div class="grid-td">${r.best_weight}</div>
       <div class="grid-td">$${r.supertrend.toFixed(2)}</div>
     </div>`;
   }).join('');
@@ -743,11 +726,7 @@ function openModal(jsonStr) {
   const cards = [
     {l:'Flip Date',   v: r.flip_date},
     {l:'Flip Price',  v:'$'+r.flip_price.toFixed(2)},
-    {l:'Last Price',  v:'$'+r.last_price.toFixed(2)},
-    {l:'Change',      v:(r.change_pct>=0?'+':'')+r.change_pct.toFixed(2)+'%', c:r.change_pct>=0?'#3ddc84':'#ff5c5c'},
     {l:'MFI',         v:r.mfi.toFixed(1), c:GRADE_COLOR[r.mfi_grade]},
-    {l:'Grade',       v:r.mfi_grade,      c:GRADE_COLOR[r.mfi_grade]},
-    {l:'Dyn Mult',    v:r.dyn_mult.toFixed(3)},
     {l:'Best Weight', v:r.best_weight},
     {l:'SuperTrend',  v:'$'+r.supertrend.toFixed(2)},
     {l:'ATR',         v:r.atr.toFixed(2)},
