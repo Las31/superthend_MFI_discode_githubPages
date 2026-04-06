@@ -138,6 +138,8 @@ header{
   flex:1;min-height:0;
 }
 #content-area{flex:1;min-width:0;overflow-y:auto;display:flex;flex-direction:column;padding-bottom:40px}
+#content-area::-webkit-scrollbar{display:none}
+#content-area{scrollbar-width:none}
 
 /* ── Pin Panel ── */
 #pin-panel{
@@ -194,6 +196,17 @@ header{
   line-height:1;transition:color .15s;flex-shrink:0;
 }
 .pin-remove:hover{color:var(--down)}
+.pin-filter{display:flex;gap:1px;padding:6px 10px 6px;border-bottom:1px solid var(--border);flex-shrink:0}
+.pin-filter-btn{
+  flex:1;font-family:var(--font);font-size:9px;padding:4px 4px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;text-align:center;
+}
+.pin-filter-btn:first-child{border-radius:2px 0 0 2px}
+.pin-filter-btn:last-child{border-radius:0 2px 2px 0}
+.pin-filter-btn+.pin-filter-btn{border-left:none}
+.pin-filter-btn:hover{color:var(--text2)}
+.pin-filter-btn.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
 .pin-empty{
   padding:24px 12px;text-align:center;
   font-size:10px;color:var(--text3);letter-spacing:.5px;
@@ -522,6 +535,11 @@ footer a:hover{color:var(--accent)}
       <button class="pin-action-btn" onclick="clearAllPins()" title="全部取消釘選">清除</button>
     </div>
   </div>
+  <div class="pin-filter">
+    <button class="pin-filter-btn active" data-f="all"    onclick="setPinFilter(this)">全部</button>
+    <button class="pin-filter-btn"        data-f="on"     onclick="setPinFilter(this)">● 翻多</button>
+    <button class="pin-filter-btn"        data-f="off"    onclick="setPinFilter(this)">● 未翻</button>
+  </div>
   <div id="pin-list"></div>
 </div>
 </div><!-- end main-layout -->
@@ -636,7 +654,20 @@ function renderPinPanel() {
   const activeMap = {};
   ALL.forEach(r => { activeMap[r.ticker] = r; });
 
-  listEl.innerHTML = sorted.map(ticker => {
+  // 套用燈號篩選
+  const filtered = sorted.filter(ticker => {
+    const inResult = !!activeMap[ticker];
+    if (_pinFilter === 'on')  return inResult;
+    if (_pinFilter === 'off') return !inResult;
+    return true;
+  });
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div class="pin-empty">無符合條件的項目</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(ticker => {
     const inResult = !!activeMap[ticker];
     const r = activeMap[ticker];
     const flipDate = inResult ? r.flip_date : '—';
@@ -651,6 +682,13 @@ function renderPinPanel() {
       <button class="pin-remove" onclick="event.stopPropagation();togglePin('${ticker}')" title="取消釘選">✕</button>
     </div>`;
   }).join('');
+}
+
+let _pinFilter = 'all';
+function setPinFilter(btn) {
+  _pinFilter = btn.dataset.f;
+  document.querySelectorAll('.pin-filter-btn').forEach(b => b.classList.toggle('active', b===btn));
+  renderPinPanel();
 }
 
 function openByTicker(ticker) {
