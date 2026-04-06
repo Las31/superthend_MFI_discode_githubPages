@@ -132,7 +132,76 @@ header{
 .sort-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
-/* ── Grid Table ── */
+/* ── Main layout with pin sidebar ── */
+#main-layout{
+  display:flex;align-items:flex-start;gap:0;
+}
+#content-area{flex:1;min-width:0;overflow:hidden}
+
+/* ── Pin Panel ── */
+#pin-panel{
+  width:200px;flex-shrink:0;
+  border-left:1px solid var(--border);
+  background:var(--surface);
+  position:sticky;top:0;
+  height:calc(100vh - 40px);
+  overflow-y:auto;
+  display:flex;flex-direction:column;
+}
+#pin-panel-head{
+  padding:10px 12px 8px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--surface);z-index:10;
+}
+#pin-panel-title{
+  font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text2);font-weight:600;
+}
+.pin-panel-actions{display:flex;gap:6px;align-items:center}
+.pin-action-btn{
+  font-family:var(--font);font-size:9px;padding:3px 7px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;
+}
+.pin-action-btn:hover{color:var(--text2);border-color:var(--text2)}
+#pin-list{flex:1;padding:6px 0}
+.pin-item{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+}
+.pin-item:hover{background:var(--surface2)}
+.pin-item.active{border-left:2px solid var(--accent)}
+.pin-item.inactive{opacity:.45}
+.pin-item-info{flex:1;min-width:0}
+.pin-ticker{
+  font-family:var(--display);font-size:13px;font-weight:700;
+  color:var(--text);letter-spacing:-.2px;
+}
+.pin-item.inactive .pin-ticker{color:var(--text3)}
+.pin-date{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.3px}
+.pin-status{
+  font-size:8px;padding:1px 5px;border-radius:2px;margin-top:3px;
+  display:inline-block;letter-spacing:.5px;
+}
+.pin-status.on{background:rgba(0,229,160,.1);color:var(--accent);border:1px solid rgba(0,229,160,.2)}
+.pin-status.off{background:rgba(74,88,120,.15);color:#5a6a85;border:1px solid rgba(74,88,120,.2)}
+.pin-remove{
+  background:none;border:none;cursor:pointer;
+  color:var(--text3);font-size:12px;padding:2px 4px;
+  line-height:1;transition:color .15s;flex-shrink:0;
+}
+.pin-remove:hover{color:var(--down)}
+.pin-empty{
+  padding:24px 12px;text-align:center;
+  font-size:10px;color:var(--text3);letter-spacing:.5px;
+}
+@media(max-width:700px){
+  #pin-panel{display:none}
+  #main-layout{display:block}
+}
+
 :root{--cols:36px 160px 120px 100px 110px 120px}
 #grid-table{overflow-x:auto}
 .grid-thead{
@@ -424,6 +493,8 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
+<div id="main-layout">
+<div id="content-area">
 <div id="loading"><div class="spinner"></div>Loading data.json ...</div>
 <div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
 <div id="grid-table">
@@ -438,6 +509,20 @@ footer a:hover{color:var(--accent)}
   <div class="grid-tbody" id="tbody"></div>
 </div>
 <div id="card-list"></div>
+</div><!-- end content-area -->
+
+<!-- Pin Panel -->
+<div id="pin-panel">
+  <div id="pin-panel-head">
+    <span id="pin-panel-title">釘選清單</span>
+    <div class="pin-panel-actions">
+      <button class="pin-action-btn" onclick="exportPins()" title="匯出清單">匯出</button>
+      <button class="pin-action-btn" onclick="clearAllPins()" title="全部取消釘選">清除</button>
+    </div>
+  </div>
+  <div id="pin-list"></div>
+</div>
+</div><!-- end main-layout -->
 
 <!-- Chart modal -->
 <div id="modal-backdrop">
@@ -477,14 +562,108 @@ let mfiChartInst = null;
 
 /* ── Pin ── */
 const PIN_KEY = 'st_pinned_tickers';
+const PIN_TIME_KEY = 'st_pinned_times';
+
 function getPinned() {
   try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY) || '[]')); }
   catch { return new Set(); }
 }
-function savePinned(set) { localStorage.setItem(PIN_KEY, JSON.stringify([...set])); }
-function togglePin(ticker) { const p=getPinned(); p.has(ticker)?p.delete(ticker):p.add(ticker); savePinned(p); render(); }
+function getPinTimes() {
+  try { return JSON.parse(localStorage.getItem(PIN_TIME_KEY) || '{}'); }
+  catch { return {}; }
+}
+function savePinned(set) {
+  localStorage.setItem(PIN_KEY, JSON.stringify([...set]));
+}
+function savePinTimes(times) {
+  localStorage.setItem(PIN_TIME_KEY, JSON.stringify(times));
+}
+function togglePin(ticker) {
+  const pins = getPinned();
+  const times = getPinTimes();
+  if (pins.has(ticker)) {
+    pins.delete(ticker);
+    delete times[ticker];
+  } else {
+    pins.add(ticker);
+    times[ticker] = Date.now();
+  }
+  savePinned(pins);
+  savePinTimes(times);
+  render();
+  renderPinPanel();
+}
+function clearAllPins() {
+  if (!confirm('確定清除所有釘選？')) return;
+  savePinned(new Set());
+  savePinTimes({});
+  render();
+  renderPinPanel();
+}
+function exportPins() {
+  const pins = getPinned();
+  const times = getPinTimes();
+  if (!pins.size) { alert('釘選清單是空的'); return; }
+  // 依釘選時間排序
+  const sorted = [...pins].sort((a,b) => (times[b]||0)-(times[a]||0));
+  const text = sorted.join(', ');
+  navigator.clipboard?.writeText(text).then(() => alert('已複製到剪貼簿：\n'+text))
+    .catch(() => {
+      const el = document.createElement('textarea');
+      el.value = text; document.body.appendChild(el);
+      el.select(); document.execCommand('copy');
+      document.body.removeChild(el);
+      alert('已複製到剪貼簿：\n'+text);
+    });
+}
+
+function renderPinPanel() {
+  const pins = getPinned();
+  const times = getPinTimes();
+  const listEl = document.getElementById('pin-list');
+  if (!listEl) return;
+
+  if (!pins.size) {
+    listEl.innerHTML = '<div class="pin-empty">尚無釘選項目<br>點擊 ☐ 加入</div>';
+    return;
+  }
+
+  // 依釘選時間降序排列（最新在最上）
+  const sorted = [...pins].sort((a,b) => (times[b]||0)-(times[a]||0));
+
+  // 建立目前結果的 ticker map
+  const activeMap = {};
+  ALL.forEach(r => { activeMap[r.ticker] = r; });
+
+  listEl.innerHTML = sorted.map(ticker => {
+    const inResult = !!activeMap[ticker];
+    const r = activeMap[ticker];
+    const flipDate = inResult ? r.flip_date : '—';
+    return `<div class="pin-item${inResult?' active':' inactive'}" onclick="${inResult?`openByTicker('${ticker}')`:''}" >
+      <div class="pin-item-info">
+        <div class="pin-ticker">${ticker}</div>
+        <div class="pin-date">${flipDate}</div>
+        <span class="pin-status ${inResult?'on':'off'}">${inResult?'翻多中':'未翻多'}</span>
+      </div>
+      <button class="pin-remove" onclick="event.stopPropagation();togglePin('${ticker}')" title="取消釘選">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openByTicker(ticker) {
+  const tbody = document.getElementById('tbody');
+  if (!tbody._rows) return;
+  const idx = tbody._rows.findIndex(r => r.ticker === ticker);
+  if (idx >= 0) openModalByIndex(idx);
+}
+
 let _currentModalTicker = null;
-function togglePinFromModal() { if(_currentModalTicker){ togglePin(_currentModalTicker); updateModalPinBtn(_currentModalTicker); } }
+function togglePinFromModal() {
+  if (_currentModalTicker) {
+    togglePin(_currentModalTicker);
+    updateModalPinBtn(_currentModalTicker);
+  }
+}
 function updateModalPinBtn(ticker) {
   const btn = document.getElementById('modal-pin-btn');
   if (!btn) return;
@@ -505,6 +684,7 @@ fetch('data.json?_=' + Date.now())
       meta = d.meta  || {};
       initMeta();
       render();
+      renderPinPanel();
       document.getElementById('loading').style.display = 'none';
       document.getElementById('grid-thead').style.display = '';
     } catch(err) {
@@ -679,6 +859,8 @@ function render() {
     btns += `<span class="page-info">${rows.length} 筆</span>`;
     pg.innerHTML = btns;
   }
+
+  renderPinPanel();
 
   /* Mobile cards */
   const mfiFillColor = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
