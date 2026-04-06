@@ -21,8 +21,8 @@
 html{height:100%;scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;
-  min-height:100%;display:flex;flex-direction:column;
-  overflow-y:scroll;scrollbar-width:none;}
+  height:100%;display:flex;flex-direction:column;overflow:hidden;
+  scrollbar-width:none;}
 body::-webkit-scrollbar{display:none}
 
 /* scanline */
@@ -35,6 +35,7 @@ header{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
   padding:16px 32px;border-bottom:1px solid var(--border);
   background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
+  flex-shrink:0;
 }
 .logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--text)}
 .logo em{color:var(--accent);font-style:normal}
@@ -46,7 +47,7 @@ header{
 #scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
 
 /* ── Stats ── */
-#stats{display:flex;justify-content:center;gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+#stats{display:flex;justify-content:center;gap:1px;background:var(--border);border-bottom:1px solid var(--border);flex-shrink:0}
 .stat{width:180px;flex-shrink:0;background:var(--surface);padding:14px 20px;text-align:center}
 .stat-n{font-family:var(--display);font-size:26px;font-weight:800;line-height:1}
 .stat-l{font-size:11px;color:var(--text2);margin-top:5px;letter-spacing:1px;text-transform:uppercase}
@@ -59,8 +60,8 @@ header{
 #controls{
   display:flex;align-items:center;flex-wrap:wrap;gap:8px;
   padding:12px 32px;border-bottom:1px solid var(--border);
-  background:var(--surface);position:sticky;top:0;z-index:100;
-  justify-content:center;
+  background:var(--surface);z-index:100;
+  justify-content:center;flex-shrink:0;
 }
 .controls-inner{
   display:flex;align-items:center;flex-wrap:wrap;gap:8px;
@@ -138,14 +139,14 @@ header{
 
 /* ── Main layout with pin sidebar ── */
 #main-layout{
-  display:flex;align-items:flex-start;gap:0;
-  flex:1;
+  display:flex;gap:0;
+  flex:1;min-height:0;overflow:hidden;
 }
 #content-area{
-  flex:1;min-width:0;
+  flex:1;min-width:0;min-height:0;
   display:flex;flex-direction:column;
-  padding-bottom:40px;
-  overflow:visible;
+  overflow-y:auto;
+  scrollbar-width:none;
 }
 
 /* ── Pin Panel ── */
@@ -154,10 +155,8 @@ header{
   border-left:1px solid var(--border);
   background:var(--surface);
   display:flex;flex-direction:column;
-  position:sticky;top:0;
-  height:100vh;
   overflow:hidden;
-  align-self:flex-start;
+  min-height:0;
 }
 #pin-panel-head{
   padding:10px 12px 8px;
@@ -399,12 +398,11 @@ canvas#mfi-chart{width:100%!important}
 
 /* ── Footer ── */
 footer{
-  position:fixed;bottom:0;left:0;right:0;
   padding:10px 32px;border-top:1px solid var(--border);
   background:var(--surface);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
   font-size:10px;color:var(--text3);letter-spacing:.5px;
-  z-index:90;
+  flex-shrink:0;
 }
 footer a{color:var(--text2);text-decoration:none}
 footer a:hover{color:var(--accent)}
@@ -571,7 +569,6 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
-<div id="footer-spacer"></div>
 <footer>
   <span>NASDAQ 100 · SuperTrend × MFI Dynamic Multiplier</span>
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
