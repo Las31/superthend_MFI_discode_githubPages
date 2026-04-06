@@ -133,7 +133,7 @@ header{
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Grid Table ── */
-:root{--cols:36px 160px 110px 90px 90px 100px 130px 90px 90px 80px 110px}
+:root{--cols:36px 160px 120px 100px 110px 120px}
 #grid-table{overflow-x:auto}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
@@ -307,12 +307,30 @@ canvas#mfi-chart{width:100%!important}
 
 /* ── Footer ── */
 footer{
-  padding:14px 32px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  position:fixed;bottom:0;left:0;right:0;
+  padding:10px 32px;border-top:1px solid var(--border);
+  background:var(--surface);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
   font-size:10px;color:var(--text3);letter-spacing:.5px;
+  z-index:90;
 }
 footer a{color:var(--text2);text-decoration:none}
 footer a:hover{color:var(--accent)}
+
+/* ── Pagination ── */
+.pagination{display:flex;align-items:center;gap:6px}
+.page-btn{
+  font-family:var(--font);font-size:10px;padding:4px 10px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s;
+}
+.page-btn:hover{color:var(--text);border-color:var(--text2)}
+.page-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
+.page-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
+.page-info{font-size:10px;color:var(--text3);letter-spacing:.3px}
+
+/* 底部 footer 佔位，防止內容被遮住 */
+#footer-spacer{height:40px}
 </style>
 </head>
 <body>
@@ -335,7 +353,7 @@ footer a:hover{color:var(--accent)}
 <div id="controls">
   <div class="controls-inner">
     <div class="search-wrap">
-      <input id="search" type="text" placeholder="ticker..." oninput="render()">
+      <input id="search" type="text" placeholder="ticker..." oninput="curPage=1;render()">
     </div>
 
     <!-- Filter Dropdown -->
@@ -403,13 +421,6 @@ footer a:hover{color:var(--accent)}
     </div>
 
     <span class="count-badge" id="count-badge"></span>
-    <div class="sort-group">
-      <span class="sort-lbl">Sort</span>
-      <button class="sort-btn active" data-k="change_pct"  onclick="setSort(this)">Change%</button>
-      <button class="sort-btn"        data-k="mfi"         onclick="setSort(this)">MFI</button>
-      <button class="sort-btn"        data-k="flip_date"   onclick="setSort(this)">Date</button>
-      <button class="sort-btn"        data-k="last_price"  onclick="setSort(this)">Price</button>
-    </div>
   </div>
 </div>
 
@@ -418,16 +429,11 @@ footer a:hover{color:var(--accent)}
 <div id="grid-table">
   <div class="grid-thead" id="grid-thead" style="display:none">
     <div class="grid-th"></div>
-    <div class="grid-th col-sorted" data-k="ticker"      onclick="thSort(this)">Ticker<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_date"   onclick="thSort(this)">Flip Date<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_price"  onclick="thSort(this)">Flip $<span class="arr"></span></div>
-    <div class="grid-th" data-k="last_price"  onclick="thSort(this)">Last $<span class="arr"></span></div>
-    <div class="grid-th" data-k="change_pct"  onclick="thSort(this)">Change %<span class="arr"></span></div>
-    <div class="grid-th" data-k="mfi"         onclick="thSort(this)">MFI<span class="arr"></span></div>
-    <div class="grid-th" data-k="mfi_grade"   onclick="thSort(this)">Grade<span class="arr"></span></div>
-    <div class="grid-th" data-k="dyn_mult"    onclick="thSort(this)">Dyn Mult<span class="arr"></span></div>
-    <div class="grid-th" data-k="best_weight" onclick="thSort(this)">Weight<span class="arr"></span></div>
-    <div class="grid-th" data-k="supertrend"  onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
+    <div class="grid-th col-sorted" data-k="ticker"     onclick="thSort(this)">Ticker<span class="arr"></span></div>
+    <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
+    <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
+    <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
+    <div class="grid-th" data-k="supertrend" onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
   </div>
   <div class="grid-tbody" id="tbody"></div>
 </div>
@@ -451,8 +457,10 @@ footer a:hover{color:var(--accent)}
   </div>
 </div>
 
+<div id="footer-spacer"></div>
 <footer>
   <span>NASDAQ 100 · SuperTrend × MFI Dynamic Multiplier</span>
+  <div class="pagination" id="pagination"></div>
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
 </footer>
 
@@ -461,7 +469,9 @@ footer a:hover{color:var(--accent)}
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
-let curSort = 'change_pct', sortAsc = false;
+let curSort = 'mfi', sortAsc = false;
+let curPage = 1;
+const PAGE_SIZE = 20;
 let chartInst = null;
 let mfiChartInst = null;
 
@@ -562,6 +572,7 @@ function updateFilterBadge(f) {
 function toggleFilterPanel() { document.getElementById('filter-panel').classList.toggle('open'); }
 function clearFilters() {
   document.querySelectorAll('#filter-panel input[type=checkbox]').forEach(cb => cb.checked=false);
+  curPage = 1;
   render();
 }
 document.addEventListener('click', e => {
@@ -608,9 +619,17 @@ function render() {
 
   const mfiFill = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
   const pinnedCount = rows.filter(r => pins.has(r.ticker)).length;
-  tbody._rows = rows;
 
-  tbody.innerHTML = rows.map((r, idx) => {
+  // 翻頁：釘選的永遠在第一頁最前面，其餘依頁碼切割
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  if (curPage > totalPages) curPage = 1;
+  const pageRows = rows.slice((curPage-1)*PAGE_SIZE, curPage*PAGE_SIZE);
+
+  tbody._rows = rows; // 保留完整 rows 供 openModalByIndex 用索引查找
+
+  const startIdx = (curPage-1)*PAGE_SIZE;
+  tbody.innerHTML = pageRows.map((r, i) => {
+    const idx = startIdx + i;
     const chg = r.change_pct;
     const cls = chg>0?'up':chg<0?'down':'neutral';
     const sign = chg>=0?'+':'';
@@ -631,22 +650,35 @@ function render() {
       </div>
       <div class="grid-td">${r.flip_date}</div>
       <div class="grid-td">$${r.flip_price.toFixed(2)}</div>
-      <div class="grid-td">$${r.last_price.toFixed(2)}</div>
-      <div class="grid-td ${cls}">${sign}${chg.toFixed(2)}%</div>
       <div class="grid-td">
         <div class="mfi-wrap">
           ${mfi}
           <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
-      <div class="grid-td"><span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span></div>
-      <div class="grid-td">${r.dyn_mult.toFixed(3)}</div>
-      <div class="grid-td">${r.best_weight}</div>
       <div class="grid-td">$${r.supertrend.toFixed(2)}</div>
     </div>`;
   }).join('');
 
   updateThArrows();
+
+  // 分頁按鈕
+  const pg = document.getElementById('pagination');
+  if (totalPages <= 1) {
+    pg.innerHTML = '';
+  } else {
+    let btns = `<button class="page-btn" onclick="goPage(${curPage-1})" ${curPage===1?'disabled':''}>‹</button>`;
+    for (let p=1; p<=totalPages; p++) {
+      if (totalPages<=7 || p===1 || p===totalPages || Math.abs(p-curPage)<=1) {
+        btns += `<button class="page-btn${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
+      } else if (Math.abs(p-curPage)===2) {
+        btns += `<span class="page-info">…</span>`;
+      }
+    }
+    btns += `<button class="page-btn" onclick="goPage(${curPage+1})" ${curPage===totalPages?'disabled':''}>›</button>`;
+    btns += `<span class="page-info">${rows.length} 筆</span>`;
+    pg.innerHTML = btns;
+  }
 
   /* Mobile cards */
   const mfiFillColor = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
@@ -681,9 +713,12 @@ function render() {
   }).join('');
 }
 
+function goPage(p) { curPage = p; render(); window.scrollTo(0,0); }
+
 function setSort(btn) {
   sortAsc = curSort===btn.dataset.k ? !sortAsc : false;
   curSort = btn.dataset.k;
+  curPage = 1;
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   render();
@@ -743,11 +778,7 @@ function openModal(jsonStr) {
   const cards = [
     {l:'Flip Date',   v: r.flip_date},
     {l:'Flip Price',  v:'$'+r.flip_price.toFixed(2)},
-    {l:'Last Price',  v:'$'+r.last_price.toFixed(2)},
-    {l:'Change',      v:(r.change_pct>=0?'+':'')+r.change_pct.toFixed(2)+'%', c:r.change_pct>=0?'#3ddc84':'#ff5c5c'},
     {l:'MFI',         v:r.mfi.toFixed(1), c:GRADE_COLOR[r.mfi_grade]},
-    {l:'Grade',       v:r.mfi_grade,      c:GRADE_COLOR[r.mfi_grade]},
-    {l:'Dyn Mult',    v:r.dyn_mult.toFixed(3)},
     {l:'Best Weight', v:r.best_weight},
     {l:'SuperTrend',  v:'$'+r.supertrend.toFixed(2)},
     {l:'ATR',         v:r.atr.toFixed(2)},
