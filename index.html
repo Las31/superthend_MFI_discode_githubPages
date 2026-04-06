@@ -134,25 +134,23 @@ header{
 
 /* ── Main layout with pin sidebar ── */
 #main-layout{
-  display:flex;align-items:flex-start;gap:0;
+  display:flex;align-items:stretch;gap:0;
 }
-#content-area{flex:1;min-width:0;overflow:hidden}
+#content-area{flex:1;min-width:0;overflow:hidden;display:flex;flex-direction:column}
 
 /* ── Pin Panel ── */
 #pin-panel{
   width:200px;flex-shrink:0;
   border-left:1px solid var(--border);
   background:var(--surface);
-  position:sticky;top:0;
-  height:calc(100vh - 40px);
-  overflow-y:auto;
   display:flex;flex-direction:column;
+  overflow:hidden;
 }
 #pin-panel-head{
   padding:10px 12px 8px;
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:var(--surface);z-index:10;
+  flex-shrink:0;
 }
 #pin-panel-title{
   font-size:10px;letter-spacing:1px;text-transform:uppercase;
@@ -165,28 +163,29 @@ header{
   color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;
 }
 .pin-action-btn:hover{color:var(--text2);border-color:var(--text2)}
-#pin-list{flex:1;padding:6px 0}
+#pin-list{flex:1;overflow-y:auto;padding:4px 0}
+#pin-list::-webkit-scrollbar{width:4px}
+#pin-list::-webkit-scrollbar-track{background:transparent}
+#pin-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .pin-item{
   display:flex;align-items:center;gap:6px;
-  padding:8px 12px;border-bottom:1px solid var(--border);
+  padding:7px 10px;border-bottom:1px solid var(--border);
   cursor:pointer;transition:background .12s;
 }
 .pin-item:hover{background:var(--surface2)}
 .pin-item.active{border-left:2px solid var(--accent)}
-.pin-item.inactive{opacity:.45}
+.pin-item.inactive{opacity:.45;cursor:default}
 .pin-item-info{flex:1;min-width:0}
+.pin-ticker-row{display:flex;align-items:center;gap:5px}
 .pin-ticker{
   font-family:var(--display);font-size:13px;font-weight:700;
   color:var(--text);letter-spacing:-.2px;
 }
 .pin-item.inactive .pin-ticker{color:var(--text3)}
+.pin-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.pin-dot.on{background:#00e5a0}
+.pin-dot.off{background:#3d4a63}
 .pin-date{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.3px}
-.pin-status{
-  font-size:8px;padding:1px 5px;border-radius:2px;margin-top:3px;
-  display:inline-block;letter-spacing:.5px;
-}
-.pin-status.on{background:rgba(0,229,160,.1);color:var(--accent);border:1px solid rgba(0,229,160,.2)}
-.pin-status.off{background:rgba(74,88,120,.15);color:#5a6a85;border:1px solid rgba(74,88,120,.2)}
 .pin-remove{
   background:none;border:none;cursor:pointer;
   color:var(--text3);font-size:12px;padding:2px 4px;
@@ -508,6 +507,7 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="grid-tbody" id="tbody"></div>
 </div>
+<div class="pagination" id="pagination" style="padding:10px 0;justify-content:center"></div>
 <div id="card-list"></div>
 </div><!-- end content-area -->
 
@@ -545,7 +545,6 @@ footer a:hover{color:var(--accent)}
 <div id="footer-spacer"></div>
 <footer>
   <span>NASDAQ 100 · SuperTrend × MFI Dynamic Multiplier</span>
-  <div class="pagination" id="pagination"></div>
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
 </footer>
 
@@ -641,9 +640,11 @@ function renderPinPanel() {
     const flipDate = inResult ? r.flip_date : '—';
     return `<div class="pin-item${inResult?' active':' inactive'}" onclick="${inResult?`openByTicker('${ticker}')`:''}" >
       <div class="pin-item-info">
-        <div class="pin-ticker">${ticker}</div>
+        <div class="pin-ticker-row">
+          <span class="pin-ticker">${ticker}</span>
+          <span class="pin-dot ${inResult?'on':'off'}"></span>
+        </div>
         <div class="pin-date">${flipDate}</div>
-        <span class="pin-status ${inResult?'on':'off'}">${inResult?'翻多中':'未翻多'}</span>
       </div>
       <button class="pin-remove" onclick="event.stopPropagation();togglePin('${ticker}')" title="取消釘選">✕</button>
     </div>`;
