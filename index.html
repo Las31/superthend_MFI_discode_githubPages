@@ -382,6 +382,18 @@ canvas#mfi-chart{width:100%!important}
 .info-card .lbl{font-size:10px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
 .info-card .val{font-family:var(--display);font-size:15px;font-weight:700;margin-top:3px;color:var(--text)}
 
+/* ── Stock fundamental info ── */
+#modal-info{padding:0 20px 12px;border-bottom:1px solid var(--border)}
+.info-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.info-tag{
+  font-size:10px;padding:2px 8px;letter-spacing:.4px;
+  border:1px solid var(--border2);color:var(--text2);
+}
+.info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
+.info-tag.industry{border-color:rgba(0,229,160,.3);color:#00e5a0}
+.info-tag.country{border-color:var(--border2);color:var(--text3)}
+.info-desc{font-size:11px;color:var(--text2);line-height:1.6;letter-spacing:.2px}
+
 /* ── Pin ── */
 .pin-btn{
   background:none;border:none;cursor:pointer;padding:2px 6px;
@@ -565,6 +577,7 @@ footer a:hover{color:var(--accent)}
       <div class="mfi-label">MFI</div>
       <canvas id="mfi-chart" height="80"></canvas>
     </div>
+    <div id="modal-info"></div>
     <div id="modal-cards"></div>
   </div>
 </div>
@@ -1015,6 +1028,23 @@ function openModal(jsonStr) {
   document.getElementById('modal-cards').innerHTML = cards.map(c =>
     `<div class="info-card"><div class="lbl">${c.l}</div><div class="val" style="${c.c?'color:'+c.c:''}">${c.v}</div></div>`
   ).join('');
+
+  /* Fundamental info */
+  const info = r.info || {};
+  const infoEl = document.getElementById('modal-info');
+  if (info.sector || info.industry || info.description) {
+    const tags = [
+      info.sector   ? `<span class="info-tag sector">${info.sector}</span>` : '',
+      info.industry ? `<span class="info-tag industry">${info.industry}</span>` : '',
+      info.country  ? `<span class="info-tag country">${info.country}</span>` : '',
+    ].filter(Boolean).join('');
+    infoEl.innerHTML = `
+      <div class="info-tags">${tags}</div>
+      ${info.description ? `<div class="info-desc">${info.description}</div>` : ''}
+    `;
+  } else {
+    infoEl.innerHTML = '';
+  }
 
   const c = r.chart || {};
   const dates = c.dates || [];
