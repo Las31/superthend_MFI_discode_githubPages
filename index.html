@@ -16,41 +16,43 @@
   --up:#3ddc84;--down:#ff5c5c;
   --font:'IBM Plex Mono',monospace;
   --display:'Syne',sans-serif;
+  --chart-w:60vw;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{height:100%;scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;
   height:100%;display:flex;flex-direction:column;overflow:hidden;
-  scrollbar-width:none;}
+}
 body::-webkit-scrollbar{display:none}
-
-/* scanline */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(
-  180deg,transparent 0,transparent 3px,rgba(0,229,160,.012) 3px,rgba(0,229,160,.012) 4px);
-  pointer-events:none;z-index:9000}
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,229,160,.012) 3px,rgba(0,229,160,.012) 4px);
+  pointer-events:none;z-index:9000
+}
 
 /* ── Header ── */
 header{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  padding:16px 32px;border-bottom:1px solid var(--border);
+  padding:14px 28px;border-bottom:1px solid var(--border);
   background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
   flex-shrink:0;
 }
 .logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--text)}
 .logo em{color:var(--accent);font-style:normal}
 .header-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.param-pill{
-  font-size:11px;color:var(--text2);border:1px solid var(--border2);
-  padding:4px 10px;letter-spacing:.5px;
-}
+.param-pill{font-size:11px;color:var(--text2);border:1px solid var(--border2);padding:4px 10px;letter-spacing:.5px}
 #scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
 
 /* ── Stats ── */
-#stats{display:flex;justify-content:center;gap:1px;background:var(--border);border-bottom:1px solid var(--border);flex-shrink:0}
-.stat{width:180px;flex-shrink:0;background:var(--surface);padding:14px 20px;text-align:center}
-.stat-n{font-family:var(--display);font-size:26px;font-weight:800;line-height:1}
-.stat-l{font-size:11px;color:var(--text2);margin-top:5px;letter-spacing:1px;text-transform:uppercase}
+#stats{
+  display:flex;justify-content:center;gap:1px;
+  background:var(--border);border-bottom:1px solid var(--border);flex-shrink:0
+}
+.stat{width:180px;flex-shrink:0;background:var(--surface);padding:12px 20px;text-align:center}
+.stat-n{font-family:var(--display);font-size:24px;font-weight:800;line-height:1}
+.stat-l{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
 .s-total .stat-n{color:var(--text)}
 .s-strong .stat-n{color:var(--strong)}
 .s-normal .stat-n{color:var(--normal)}
@@ -59,14 +61,10 @@ header{
 /* ── Controls ── */
 #controls{
   display:flex;align-items:center;flex-wrap:wrap;gap:8px;
-  padding:12px 32px;border-bottom:1px solid var(--border);
-  background:var(--surface);z-index:100;
-  justify-content:center;flex-shrink:0;
+  padding:10px 28px;border-bottom:1px solid var(--border);
+  background:var(--surface);z-index:100;flex-shrink:0;
 }
-.controls-inner{
-  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
-  width:1060px;max-width:100%;
-}
+.controls-inner{display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%}
 .search-wrap{position:relative;flex-shrink:0}
 .search-wrap::before{
   content:'//';position:absolute;left:10px;top:50%;transform:translateY(-50%);
@@ -75,58 +73,37 @@ header{
 #search{
   background:var(--bg);border:1px solid var(--border2);color:var(--text);
   font-family:var(--font);font-size:12px;padding:7px 12px 7px 30px;
-  width:180px;outline:none;transition:border-color .2s;
+  width:160px;outline:none;transition:border-color .2s;
 }
 #search:focus{border-color:var(--accent)}
 #search::placeholder{color:var(--text3)}
-.tabs{display:flex;gap:0}
-.tab{
-  font-family:var(--font);font-size:11px;padding:7px 16px;
-  border:1px solid var(--border2);border-right:none;background:transparent;
-  color:var(--text2);cursor:pointer;letter-spacing:.5px;transition:all .15s;
-  text-transform:uppercase;
-}
-.tab:last-child{border-right:1px solid var(--border2)}
-.tab:hover{color:var(--text);background:var(--surface2)}
-.tab.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
 
-/* ── Filter Dropdown ── */
+/* Filter */
 .filter-wrap{position:relative}
 .filter-btn{
   font-family:var(--font);font-size:11px;padding:7px 14px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--text2);cursor:pointer;letter-spacing:.5px;
-  transition:all .15s;display:flex;align-items:center;gap:6px;
+  border:1px solid var(--border2);background:transparent;color:var(--text2);
+  cursor:pointer;letter-spacing:.5px;transition:all .15s;display:flex;align-items:center;gap:6px;
 }
 .filter-btn:hover{color:var(--text);border-color:var(--text2)}
 .filter-btn.has-active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.08)}
-.filter-badge{
-  background:var(--accent);color:#000;font-size:9px;font-weight:700;
-  border-radius:8px;padding:1px 5px;min-width:14px;text-align:center;
-}
+.filter-badge{background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px;min-width:14px;text-align:center}
 .filter-panel{
   display:none;position:absolute;top:calc(100% + 6px);left:0;
-  background:var(--surface);border:1px solid var(--border2);
-  min-width:240px;z-index:200;padding:12px;
+  background:var(--surface);border:1px solid var(--border2);min-width:240px;z-index:200;padding:12px;
 }
 .filter-panel.open{display:block}
-.filter-group-label{
-  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--text3);margin-bottom:6px;margin-top:10px;
-}
+.filter-group-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;margin-top:10px}
 .filter-group-label:first-child{margin-top:0}
-.filter-item{
-  display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer;
-}
-.filter-item input[type=checkbox]{
-  accent-color:var(--accent);width:13px;height:13px;cursor:pointer;flex-shrink:0;
-}
-.filter-item label{
-  font-size:11px;color:var(--text2);cursor:pointer;letter-spacing:.3px;
-}
+.filter-item{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}
+.filter-item input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;cursor:pointer;flex-shrink:0}
+.filter-item label{font-size:11px;color:var(--text2);cursor:pointer;letter-spacing:.3px}
 .filter-item:hover label{color:var(--text)}
 .filter-divider{height:1px;background:var(--border);margin:8px 0}
-.sort-group{display:flex;gap:4px;margin-left:auto;align-items:center}
+.count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
+
+/* Sort */
+.sort-group{display:flex;gap:4px;align-items:center;margin-left:auto}
 .sort-lbl{font-size:10px;color:var(--text3);letter-spacing:1px;margin-right:2px}
 .sort-btn{
   font-family:var(--font);font-size:10px;padding:6px 11px;
@@ -135,39 +112,174 @@ header{
 }
 .sort-btn:hover{color:var(--text);border-color:var(--text2)}
 .sort-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
-.count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
-/* ── Main layout with pin sidebar ── */
-#main-layout{
-  display:flex;gap:0;
-  flex:1;min-height:0;overflow:hidden;
+/* ══════════════════════════════════════════════
+   MAIN LAYOUT: left chart + right list
+   ══════════════════════════════════════════════ */
+#app-body{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── Left Chart Panel ── */
+#chart-panel{
+  width:var(--chart-w);flex-shrink:0;display:flex;flex-direction:column;
+  border-right:1px solid var(--border);background:var(--surface);
+  min-height:0;overflow:hidden;
 }
-#content-area{
-  flex:1;min-width:0;min-height:0;
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-  scrollbar-width:none;
+#chart-panel-head{
+  padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
 }
+#chart-ticker-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+#chart-ticker{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)}
+
+.grade{display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:.5px}
+.grade-Strong{background:rgba(0,229,160,.1);color:var(--strong);border:1px solid rgba(0,229,160,.25)}
+.grade-Normal{background:rgba(245,166,35,.1);color:var(--normal);border:1px solid rgba(245,166,35,.25)}
+.grade-Weak{background:rgba(74,88,120,.15);color:#7a8ba8;border:1px solid rgba(74,88,120,.3)}
+
+#chart-sub{font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px}
+
+#chart-meta-cards{display:flex;gap:6px;flex-wrap:wrap}
+.cmeta{background:var(--bg);border:1px solid var(--border);padding:5px 10px;min-width:78px}
+.cmeta .lbl{font-size:9px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
+.cmeta .val{font-family:var(--display);font-size:13px;font-weight:700;margin-top:2px;color:var(--text)}
+
+#chart-pin-btn{
+  margin-left:auto;background:none;border:none;cursor:pointer;
+  padding:2px 6px;font-size:18px;color:var(--text3);transition:color .15s;flex-shrink:0;line-height:1;
+}
+#chart-pin-btn:hover{color:var(--text2)}
+#chart-pin-btn.pinned{color:var(--accent)}
+
+#chart-legend{
+  display:flex;gap:12px;flex-wrap:wrap;
+  padding:6px 16px 4px;font-size:10px;font-family:var(--font);
+  letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border);
+}
+.legend-item{display:flex;align-items:center;gap:4px}
+
+/* chart fills remaining space */
+#lw-wrap{flex:1;min-height:0;padding:0;overflow:hidden;position:relative}
+#lw-container{width:100%;height:100%;margin:0}
+
+#mfi-panel{flex-shrink:0;padding:6px 16px 10px;border-top:1px solid var(--border)}
+#mfi-panel .mfi-label{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+canvas#mfi-chart{width:100%!important}
+
+#chart-info{flex-shrink:0;padding:8px 16px;border-top:1px solid var(--border);font-size:11px}
+.info-tags{display:flex;gap:6px;flex-wrap:wrap}
+.info-tag{font-size:10px;padding:2px 8px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text2)}
+.info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
+.info-tag.industry{border-color:rgba(0,229,160,.3);color:#00e5a0}
+.info-tag.country{border-color:var(--border2);color:var(--text3)}
+.info-desc{font-size:10px;color:var(--text3);line-height:1.5;letter-spacing:.2px;margin-top:5px}
+
+#chart-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:var(--text3);font-size:11px;letter-spacing:1px;gap:10px;text-align:center;padding:24px;
+}
+#chart-empty .big{font-family:var(--display);font-size:48px;font-weight:800;opacity:.06;line-height:1}
+
+/* ── Right List Panel ── */
+#list-panel{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#list-scroll{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+#list-scroll::-webkit-scrollbar{width:4px}
+#list-scroll::-webkit-scrollbar-track{background:transparent}
+#list-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+:root{--cols:36px 1fr 110px 90px 100px 110px}
+.grid-thead{
+  display:grid;grid-template-columns:var(--cols);
+  position:sticky;top:0;z-index:50;
+  background:var(--surface2);border-bottom:1px solid var(--border2);
+}
+.grid-row{
+  display:grid;grid-template-columns:var(--cols);
+  border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;
+}
+.grid-row:hover{background:rgba(255,255,255,.04)}
+.grid-row.selected{background:rgba(0,229,160,.07);border-left:2px solid var(--accent)}
+.grid-th{
+  padding:9px 14px;font-size:10px;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text2);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none;
+}
+.grid-th:hover{color:var(--text)}
+.grid-th.col-sorted{color:var(--accent)}
+.grid-th .arr{margin-left:3px;font-size:9px}
+.grid-td{padding:9px 14px;white-space:nowrap;display:flex;align-items:center}
+.td-ticker{font-family:var(--display);font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.td-ticker a{color:inherit;text-decoration:none}
+.td-ticker a:hover{color:var(--accent);text-decoration:underline;text-decoration-style:dotted}
+.up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--text2)}
+.mfi-wrap{display:flex;align-items:center;gap:6px}
+.mfi-bar{width:44px;height:3px;background:var(--border2);flex-shrink:0}
+.mfi-fill{height:100%;transition:width .5s}
+
+.pin-btn{background:none;border:none;cursor:pointer;padding:2px 6px;font-size:16px;color:var(--text3);transition:color .15s;flex-shrink:0;line-height:1}
+.pin-btn:hover{color:var(--text2)}
+.pin-btn.pinned{color:var(--accent)}
+.grid-row.pinned-row{border-left:2px solid var(--accent)}
+.grid-row.selected{border-left:2px solid var(--accent)!important}
+.pin-separator{border-top:1px dashed var(--accent);opacity:.4}
+
+#empty{display:none;padding:60px 32px;text-align:center;font-size:11px;color:var(--text3);letter-spacing:1px}
+#empty .big{font-family:var(--display);font-size:56px;font-weight:800;opacity:.07;line-height:1;margin-bottom:12px}
+#loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px;font-size:11px;color:var(--text3);letter-spacing:1px}
+.spinner{width:16px;height:16px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#pagination{
+  display:flex;align-items:center;gap:6px;justify-content:center;
+  padding:10px 0;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0;
+}
+.page-btn{font-family:var(--font);font-size:10px;padding:4px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s}
+.page-btn:hover{color:var(--text);border-color:var(--text2)}
+.page-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
+.page-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
+.page-info{font-size:10px;color:var(--text3);letter-spacing:.3px}
+
+/* ── Mobile ── */
+@media(max-width:760px){
+  :root{--chart-w:100%}
+  #app-body{flex-direction:column;overflow-y:auto}
+  #chart-panel{width:100%;height:auto;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border)}
+  #lw-wrap{height:220px;flex:none}
+  #mfi-panel canvas{height:60px!important}
+  #list-panel{flex:none;overflow:visible}
+  #list-scroll{overflow:visible;height:auto}
+  #grid-table{display:none}
+  #card-list{display:block;padding:8px 12px}
+  .stock-card{background:var(--surface);border:1px solid var(--border2);margin-bottom:8px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
+  .stock-card:hover,.stock-card.selected{border-color:var(--accent)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .card-ticker{font-family:var(--display);font-size:17px;font-weight:800}
+  .card-ticker a{color:var(--text);text-decoration:none}
+  .card-right{display:flex;align-items:center;gap:8px}
+  .card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px 0}
+  .card-item .lbl{font-size:9px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
+  .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
+  .card-mfi-bar{height:2px;background:var(--border2);margin-top:5px;border-radius:1px}
+  .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
+  header{padding:10px 14px}
+  .logo{font-size:16px}
+  #stats{flex-wrap:wrap}
+  .stat{width:50%;min-width:0;padding:8px}
+  .stat-n{font-size:20px}
+  #controls{padding:8px 12px}
+  #search{width:120px}
+  .sort-lbl{display:none}
+}
+@media(min-width:761px){#card-list{display:none}}
 
 /* ── Pin Panel ── */
 #pin-panel{
-  width:200px;flex-shrink:0;
-  border-left:1px solid var(--border);
-  background:var(--surface);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  min-height:0;
+  width:180px;flex-shrink:0;display:flex;flex-direction:column;
+  border-left:1px solid var(--border);background:var(--surface);
+  overflow:hidden;min-height:0;
 }
 #pin-panel-head{
-  padding:10px 12px 8px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
+  padding:10px 12px 8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
 }
-#pin-panel-title{
-  font-size:10px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--text2);font-weight:600;
-}
+#pin-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);font-weight:600}
 .pin-panel-actions{display:flex;gap:6px;align-items:center}
 .pin-action-btn{
   font-family:var(--font);font-size:9px;padding:3px 7px;
@@ -176,7 +288,7 @@ header{
 }
 .pin-action-btn:hover{color:var(--text2);border-color:var(--text2)}
 #pin-list{flex:1;min-height:0;overflow-y:auto;padding:4px 0}
-#pin-list::-webkit-scrollbar{width:4px}
+#pin-list::-webkit-scrollbar{width:3px}
 #pin-list::-webkit-scrollbar-track{background:transparent}
 #pin-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .pin-item{
@@ -185,14 +297,11 @@ header{
   cursor:pointer;transition:background .12s;
 }
 .pin-item:hover{background:var(--surface2)}
-.pin-item.active{border-left:2px solid var(--accent)}
+.pin-item.active-pin{border-left:2px solid var(--accent)}
 .pin-item.inactive{opacity:.45;cursor:default}
 .pin-item-info{flex:1;min-width:0}
 .pin-ticker-row{display:flex;align-items:center;gap:5px}
-.pin-ticker{
-  font-family:var(--display);font-size:13px;font-weight:700;
-  color:var(--text);letter-spacing:-.2px;
-}
+.pin-ticker{font-family:var(--display);font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px}
 .pin-item.inactive .pin-ticker{color:var(--text3)}
 .pin-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .pin-dot.on{background:#00e5a0}
@@ -204,235 +313,26 @@ header{
   line-height:1;transition:color .15s;flex-shrink:0;
 }
 .pin-remove:hover{color:var(--down)}
-.pin-filter{display:flex;gap:1px;padding:6px 10px 6px;border-bottom:1px solid var(--border);flex-shrink:0}
+.pin-filter{display:flex;gap:1px;padding:6px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
 .pin-filter-btn{
   flex:1;font-family:var(--font);font-size:9px;padding:4px 4px;
   border:1px solid var(--border2);background:transparent;
   color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;text-align:center;
 }
-.pin-filter-btn:first-child{border-radius:2px 0 0 2px}
-.pin-filter-btn:last-child{border-radius:0 2px 2px 0}
 .pin-filter-btn+.pin-filter-btn{border-left:none}
 .pin-filter-btn:hover{color:var(--text2)}
 .pin-filter-btn.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
-.pin-empty{
-  padding:24px 12px;text-align:center;
-  font-size:10px;color:var(--text3);letter-spacing:.5px;
-}
-@media(max-width:700px){
-  #pin-panel{display:none}
-  #main-layout{display:block}
-}
-
-:root{--cols:36px 160px 120px 100px 110px 120px}
-#grid-table{overflow-x:auto}
-.grid-thead{
-  display:grid;grid-template-columns:var(--cols);
-  position:sticky;top:0;z-index:50;
-  background:var(--surface2);border-bottom:1px solid var(--border2);
-  width:max-content;margin:0 auto;
-}
-.grid-tbody{width:max-content;margin:0 auto}
-.grid-row{
-  display:grid;grid-template-columns:var(--cols);
-  border-bottom:1px solid var(--border);cursor:pointer;
-  transition:background .12s;
-}
-.grid-row:hover{background:rgba(255,255,255,.05)}
-.grid-row.selected{background:rgba(0,229,160,.07);border-left:2px solid var(--accent)}
-.stock-card.selected{border-color:var(--accent);background:rgba(0,229,160,.05)}
-.grid-th{
-  padding:9px 16px;font-size:11px;letter-spacing:.8px;
-  text-transform:uppercase;color:var(--text2);font-weight:600;
-  white-space:nowrap;cursor:pointer;user-select:none;
-}
-.grid-th:hover{color:var(--text2)}
-.grid-th.col-sorted{color:var(--accent)}
-.grid-th .arr{margin-left:3px;font-size:9px}
-.grid-td{padding:10px 16px;white-space:nowrap;display:flex;align-items:center}
-.td-ticker{
-  font-family:var(--display);font-size:14px;font-weight:700;
-  color:var(--text);letter-spacing:-.3px;
-}
-.td-ticker a{color:inherit;text-decoration:none}
-.td-ticker a:hover{color:var(--accent);text-decoration:underline;text-decoration-style:dotted}
-.up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--text2)}
-.grade{display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:.5px}
-.grade-Strong{background:rgba(0,229,160,.1);color:var(--strong);border:1px solid rgba(0,229,160,.25)}
-.grade-Normal{background:rgba(245,166,35,.1);color:var(--normal);border:1px solid rgba(245,166,35,.25)}
-.grade-Weak  {background:rgba(74,88,120,.15); color:#7a8ba8;    border:1px solid rgba(74,88,120,.3)}
-.mfi-wrap{display:flex;align-items:center;gap:6px}
-.mfi-bar{width:48px;height:3px;background:var(--border2);flex-shrink:0}
-.mfi-fill{height:100%;transition:width .5s}
-
-/* ── Mobile Card Layout ── */
-@media(max-width:700px){
-  header{padding:12px 16px}
-  .logo{font-size:16px}
-  .param-pill{font-size:10px;padding:3px 8px}
-  #scan-time{font-size:10px}
-
-  #stats{flex-wrap:wrap}
-  .stat{width:50%;min-width:0;padding:10px 8px}
-  .stat-n{font-size:22px}
-  .stat-l{font-size:10px}
-
-  #controls{padding:8px 12px}
-  .controls-inner{width:100%;gap:6px}
-  #search{width:130px;font-size:11px}
-  .tab{font-size:10px;padding:5px 10px}
-  .sort-lbl{display:none}
-  .sort-btn{font-size:10px;padding:5px 8px}
-
-  /* 隱藏桌面版表格 */
-  #grid-table{display:none}
-
-  /* 卡片容器 */
-  #card-list{display:block;padding:8px 12px}
-
-  .stock-card{
-    background:var(--surface);border:1px solid var(--border2);
-    margin-bottom:10px;padding:14px 16px;cursor:pointer;
-    transition:border-color .15s;
-  }
-  .stock-card:hover{border-color:var(--accent)}
-  .card-top{
-    display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:10px;
-  }
-  .card-ticker{font-family:var(--display);font-size:18px;font-weight:800}
-  .card-ticker a{color:var(--text);text-decoration:none}
-  .card-right{display:flex;align-items:center;gap:8px}
-  .card-grid{
-    display:grid;grid-template-columns:1fr 1fr 1fr;
-    gap:8px 0;
-  }
-  .card-item .lbl{font-size:9px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
-  .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
-  .card-mfi-bar{
-    height:2px;background:var(--border2);margin-top:6px;border-radius:1px;
-  }
-  .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
-}
-
-/* 桌面版隱藏卡片列表 */
-@media(min-width:701px){
-  #card-list{display:none}
-}
-
-/* ── Empty / Loading ── */
-#empty{
-  display:none;padding:80px 32px;text-align:center;
-  font-size:11px;color:var(--text3);letter-spacing:1px;
-}
-#empty .big{font-family:var(--display);font-size:64px;font-weight:800;opacity:.07;line-height:1;margin-bottom:12px}
-#loading{
-  display:flex;align-items:center;justify-content:center;
-  gap:10px;padding:80px;font-size:11px;color:var(--text3);letter-spacing:1px;
-}
-.spinner{
-  width:16px;height:16px;border:1.5px solid var(--border2);
-  border-top-color:var(--accent);border-radius:50%;
-  animation:spin .7s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Chart modal ── */
-#modal-backdrop{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.75);z-index:500;
-  align-items:center;justify-content:center;padding:24px;
-}
-#modal-backdrop.open{display:flex}
-#modal{
-  background:var(--surface);border:1px solid var(--border2);
-  width:100%;max-width:900px;max-height:90vh;overflow:auto;
-  position:relative;
-}
-@media(max-width:700px){
-  #modal-backdrop{padding:0}
-  #modal{max-height:100vh;max-width:100%;border:none}
-  #modal-head{padding:14px 16px 12px}
-  #modal-ticker{font-size:18px}
-  #chart-wrap{padding:10px 12px 0}
-  #modal-cards{grid-template-columns:repeat(2,1fr);padding:10px 12px 16px;gap:6px}
-}
-#modal-head{
-  display:flex;align-items:baseline;gap:12px;
-  padding:20px 24px 0;border-bottom:1px solid var(--border);padding-bottom:14px;
-}
-#modal-ticker{font-family:var(--display);font-size:22px;font-weight:800}
-#modal-sub{font-size:11px;color:var(--text2);letter-spacing:.3px}
-#modal-close{
-  margin-left:auto;background:none;border:none;
-  color:var(--text2);font-size:18px;cursor:pointer;
-  font-family:var(--font);padding:0 4px;line-height:1;
-}
-#modal-close:hover{color:var(--text)}
-#chart-wrap{padding:16px 20px 0}
-#chart-container{width:100%;height:260px}
-#mfi-wrap{padding:8px 20px 0;border-top:1px solid var(--border);margin-top:8px}
-#mfi-wrap .mfi-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
-canvas#mfi-chart{width:100%!important}
-#modal-cards{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-  gap:6px;padding:16px 20px 20px;
-}
-.info-card{background:var(--bg);border:1px solid var(--border);padding:10px 12px}
-.info-card .lbl{font-size:10px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
-.info-card .val{font-family:var(--display);font-size:15px;font-weight:700;margin-top:3px;color:var(--text)}
-
-/* ── Stock fundamental info ── */
-#modal-info{padding:0 20px 12px;border-bottom:1px solid var(--border)}
-.info-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.info-tag{
-  font-size:10px;padding:2px 8px;letter-spacing:.4px;
-  border:1px solid var(--border2);color:var(--text2);
-}
-.info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
-.info-tag.industry{border-color:rgba(0,229,160,.3);color:#00e5a0}
-.info-tag.country{border-color:var(--border2);color:var(--text3)}
-.info-desc{font-size:11px;color:var(--text2);line-height:1.6;letter-spacing:.2px}
-
-/* ── Pin ── */
-.pin-btn{
-  background:none;border:none;cursor:pointer;padding:2px 6px;
-  font-size:16px;color:var(--text3);transition:color .15s;flex-shrink:0;
-  line-height:1;
-}
-.pin-btn:hover{color:var(--text2)}
-.pin-btn.pinned{color:var(--accent)}
-.grid-row.pinned-row{border-left:2px solid var(--accent)}
-.pin-separator{
-  border-top:1px dashed var(--accent);
-  margin:0;opacity:.4;
-}
+.pin-empty{padding:24px 12px;text-align:center;font-size:10px;color:var(--text3);letter-spacing:.5px}
+@media(max-width:760px){#pin-panel{display:none}}
 
 /* ── Footer ── */
 footer{
-  padding:10px 32px;border-top:1px solid var(--border);
-  background:var(--surface);
+  padding:8px 28px;border-top:1px solid var(--border);background:var(--surface);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
-  font-size:10px;color:var(--text3);letter-spacing:.5px;
-  flex-shrink:0;
+  font-size:10px;color:var(--text3);letter-spacing:.5px;flex-shrink:0;
 }
 footer a{color:var(--text2);text-decoration:none}
 footer a:hover{color:var(--accent)}
-
-/* ── Pagination ── */
-.pagination{display:flex;align-items:center;gap:6px}
-.page-btn{
-  font-family:var(--font);font-size:10px;padding:4px 10px;
-  border:1px solid var(--border2);background:transparent;
-  color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s;
-}
-.page-btn:hover{color:var(--text);border-color:var(--text2)}
-.page-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
-.page-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
-.page-info{font-size:10px;color:var(--text3);letter-spacing:.3px}
-
-/* 底部 footer 佔位，防止內容被遮住 */
-#footer-spacer{height:40px}
 </style>
 </head>
 <body>
@@ -458,128 +358,126 @@ footer a:hover{color:var(--accent)}
       <input id="search" type="text" placeholder="ticker..." oninput="curPage=1;render()">
     </div>
 
-    <!-- Filter Dropdown -->
     <div class="filter-wrap">
       <button class="filter-btn" id="filter-btn" onclick="toggleFilterPanel()">
         篩選條件 <span class="filter-badge" id="filter-badge" style="display:none">0</span> ▾
       </button>
       <div class="filter-panel" id="filter-panel">
-
         <div class="filter-group-label">趨勢</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-price-ema50"  onchange="render()">
-          <label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-price-ema200" onchange="render()">
-          <label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-ema-golden"   onchange="render()">
-          <label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-flip-ema50"   onchange="render()">
-          <label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-flip-ema200"  onchange="render()">
-          <label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label>
-        </label>
-
+        <label class="filter-item"><input type="checkbox" id="f-price-ema50"  onchange="render()"><label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-price-ema200" onchange="render()"><label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-ema-golden"   onchange="render()"><label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-flip-ema50"   onchange="render()"><label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-flip-ema200"  onchange="render()"><label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label></label>
         <div class="filter-divider"></div>
         <div class="filter-group-label">量能</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi50"    onchange="render()">
-          <label for="f-mfi50">翻多當天 MFI ≥ 50</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi70"    onchange="render()">
-          <label for="f-mfi70">翻多當天 MFI ≥ 70</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-mfi-rising" onchange="render()">
-          <label for="f-mfi-rising">MFI 持續上升（近 3 日）</label>
-        </label>
-
+        <label class="filter-item"><input type="checkbox" id="f-mfi50"      onchange="render()"><label for="f-mfi50">翻多當天 MFI ≥ 50</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-mfi70"      onchange="render()"><label for="f-mfi70">翻多當天 MFI ≥ 70</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-mfi-rising" onchange="render()"><label for="f-mfi-rising">MFI 持續上升（近 3 日）</label></label>
         <div class="filter-divider"></div>
         <div class="filter-group-label">價格表現</div>
-        <label class="filter-item">
-          <input type="checkbox" id="f-chg-pos"  onchange="render()">
-          <label for="f-chg-pos">翻多後漲幅 &gt; 0%</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-chg-3"    onchange="render()">
-          <label for="f-chg-3">翻多後漲幅 &gt; 3%</label>
-        </label>
-        <label class="filter-item">
-          <input type="checkbox" id="f-hold2"    onchange="render()">
-          <label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label>
-        </label>
-
+        <label class="filter-item"><input type="checkbox" id="f-chg-pos" onchange="render()"><label for="f-chg-pos">翻多後漲幅 &gt; 0%</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></label>
+        <label class="filter-item"><input type="checkbox" id="f-hold2"   onchange="render()"><label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label></label>
         <div class="filter-divider"></div>
         <button onclick="clearFilters()" style="font-family:var(--font);font-size:10px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
       </div>
     </div>
 
     <span class="count-badge" id="count-badge"></span>
-  </div>
-</div>
 
-<div id="main-layout">
-<div id="content-area">
-<div id="loading"><div class="spinner"></div>Loading data.json ...</div>
-<div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
-<div id="grid-table">
-  <div class="grid-thead" id="grid-thead" style="display:none">
-    <div class="grid-th"></div>
-    <div class="grid-th col-sorted" data-k="ticker"     onclick="thSort(this)">Ticker<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
-    <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
-    <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
-    <div class="grid-th" data-k="supertrend" onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
-  </div>
-  <div class="grid-tbody" id="tbody"></div>
-</div>
-<div class="pagination" id="pagination" style="padding:10px 0;justify-content:center"></div>
-<div id="card-list"></div>
-</div><!-- end content-area -->
-
-<!-- Pin Panel -->
-<div id="pin-panel">
-  <div id="pin-panel-head">
-    <span id="pin-panel-title">釘選清單</span>
-    <div class="pin-panel-actions">
-      <button class="pin-action-btn" onclick="exportPins()" title="匯出清單">匯出</button>
-      <button class="pin-action-btn" onclick="clearAllPins()" title="全部取消釘選">清除</button>
+    <div class="sort-group">
+      <span class="sort-lbl">SORT</span>
+      <button class="sort-btn" data-k="ticker"     onclick="setSort(this)">Ticker</button>
+      <button class="sort-btn" data-k="flip_date"  onclick="setSort(this)">Date</button>
+      <button class="sort-btn active" data-k="mfi" onclick="setSort(this)">MFI</button>
+      <button class="sort-btn" data-k="change_pct" onclick="setSort(this)">Chg%</button>
     </div>
   </div>
-  <div class="pin-filter">
-    <button class="pin-filter-btn active" data-f="all"    onclick="setPinFilter(this)">全部</button>
-    <button class="pin-filter-btn"        data-f="on"     onclick="setPinFilter(this)">● 翻多</button>
-    <button class="pin-filter-btn"        data-f="off"    onclick="setPinFilter(this)">● 未翻</button>
-  </div>
-  <div id="pin-list"></div>
 </div>
-</div><!-- end main-layout -->
 
-<!-- Chart modal -->
-<div id="modal-backdrop">
-  <div id="modal">
-    <div id="modal-head">
-      <span id="modal-ticker"></span>
-      <span id="modal-sub"></span>
-      <button id="modal-pin-btn" class="pin-btn" onclick="togglePinFromModal()" title="釘選">☐</button>
-      <button id="modal-close" onclick="closeModal()">✕</button>
+<!-- ══ APP BODY ══ -->
+<div id="app-body">
+
+  <!-- LEFT: Chart Panel -->
+  <div id="chart-panel">
+    <div id="chart-panel-head">
+      <div id="chart-ticker-row">
+        <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
+        <span id="chart-grade" style="display:none"></span>
+        <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
+      </div>
+      <div id="chart-sub" style="display:none;font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px"></div>
+      <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
     </div>
-    <div id="chart-wrap"><div id="chart-container" style="width:100%;height:260px"></div></div>
-    <div id="mfi-wrap">
+
+    <div id="chart-legend" style="display:none;gap:12px;flex-wrap:wrap;padding:6px 16px 4px;font-size:10px;font-family:var(--font);letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #facc15;vertical-align:middle"></span>SuperTrend</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle"></span>EMA 50</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle"></span>EMA 150</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle"></span>EMA 200</span>
+      <span style="color:#ff6b35">▲ FLIP</span>
+
+    </div>
+
+    <div id="chart-empty">
+      <div class="big">K</div>
+      <span>點擊右側股票<br>查看 K 線圖表</span>
+    </div>
+
+    <div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
+
+    <div id="mfi-panel" style="display:none">
       <div class="mfi-label">MFI</div>
-      <canvas id="mfi-chart" height="80"></canvas>
+      <canvas id="mfi-chart" height="72"></canvas>
     </div>
-    <div id="modal-info"></div>
-    <div id="modal-cards"></div>
+
+    <div id="chart-info" style="display:none"></div>
   </div>
+
+  <!-- Drag Resizer -->
+  <div id="resizer"></div>
+
+  <!-- RIGHT: List Panel -->
+  <div id="list-panel">
+    <div id="list-scroll">
+      <div id="loading"><div class="spinner"></div>Loading data.json ...</div>
+      <div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
+
+      <div id="grid-table">
+        <div class="grid-thead" id="grid-thead" style="display:none">
+          <div class="grid-th"></div>
+          <div class="grid-th col-sorted" data-k="ticker"     onclick="thSort(this)">Ticker<span class="arr"></span></div>
+          <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
+          <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
+          <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
+          <div class="grid-th" data-k="supertrend" onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
+        </div>
+        <div class="grid-tbody" id="tbody"></div>
+      </div>
+
+      <div id="card-list"></div>
+    </div>
+    <div id="pagination"></div>
+  </div>
+
+  <!-- Pin Panel -->
+  <div id="pin-panel">
+    <div id="pin-panel-head">
+      <span id="pin-panel-title">釘選清單</span>
+      <div class="pin-panel-actions">
+        <button class="pin-action-btn" onclick="exportPins()" title="匯出清單">匯出</button>
+        <button class="pin-action-btn" onclick="clearAllPins()" title="全部取消釘選">清除</button>
+      </div>
+    </div>
+    <div class="pin-filter">
+      <button class="pin-filter-btn active" data-f="all" onclick="setPinFilter(this)">全部</button>
+      <button class="pin-filter-btn" data-f="on"  onclick="setPinFilter(this)">● 翻多</button>
+      <button class="pin-filter-btn" data-f="off" onclick="setPinFilter(this)">● 未翻</button>
+    </div>
+    <div id="pin-list"></div>
+  </div>
+
 </div>
 
 <footer>
@@ -587,6 +485,7 @@ footer a:hover{color:var(--accent)}
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
 </footer>
 
+<!-- cSpell:ignore cmeta supertrend finviz yfinance mfi -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script src="lightweight-charts.js"></script>
 <script>
@@ -594,103 +493,66 @@ footer a:hover{color:var(--accent)}
 let ALL = [], meta = {};
 let curSort = 'mfi', sortAsc = false;
 let curPage = 1;
-const PAGE_SIZE = 15;
-let chartInst = null;
+const PAGE_SIZE = 20;
+let lwChartInst = null;
 let mfiChartInst = null;
+let _selectedTicker = null;
+let _selectedRowEl  = null;
 
 /* ── Pin ── */
-const PIN_KEY = 'st_pinned_tickers';
+const PIN_KEY      = 'st_pinned_tickers';
 const PIN_TIME_KEY = 'st_pinned_times';
 
-function getPinned() {
-  try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY) || '[]')); }
-  catch { return new Set(); }
-}
-function getPinTimes() {
-  try { return JSON.parse(localStorage.getItem(PIN_TIME_KEY) || '{}'); }
-  catch { return {}; }
-}
-function savePinned(set) {
-  localStorage.setItem(PIN_KEY, JSON.stringify([...set]));
-}
-function savePinTimes(times) {
-  localStorage.setItem(PIN_TIME_KEY, JSON.stringify(times));
-}
+function getPinned()  { try { return new Set(JSON.parse(localStorage.getItem(PIN_KEY)||'[]')); } catch { return new Set(); } }
+function getPinTimes(){ try { return JSON.parse(localStorage.getItem(PIN_TIME_KEY)||'{}'); } catch { return {}; } }
+function savePinned(s){ localStorage.setItem(PIN_KEY, JSON.stringify([...s])); }
+function savePinTimes(t){ localStorage.setItem(PIN_TIME_KEY, JSON.stringify(t)); }
+
 function togglePin(ticker) {
-  const pins = getPinned();
-  const times = getPinTimes();
-  if (pins.has(ticker)) {
-    pins.delete(ticker);
-    delete times[ticker];
-  } else {
-    pins.add(ticker);
-    times[ticker] = Date.now();
-  }
-  savePinned(pins);
-  savePinTimes(times);
-  render();
-  renderPinPanel();
+  const pins=getPinned(), times=getPinTimes();
+  if (pins.has(ticker)) { pins.delete(ticker); delete times[ticker]; }
+  else { pins.add(ticker); times[ticker]=Date.now(); }
+  savePinned(pins); savePinTimes(times);
+  render(); renderPinPanel();
+  if (ticker === _selectedTicker) updateChartPinBtn(ticker);
 }
-function clearAllPins() {
-  if (!confirm('確定清除所有釘選？')) return;
-  savePinned(new Set());
-  savePinTimes({});
-  render();
+function togglePinFromChart() { if (_selectedTicker) togglePin(_selectedTicker); }
+
+/* ── Pin Panel render ── */
+let _pinFilter = 'all';
+
+function setPinFilter(btn) {
+  _pinFilter = btn.dataset.f;
+  document.querySelectorAll('.pin-filter-btn').forEach(b => b.classList.toggle('active', b===btn));
   renderPinPanel();
-}
-function exportPins() {
-  const pins = getPinned();
-  const times = getPinTimes();
-  if (!pins.size) { alert('釘選清單是空的'); return; }
-  // 依釘選時間排序
-  const sorted = [...pins].sort((a,b) => (times[b]||0)-(times[a]||0));
-  const text = sorted.join(', ');
-  navigator.clipboard?.writeText(text).then(() => alert('已複製到剪貼簿：\n'+text))
-    .catch(() => {
-      const el = document.createElement('textarea');
-      el.value = text; document.body.appendChild(el);
-      el.select(); document.execCommand('copy');
-      document.body.removeChild(el);
-      alert('已複製到剪貼簿：\n'+text);
-    });
 }
 
 function renderPinPanel() {
-  const pins = getPinned();
-  const times = getPinTimes();
-  const listEl = document.getElementById('pin-list');
+  const pins=getPinned(), times=getPinTimes();
+  const listEl=document.getElementById('pin-list');
   if (!listEl) return;
-
   if (!pins.size) {
-    listEl.innerHTML = '<div class="pin-empty">尚無釘選項目<br>點擊 ☐ 加入</div>';
-    return;
+    listEl.innerHTML='<div class="pin-empty">尚無釘選項目<br>點擊 ☐ 加入</div>'; return;
   }
-
-  // 依釘選時間降序排列（最新在最上）
-  const sorted = [...pins].sort((a,b) => (times[b]||0)-(times[a]||0));
-
-  // 建立目前結果的 ticker map
-  const activeMap = {};
-  ALL.forEach(r => { activeMap[r.ticker] = r; });
-
-  // 套用燈號篩選
-  const filtered = sorted.filter(ticker => {
-    const inResult = !!activeMap[ticker];
-    if (_pinFilter === 'on')  return inResult;
-    if (_pinFilter === 'off') return !inResult;
+  const sorted=[...pins].sort((a,b)=>(times[b]||0)-(times[a]||0));
+  const activeMap={};
+  ALL.forEach(r=>{ activeMap[r.ticker]=r; });
+  const filtered=sorted.filter(ticker=>{
+    const inResult=!!activeMap[ticker];
+    if (_pinFilter==='on')  return inResult;
+    if (_pinFilter==='off') return !inResult;
     return true;
   });
-
   if (!filtered.length) {
-    listEl.innerHTML = '<div class="pin-empty">無符合條件的項目</div>';
-    return;
+    listEl.innerHTML='<div class="pin-empty">無符合條件的項目</div>'; return;
   }
-
-  listEl.innerHTML = filtered.map(ticker => {
-    const inResult = !!activeMap[ticker];
-    const r = activeMap[ticker];
-    const flipDate = inResult ? r.flip_date : '—';
-    return `<div class="pin-item${inResult?' active':' inactive'}" onclick="${inResult?`openByTicker('${ticker}')`:''}" >
+  listEl.innerHTML=filtered.map(ticker=>{
+    const inResult=!!activeMap[ticker];
+    const r=activeMap[ticker];
+    const flipDate=inResult?r.flip_date:'—';
+    const isActive=ticker===_selectedTicker;
+    return `<div class="pin-item${inResult?' active-pin':' inactive'}${isActive?' selected':''}"
+        onclick="${inResult?`openByTicker('${ticker}')`:''}" >
       <div class="pin-item-info">
         <div class="pin-ticker-row">
           <span class="pin-ticker">${ticker}</span>
@@ -703,30 +565,30 @@ function renderPinPanel() {
   }).join('');
 }
 
-let _pinFilter = 'all';
-function setPinFilter(btn) {
-  _pinFilter = btn.dataset.f;
-  document.querySelectorAll('.pin-filter-btn').forEach(b => b.classList.toggle('active', b===btn));
-  renderPinPanel();
+function clearAllPins() {
+  if (!confirm('確定清除所有釘選？')) return;
+  savePinned(new Set()); savePinTimes({});
+  render(); renderPinPanel();
 }
 
-function openByTicker(ticker) {
-  const tbody = document.getElementById('tbody');
-  if (!tbody._rows) return;
-  const idx = tbody._rows.findIndex(r => r.ticker === ticker);
-  if (idx >= 0) openModalByIndex(idx);
+function exportPins() {
+  const pins=getPinned(), times=getPinTimes();
+  if (!pins.size) { alert('釘選清單是空的'); return; }
+  const sorted=[...pins].sort((a,b)=>(times[b]||0)-(times[a]||0));
+  const text=sorted.join(', ');
+  navigator.clipboard?.writeText(text)
+    .then(()=>alert('已複製到剪貼簿：\n'+text))
+    .catch(()=>{
+      const el=document.createElement('textarea');
+      el.value=text; document.body.appendChild(el);
+      el.select(); document.execCommand('copy');
+      document.body.removeChild(el);
+      alert('已複製到剪貼簿：\n'+text);
+    });
 }
-
-let _currentModalTicker = null;
-function togglePinFromModal() {
-  if (_currentModalTicker) {
-    togglePin(_currentModalTicker);
-    updateModalPinBtn(_currentModalTicker);
-  }
-}
-function updateModalPinBtn(ticker) {
-  const btn = document.getElementById('modal-pin-btn');
-  if (!btn) return;
+function updateChartPinBtn(ticker) {
+  const btn = document.getElementById('chart-pin-btn');
+  if (!btn || !ticker) return;
   const pinned = getPinned().has(ticker);
   btn.classList.toggle('pinned', pinned);
   btn.textContent = pinned ? '☑' : '☐';
@@ -737,34 +599,29 @@ const GRADE_COLOR = {Strong:'#00e5a0', Normal:'#f5a623', Weak:'#4a5878'};
 
 /* ── Boot ── */
 fetch('data.json?_=' + Date.now())
-  .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(r => { if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
   .then(d => {
     try {
-      ALL  = d.rows  || [];
-      meta = d.meta  || {};
-      initMeta();
-      render();
-      renderPinPanel();
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('grid-thead').style.display = '';
+      ALL=d.rows||[]; meta=d.meta||{};
+      initMeta(); render(); renderPinPanel();
+      document.getElementById('loading').style.display='none';
+      document.getElementById('grid-thead').style.display='';
     } catch(err) {
-      document.getElementById('loading').innerHTML =
-        '<span style="color:#ff5c5c">JS Error: ' + err.message + '</span>';
+      document.getElementById('loading').innerHTML='<span style="color:#ff5c5c">JS Error: '+err.message+'</span>';
     }
   })
   .catch(e => {
-    document.getElementById('loading').innerHTML =
-      '<span style="color:#ff5c5c">Failed to load data.json — ' + e.message +
+    document.getElementById('loading').innerHTML=
+      '<span style="color:#ff5c5c">Failed to load data.json — '+e.message+
       '<br><small style="color:#6b7a99">Run scanner_export.py first, then push to GitHub.</small></span>';
   });
 
 function initMeta() {
-  document.getElementById('param-pills').textContent =
+  document.getElementById('param-pills').textContent=
     `ATR ${meta.atr} · Mult ${meta.mult} · MFI ${meta.mfi_period} · Days ${meta.flip_days}`;
   const t = meta.scan_time ? new Date(meta.scan_time) : null;
   document.getElementById('scan-time').textContent =
-    t ? 'Updated ' + t.toLocaleString('zh-TW', {timeZone:'Asia/Taipei',
-      year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+    t ? 'Updated '+t.toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
   document.getElementById('s-total') .textContent = meta.total  ?? '—';
   document.getElementById('s-strong').textContent = meta.strong ?? '—';
   document.getElementById('s-normal').textContent = meta.normal ?? '—';
@@ -787,98 +644,86 @@ function getActiveFilters() {
     hold2       : document.getElementById('f-hold2')?.checked,
   };
 }
-function applyFilters(r, f) {
-  const fl = r.filters || {};
-  if (f.priceEma50  && !fl.price_above_ema50)       return false;
-  if (f.priceEma200 && !fl.price_above_ema200)       return false;
-  if (f.emaGolden   && !fl.ema50_above_ema200)       return false;
-  if (f.flipEma50   && !fl.flip_price_above_ema50)   return false;
-  if (f.flipEma200  && !fl.flip_price_above_ema200)  return false;
-  if (f.mfi50       && r.mfi < 50)                   return false;
-  if (f.mfi70       && r.mfi < 70)                   return false;
-  if (f.mfiRising   && !fl.mfi_rising)               return false;
-  if (f.chgPos      && r.change_pct <= 0)            return false;
-  if (f.chg3        && r.change_pct <= 3)            return false;
-  if (f.hold2       && (fl.hold_days || 0) < 2)      return false;
+function applyFilters(r,f) {
+  const fl=r.filters||{};
+  if (f.priceEma50  && !fl.price_above_ema50)      return false;
+  if (f.priceEma200 && !fl.price_above_ema200)      return false;
+  if (f.emaGolden   && !fl.ema50_above_ema200)      return false;
+  if (f.flipEma50   && !fl.flip_price_above_ema50)  return false;
+  if (f.flipEma200  && !fl.flip_price_above_ema200) return false;
+  if (f.mfi50       && r.mfi < 50)                  return false;
+  if (f.mfi70       && r.mfi < 70)                  return false;
+  if (f.mfiRising   && !fl.mfi_rising)              return false;
+  if (f.chgPos      && r.change_pct <= 0)           return false;
+  if (f.chg3        && r.change_pct <= 3)           return false;
+  if (f.hold2       && (fl.hold_days||0) < 2)       return false;
   return true;
 }
 function updateFilterBadge(f) {
-  const count = Object.values(f).filter(Boolean).length;
-  const badge = document.getElementById('filter-badge');
-  const btn   = document.getElementById('filter-btn');
-  if (count > 0) { badge.textContent=count; badge.style.display=''; btn.classList.add('has-active'); }
-  else           { badge.style.display='none'; btn.classList.remove('has-active'); }
+  const count=Object.values(f).filter(Boolean).length;
+  const badge=document.getElementById('filter-badge'), btn=document.getElementById('filter-btn');
+  if (count>0){badge.textContent=count;badge.style.display='';btn.classList.add('has-active');}
+  else{badge.style.display='none';btn.classList.remove('has-active');}
 }
-function toggleFilterPanel() { document.getElementById('filter-panel').classList.toggle('open'); }
-function clearFilters() {
-  document.querySelectorAll('#filter-panel input[type=checkbox]').forEach(cb => cb.checked=false);
-  curPage = 1;
-  render();
+function toggleFilterPanel(){ document.getElementById('filter-panel').classList.toggle('open'); }
+function clearFilters(){
+  document.querySelectorAll('#filter-panel input[type=checkbox]').forEach(cb=>cb.checked=false);
+  curPage=1; render();
 }
 document.addEventListener('click', e => {
-  const wrap = document.querySelector('.filter-wrap');
+  const wrap=document.querySelector('.filter-wrap');
   if (wrap && !wrap.contains(e.target)) document.getElementById('filter-panel')?.classList.remove('open');
 });
 
 /* ── Render ── */
-let _selectedRowEl = null;
-
 function render() {
-  const q = document.getElementById('search').value.toUpperCase().trim();
-  const f = getActiveFilters();
+  const q=document.getElementById('search').value.toUpperCase().trim();
+  const f=getActiveFilters();
   updateFilterBadge(f);
 
-  let rows = ALL.filter(r => {
+  let rows=ALL.filter(r => {
     if (q && !r.ticker.includes(q)) return false;
-    if (!applyFilters(r, f))        return false;
-    return true;
+    return applyFilters(r,f);
   });
 
-  rows.sort((a, b) => {
-    let av = a[curSort], bv = b[curSort];
-    if (typeof av === 'string') av = av.toLowerCase();
-    if (typeof bv === 'string') bv = bv.toLowerCase();
-    return sortAsc ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+  rows.sort((a,b) => {
+    let av=a[curSort], bv=b[curSort];
+    if (typeof av==='string'){av=av.toLowerCase();bv=bv.toLowerCase();}
+    return sortAsc?(av>bv?1:-1):(av<bv?1:-1);
   });
 
-  const pins = getPinned();
-  rows.sort((a, b) => (pins.has(a.ticker)?0:1) - (pins.has(b.ticker)?0:1));
+  const pins=getPinned();
+  rows.sort((a,b)=>(pins.has(a.ticker)?0:1)-(pins.has(b.ticker)?0:1));
 
-  document.getElementById('count-badge').textContent = rows.length + ' result' + (rows.length!==1?'s':'');
-  const empty = document.getElementById('empty');
-  const tbody = document.getElementById('tbody');
+  document.getElementById('count-badge').textContent=rows.length+' result'+(rows.length!==1?'s':'');
+  const empty=document.getElementById('empty'), tbody=document.getElementById('tbody');
 
   if (!rows.length) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-    document.getElementById('grid-thead').style.display = 'none';
-    return;
+    tbody.innerHTML=''; empty.style.display='block';
+    document.getElementById('grid-thead').style.display='none';
+    document.getElementById('card-list').innerHTML=''; return;
   }
-  empty.style.display = 'none';
-  document.getElementById('grid-thead').style.display = '';
+  empty.style.display='none';
+  document.getElementById('grid-thead').style.display='';
 
-  const mfiFill = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
-  const pinnedCount = rows.filter(r => pins.has(r.ticker)).length;
+  const mfiFill=v=>v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
+  const pinnedCount=rows.filter(r=>pins.has(r.ticker)).length;
 
-  // 翻頁：釘選的永遠在第一頁最前面，其餘依頁碼切割
-  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-  if (curPage > totalPages) curPage = 1;
-  const pageRows = rows.slice((curPage-1)*PAGE_SIZE, curPage*PAGE_SIZE);
+  const totalPages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
+  if (curPage>totalPages) curPage=1;
+  const pageRows=rows.slice((curPage-1)*PAGE_SIZE, curPage*PAGE_SIZE);
+  tbody._rows=rows;
 
-  tbody._rows = rows; // 保留完整 rows 供 openModalByIndex 用索引查找
-
-  const startIdx = (curPage-1)*PAGE_SIZE;
-  tbody.innerHTML = pageRows.map((r, i) => {
-    const idx = startIdx + i;
-    const chg = r.change_pct;
-    const cls = chg>0?'up':chg<0?'down':'neutral';
-    const sign = chg>=0?'+':'';
-    const mfi = r.mfi.toFixed(1);
-    const mfiPct = Math.min(100, r.mfi).toFixed(0);
-    const isPinned = pins.has(r.ticker);
-    const sep = (idx===pinnedCount-1 && pinnedCount>0 && pinnedCount<rows.length)
-      ? '<div class="pin-separator" style="grid-column:1/-1"></div>' : '';
-    return `${sep}<div class="grid-row${isPinned?' pinned-row':''}" onclick="openModalByIndex(${idx})">
+  const startIdx=(curPage-1)*PAGE_SIZE;
+  tbody.innerHTML=pageRows.map((r,i)=>{
+    const idx=startIdx+i;
+    const chg=r.change_pct, sign=chg>=0?'+':'';
+    const mfi=r.mfi.toFixed(1), mfiPct=Math.min(100,r.mfi).toFixed(0);
+    const isPinned=pins.has(r.ticker), isSelected=r.ticker===_selectedTicker;
+    const sep=(idx===pinnedCount-1 && pinnedCount>0 && pinnedCount<rows.length)
+      ?'<div class="pin-separator" style="grid-column:1/-1"></div>':'';
+    return `${sep}<div class="grid-row${isPinned?' pinned-row':''}${isSelected?' selected':''}"
+        onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
       <div class="grid-td" style="justify-content:center">
         <button class="pin-btn${isPinned?' pinned':''}"
           onclick="event.stopPropagation();togglePin('${r.ticker}')"
@@ -892,7 +737,7 @@ function render() {
       <div class="grid-td">$${r.flip_price.toFixed(2)}</div>
       <div class="grid-td">
         <div class="mfi-wrap">
-          ${mfi}
+          <span class="${r.mfi>=70?'up':r.mfi>=50?'neutral':'down'}">${mfi}</span>
           <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
@@ -902,41 +747,31 @@ function render() {
 
   updateThArrows();
 
-  // 分頁按鈕
-  const pg = document.getElementById('pagination');
-  if (totalPages <= 1) {
-    pg.innerHTML = '';
-  } else {
-    let btns = `<button class="page-btn" onclick="goPage(${curPage-1})" ${curPage===1?'disabled':''}>‹</button>`;
-    for (let p=1; p<=totalPages; p++) {
-      if (totalPages<=7 || p===1 || p===totalPages || Math.abs(p-curPage)<=1) {
-        btns += `<button class="page-btn${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
-      } else if (Math.abs(p-curPage)===2) {
-        btns += `<span class="page-info">…</span>`;
-      }
+  /* Pagination */
+  const pg=document.getElementById('pagination');
+  if (totalPages<=1){pg.innerHTML='';} else {
+    let btns=`<button class="page-btn" onclick="goPage(${curPage-1})" ${curPage===1?'disabled':''}>‹</button>`;
+    for(let p=1;p<=totalPages;p++){
+      if(totalPages<=7||p===1||p===totalPages||Math.abs(p-curPage)<=1)
+        btns+=`<button class="page-btn${p===curPage?' active':''}" onclick="goPage(${p})">${p}</button>`;
+      else if(Math.abs(p-curPage)===2)
+        btns+=`<span class="page-info">…</span>`;
     }
-    btns += `<button class="page-btn" onclick="goPage(${curPage+1})" ${curPage===totalPages?'disabled':''}>›</button>`;
-    btns += `<span class="page-info">${rows.length} 筆</span>`;
-    pg.innerHTML = btns;
+    btns+=`<button class="page-btn" onclick="goPage(${curPage+1})" ${curPage===totalPages?'disabled':''}>›</button>`;
+    btns+=`<span class="page-info">${rows.length} 筆</span>`;
+    pg.innerHTML=btns;
   }
 
-  renderPinPanel();
-
   /* Mobile cards */
-  const mfiFillColor = v => v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
-  document.getElementById('card-list').innerHTML = rows.map((r, idx) => {
-    const chg = r.change_pct;
-    const cls = chg>0?'up':chg<0?'down':'';
-    const sign = chg>=0?'+':'';
-    const mfiPct = Math.min(100, r.mfi).toFixed(0);
-    return `<div class="stock-card" onclick="openModalByIndex(${idx})">
+  const mfiFillColor=v=>v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
+  document.getElementById('card-list').innerHTML=rows.map((r,idx)=>{
+    const chg=r.change_pct, cls=chg>0?'up':chg<0?'down':'', sign=chg>=0?'+':'';
+    const mfiPct=Math.min(100,r.mfi).toFixed(0), isSelected=r.ticker===_selectedTicker;
+    return `<div class="stock-card${isSelected?' selected':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
       <div class="card-top">
-        <div class="card-ticker">
-          <a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank"
-             onclick="event.stopPropagation()">${r.ticker}</a>
-        </div>
+        <div class="card-ticker"><a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank" onclick="event.stopPropagation()">${r.ticker}</a></div>
         <div class="card-right">
-          <span class="${cls}" style="font-size:15px;font-weight:700">${sign}${chg.toFixed(2)}%</span>
+          <span class="${cls}" style="font-size:14px;font-weight:700">${sign}${chg.toFixed(2)}%</span>
           <span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span>
         </div>
       </div>
@@ -953,188 +788,201 @@ function render() {
       </div>
     </div>`;
   }).join('');
+
+  renderPinPanel();
 }
 
-function goPage(p) { curPage = p; render(); window.scrollTo(0,0); }
+function goPage(p){ curPage=p; render(); }
 
-function setSort(btn) {
-  sortAsc = curSort===btn.dataset.k ? !sortAsc : false;
-  curSort = btn.dataset.k;
-  curPage = 1;
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
+function setSort(btn){
+  sortAsc=curSort===btn.dataset.k?!sortAsc:false; curSort=btn.dataset.k; curPage=1;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); render();
 }
-
-function thSort(th) {
-  const k = th.dataset.k;
-  sortAsc = curSort===k ? !sortAsc : false;
-  curSort = k;
-  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-  render();
+function thSort(th){
+  const k=th.dataset.k; sortAsc=curSort===k?!sortAsc:false; curSort=k;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active')); render();
 }
-
-function updateThArrows() {
-  document.querySelectorAll('.grid-th[data-k]').forEach(th => {
-    th.classList.toggle('col-sorted', th.dataset.k===curSort);
-    th.querySelector('.arr').textContent = th.dataset.k===curSort ? (sortAsc?' ↑':' ↓') : '';
+function updateThArrows(){
+  document.querySelectorAll('.grid-th[data-k]').forEach(th=>{
+    th.classList.toggle('col-sorted',th.dataset.k===curSort);
+    th.querySelector('.arr').textContent=th.dataset.k===curSort?(sortAsc?' ↑':' ↓'):'';
   });
 }
 
-/* ── Modal ── */
-function openModalByIndex(idx) {
-  const tbody = document.getElementById('tbody');
-  const r = tbody._rows ? tbody._rows[idx] : null;
-  if (_selectedRowEl) { _selectedRowEl.classList.remove('selected'); _selectedRowEl=null; }
-  const rows = document.querySelectorAll('.grid-row, .stock-card');
-  if (rows[idx]) { rows[idx].classList.add('selected'); _selectedRowEl=rows[idx]; }
-  if (r) openModal(r);
+/* ════════════════════════════════════════════
+   ROW SELECT → update left chart
+   ════════════════════════════════════════════ */
+function selectRow(el, idx) {
+  const tbody=document.getElementById('tbody');
+  const r=tbody._rows?tbody._rows[idx]:null;
+  if (!r) return;
+
+  if (_selectedRowEl) _selectedRowEl.classList.remove('selected');
+  _selectedRowEl=el;
+  el.classList.add('selected');
+  _selectedTicker=r.ticker;
+
+  document.querySelectorAll('.stock-card').forEach(c=>
+    c.classList.toggle('selected', c.dataset.ticker===r.ticker));
+
+  loadChartPanel(r);
 }
 
-function openModal(jsonStr) {
-  const r = typeof jsonStr==='string' ? JSON.parse(jsonStr) : jsonStr;
+function openByTicker(ticker) {
+  const tbody=document.getElementById('tbody');
+  if (!tbody._rows) return;
+  const idx=tbody._rows.findIndex(r=>r.ticker===ticker);
+  if (idx<0) return;
+  const el=document.querySelector(`.grid-row[data-ticker="${ticker}"]`)
+          ||document.querySelector(`.stock-card[data-ticker="${ticker}"]`);
+  if (el) selectRow(el, idx);
+}
 
-  document.getElementById('modal-ticker').textContent = r.ticker;
-  document.getElementById('modal-sub').textContent =
-    `Flip: ${r.flip_date}  ·  MFI: ${r.mfi.toFixed(1)}  ·  Grade: ${r.mfi_grade}`;
-  document.getElementById('modal-sub').style.color = GRADE_COLOR[r.mfi_grade] || '#6b7a99';
-  document.getElementById('modal-backdrop').classList.add('open');
-  document.body.style.overflow = 'hidden';
+/* ════════════════════════════════════════════
+   CHART PANEL
+   ════════════════════════════════════════════ */
+function loadChartPanel(r) {
 
-  _currentModalTicker = r.ticker;
-  updateModalPinBtn(r.ticker);
+  /* Ticker + grade */
+  const tickerEl=document.getElementById('chart-ticker');
+  tickerEl.textContent=r.ticker;
+  tickerEl.style.cssText='font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)';
 
-  if (chartInst) {
-    if (chartInst._resizeObs) chartInst._resizeObs.disconnect();
-    try { chartInst.remove(); } catch(e) {}
-    chartInst = null;
-  }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst=null; }
+  const gradeEl=document.getElementById('chart-grade');
+  gradeEl.textContent=r.mfi_grade;
+  gradeEl.className='grade grade-'+r.mfi_grade;
+  gradeEl.style.display='';
 
-  document.getElementById('chart-wrap').innerHTML =
-    '<div id="chart-container" style="width:100%;height:260px"></div>';
-  document.getElementById('mfi-wrap').innerHTML =
-    '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="80"></canvas>';
+  /* Sub line */
+  const chg=r.change_pct, sign=chg>=0?'+':'';
+  const chgClr=chg>0?'#3ddc84':chg<0?'#ff5c5c':'#8a9ab8';
+  const subEl=document.getElementById('chart-sub');
+  subEl.style.display='';
+  subEl.innerHTML=
+    `Flip: <b>${r.flip_date}</b> · MFI: <b style="color:${GRADE_COLOR[r.mfi_grade]}">${r.mfi.toFixed(1)}</b> · Change: <b style="color:${chgClr}">${sign}${chg.toFixed(2)}%</b>`;
 
-  /* Info cards */
-  const cards = [
-    {l:'Flip Date',   v: r.flip_date},
+  /* Meta cards */
+  const metaCards=[
     {l:'Flip Price',  v:'$'+r.flip_price.toFixed(2)},
-    {l:'MFI',         v:r.mfi.toFixed(1), c:GRADE_COLOR[r.mfi_grade]},
-    {l:'Best Weight', v:r.best_weight},
+    {l:'Last Price',  v:'$'+r.last_price.toFixed(2)},
     {l:'SuperTrend',  v:'$'+r.supertrend.toFixed(2)},
     {l:'ATR',         v:r.atr.toFixed(2)},
+    {l:'Best Weight', v:r.best_weight},
+    {l:'Dyn Mult',    v:r.dyn_mult?.toFixed(3)?? '—'},
   ];
-  document.getElementById('modal-cards').innerHTML = cards.map(c =>
-    `<div class="info-card"><div class="lbl">${c.l}</div><div class="val" style="${c.c?'color:'+c.c:''}">${c.v}</div></div>`
+  const metaEl=document.getElementById('chart-meta-cards');
+  metaEl.innerHTML=metaCards.map(c=>
+    `<div class="cmeta"><div class="lbl">${c.l}</div><div class="val">${c.v}</div></div>`
   ).join('');
+  metaEl.style.display='flex';
 
-  /* Fundamental info */
-  const info = r.info || {};
-  const infoEl = document.getElementById('modal-info');
-  if (info.sector || info.industry || info.description) {
-    const tags = [
-      info.sector   ? `<span class="info-tag sector">${info.sector}</span>` : '',
-      info.industry ? `<span class="info-tag industry">${info.industry}</span>` : '',
-      info.country  ? `<span class="info-tag country">${info.country}</span>` : '',
+  /* Pin btn */
+  const pinBtn=document.getElementById('chart-pin-btn');
+  pinBtn.style.display=''; updateChartPinBtn(r.ticker);
+
+  /* Info */
+  const info=r.info||{};
+  const infoEl=document.getElementById('chart-info');
+  if (info.sector||info.industry||info.country||info.description) {
+    const tags=[
+      info.sector  ?`<span class="info-tag sector">${info.sector}</span>`:'',
+      info.industry?`<span class="info-tag industry">${info.industry}</span>`:'',
+      info.country ?`<span class="info-tag country">${info.country}</span>`:'',
     ].filter(Boolean).join('');
-    infoEl.innerHTML = `
-      <div class="info-tags">${tags}</div>
-      ${info.description ? `<div class="info-desc">${info.description}</div>` : ''}
-    `;
-  } else {
-    infoEl.innerHTML = '';
-  }
+    infoEl.innerHTML=`<div class="info-tags">${tags}</div>${info.description?`<div class="info-desc">${info.description}</div>`:''}`;
+    infoEl.style.display='';
+  } else { infoEl.style.display='none'; infoEl.innerHTML=''; }
 
-  const c = r.chart || {};
-  const dates = c.dates || [];
-  const flipIdx = dates.indexOf(r.flip_date);
-  requestAnimationFrame(() => requestAnimationFrame(() => _initCharts(c, dates, flipIdx)));
+  /* Show panels */
+  document.getElementById('chart-empty').style.display='none';
+  document.getElementById('chart-legend').style.display='flex';
+  document.getElementById('lw-wrap').style.display='';
+  document.getElementById('mfi-panel').style.display='';
+
+  _buildCharts(r.chart||{}, r.flip_date);
 }
 
-function _initCharts(c, dates, flipIdx) {
-  const lwContainer = document.getElementById('chart-container');
-  if (!lwContainer || typeof LightweightCharts === 'undefined') return;
+function _buildCharts(c, flipDate) {
+  const lwWrap=document.getElementById('lw-container');
 
-  lwContainer.insertAdjacentHTML('beforebegin', `
-    <div style="display:flex;gap:14px;flex-wrap:wrap;padding:0 4px 8px;font-size:10px;
-                font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;color:#6b7a99">
-      <span><span style="display:inline-block;width:14px;height:0;border-top:2px dashed #facc15;vertical-align:middle;margin-right:4px"></span>SuperTrend</span>
-      <span><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle;margin-right:4px"></span>EMA 50</span>
-      <span><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle;margin-right:4px"></span>EMA 150</span>
-      <span><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle;margin-right:4px"></span>EMA 200</span>
-      <span style="color:#ff6b35">▲ FLIP</span>
-    </div>`);
+  if (lwChartInst) {
+    if (lwChartInst._resizeObs) lwChartInst._resizeObs.disconnect();
+    try { lwChartInst.remove(); } catch(e) {}
+    lwChartInst=null;
+  }
+  if (mfiChartInst){ mfiChartInst.destroy(); mfiChartInst=null; }
 
-  const lwChart = LightweightCharts.createChart(lwContainer, {
-    width: lwContainer.clientWidth || 600,
-    height: 260,
-    layout: { background:{color:'transparent'}, textColor:'#6b7a99' },
-    grid: { vertLines:{color:'#1c2130'}, horzLines:{color:'#1c2130'} },
-    rightPriceScale: { borderColor:'#1c2130' },
-    timeScale: { borderColor:'#1c2130', timeVisible:true },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+  lwWrap.innerHTML='';
+  document.getElementById('mfi-panel').innerHTML=
+    '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="72"></canvas>';
+
+  const dates=c.dates||[], flipIdx=dates.indexOf(flipDate);
+  if (!dates.length||typeof LightweightCharts==='undefined') return;
+
+  const lwChart=LightweightCharts.createChart(lwWrap,{
+    width:  lwWrap.clientWidth  || 480,
+    height: lwWrap.clientHeight || 260,
+    layout:{background:{color:'transparent'},textColor:'#6b7a99'},
+    grid:{vertLines:{color:'#1c2130'},horzLines:{color:'#1c2130'}},
+    rightPriceScale:{borderColor:'#1c2130'},
+    timeScale:{borderColor:'#1c2130',timeVisible:true},
+    crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
   });
-  chartInst = lwChart;
+  lwChartInst=lwChart;
 
-  const candleSeries = lwChart.addCandlestickSeries({
-    upColor:'#3ddc84', downColor:'#ff5c5c',
-    borderUpColor:'#3ddc84', borderDownColor:'#ff5c5c',
-    wickUpColor:'#3ddc84', wickDownColor:'#ff5c5c',
+  const candleSeries=lwChart.addCandlestickSeries({
+    upColor:'#3ddc84',downColor:'#ff5c5c',
+    borderUpColor:'#3ddc84',borderDownColor:'#ff5c5c',
+    wickUpColor:'#3ddc84',wickDownColor:'#ff5c5c',
   });
   candleSeries.setData(
-    dates.map((d,i) => ({time:d, open:c.open?.[i]??null, high:c.high?.[i]??null, low:c.low?.[i]??null, close:c.close?.[i]??null}))
-         .filter(d => d.open!==null)
+    dates.map((d,i)=>({time:d,open:c.open?.[i]??null,high:c.high?.[i]??null,
+                        low:c.low?.[i]??null,close:c.close?.[i]??null}))
+         .filter(d=>d.open!==null)
   );
 
-  let stRef = null;
-  if (c.supertrend) {
-    stRef = lwChart.addLineSeries({color:'#facc15', lineWidth:1.5,
-      lineStyle:LightweightCharts.LineStyle.Dashed, priceLineVisible:false, lastValueVisible:false});
-    stRef.setData(dates.map((d,i) => ({time:d, value:c.supertrend[i]})).filter(d => d.value!==null));
+  let stSeries=null;
+  if (c.supertrend){
+    stSeries=lwChart.addLineSeries({color:'#facc15',lineWidth:1.5,
+      lineStyle:LightweightCharts.LineStyle.Dashed,priceLineVisible:false,lastValueVisible:false});
+    stSeries.setData(dates.map((d,i)=>({time:d,value:c.supertrend[i]})).filter(d=>d.value!==null));
   }
-  if (c.ema50) {
-    lwChart.addLineSeries({color:'#7b6cff', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
-           .setData(dates.map((d,i) => ({time:d, value:c.ema50[i]})).filter(d => d.value!==null));
-  }
-  if (c.ema150) {
-    lwChart.addLineSeries({color:'#ff9f40', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
-           .setData(dates.map((d,i) => ({time:d, value:c.ema150[i]})).filter(d => d.value!==null));
-  }
-  if (c.ema200) {
-    lwChart.addLineSeries({color:'#e05555', lineWidth:1, priceLineVisible:false, lastValueVisible:false})
-           .setData(dates.map((d,i) => ({time:d, value:c.ema200[i]})).filter(d => d.value!==null));
-  }
+  if (c.ema50)  lwChart.addLineSeries({color:'#7b6cff',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(dates.map((d,i)=>({time:d,value:c.ema50[i]})).filter(d=>d.value!==null));
+  if (c.ema150) lwChart.addLineSeries({color:'#ff9f40',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(dates.map((d,i)=>({time:d,value:c.ema150[i]})).filter(d=>d.value!==null));
+  if (c.ema200) lwChart.addLineSeries({color:'#e05555',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(dates.map((d,i)=>({time:d,value:c.ema200[i]})).filter(d=>d.value!==null));
 
-  if (flipIdx >= 0) {
-    (stRef || candleSeries).setMarkers([{
-      time:dates[flipIdx], position:'belowBar', color:'#ff6b35', shape:'arrowUp', text:'FLIP', size:1
+  if (flipIdx>=0){
+    (stSeries||candleSeries).setMarkers([{
+      time:dates[flipIdx],position:'belowBar',color:'#ff6b35',shape:'arrowUp',text:'FLIP',size:1
     }]);
   }
 
   lwChart.timeScale().fitContent();
-  const ro = new ResizeObserver(() => lwChart.applyOptions({width:lwContainer.clientWidth}));
-  ro.observe(lwContainer);
-  lwChart._resizeObs = ro;
+  const ro=new ResizeObserver(()=>{
+    lwChart.applyOptions({width:lwWrap.clientWidth,height:lwWrap.clientHeight});
+  });
+  ro.observe(lwWrap); lwChart._resizeObs=ro;
 
-  /* MFI chart */
-  const mfiCtx = document.getElementById('mfi-chart')?.getContext('2d');
-  if (mfiCtx) {
-    mfiChartInst = new Chart(mfiCtx, {
+
+  /* MFI Chart.js */
+  const mfiCtx=document.getElementById('mfi-chart')?.getContext('2d');
+  if (mfiCtx&&c.mfi){
+    mfiChartInst=new Chart(mfiCtx,{
       type:'line',
-      data:{ labels:dates, datasets:[{
-        label:'MFI', data:c.mfi,
-        borderColor:'#f5a623', backgroundColor:'rgba(245,166,35,.08)',
-        borderWidth:1.5, pointRadius:0, tension:.3, fill:true
+      data:{labels:dates,datasets:[{
+        label:'MFI',data:c.mfi,
+        borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,.08)',
+        borderWidth:1.5,pointRadius:0,tension:.3,fill:true
       }]},
       options:{
-        animation:{duration:350}, responsive:true,
-        interaction:{mode:'index', intersect:false},
+        animation:{duration:300},responsive:true,
+        interaction:{mode:'index',intersect:false},
         plugins:{
           legend:{display:false},
-          tooltip:{backgroundColor:'#0e1117', borderColor:'#1c2130', borderWidth:1,
-            titleColor:'#dce3ef', bodyColor:'#f5a623',
-            titleFont:{family:'IBM Plex Mono'}, bodyFont:{family:'IBM Plex Mono', size:11}},
+          tooltip:{backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+            titleColor:'#dce3ef',bodyColor:'#f5a623',
+            titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11}},
           annotation:{annotations:{
             ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
             os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
@@ -1145,27 +993,104 @@ function _initCharts(c, dates, flipIdx) {
           y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#1c2130'},min:0,max:100},
         }
       },
-      plugins: typeof ChartAnnotation !== 'undefined' ? [ChartAnnotation] : []
+      plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
     });
   }
 }
 
-function closeModal() {
-  document.getElementById('modal-backdrop').classList.remove('open');
-  document.body.style.overflow = '';
-  if (chartInst) {
-    if (chartInst._resizeObs) chartInst._resizeObs.disconnect();
-    try { chartInst.remove(); } catch(e) {}
-    chartInst = null;
-  }
-  if (mfiChartInst) { mfiChartInst.destroy(); mfiChartInst=null; }
-  _currentModalTicker = null;
-}
 
-document.getElementById('modal-backdrop').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
+
+/* ════════════════════════════════════════════
+   RESIZER — 拖曳分隔線調整圖表/列表比例
+   ════════════════════════════════════════════ */
+(function() {
+  const resizer  = document.getElementById('resizer');
+  const chart    = document.getElementById('chart-panel');
+  const appBody  = document.getElementById('app-body');
+  if (!resizer || !chart) return;
+
+  const STORAGE_KEY = 'st_chart_pct';
+  const MIN_PCT = 25, MAX_PCT = 75;
+
+  /* 恢復上次比例 */
+  function applyPct(pct) {
+    pct = Math.max(MIN_PCT, Math.min(MAX_PCT, pct));
+    chart.style.width = pct + '%';
+    /* 通知 LightweightCharts resize */
+    const lw = document.getElementById('lw-container');
+    if (lw && lwChartInst) {
+      requestAnimationFrame(() =>
+        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight})
+      );
+    }
+    return pct;
+  }
+
+  const saved = parseFloat(localStorage.getItem(STORAGE_KEY));
+  if (!isNaN(saved)) applyPct(saved);
+
+  /* 拖曳 */
+  let dragging = false;
+
+  resizer.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    dragging = true;
+    resizer.classList.add('dragging');
+    document.body.style.cursor    = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const bodyRect = appBody.getBoundingClientRect();
+    const pct = (e.clientX - bodyRect.left) / bodyRect.width * 100;
+    applyPct(pct);
+  });
+
+  window.addEventListener('mouseup', e => {
+    if (!dragging) return;
+    dragging = false;
+    resizer.classList.remove('dragging');
+    document.body.style.cursor    = '';
+    document.body.style.userSelect = '';
+    /* 儲存比例 */
+    const bodyRect = appBody.getBoundingClientRect();
+    const pct = (e.clientX - bodyRect.left) / bodyRect.width * 100;
+    const clamped = Math.max(MIN_PCT, Math.min(MAX_PCT, pct));
+    localStorage.setItem(STORAGE_KEY, clamped.toFixed(1));
+  });
+
+  /* 視窗縮放時保持比例正確 */
+  window.addEventListener('resize', () => {
+    const lw = document.getElementById('lw-container');
+    if (lw && lwChartInst) {
+      requestAnimationFrame(() =>
+        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight})
+      );
+    }
+  });
+})();
+
+/* ── Keyboard ↑↓ navigation ── */
+document.addEventListener('keydown', e=>{
+  if (!_selectedTicker) return;
+  const rows=document.getElementById('tbody')._rows;
+  if (!rows) return;
+  const idx=rows.findIndex(r=>r.ticker===_selectedTicker);
+  if (idx<0) return;
+  if (e.key==='ArrowDown'&&idx<rows.length-1){
+    e.preventDefault();
+    const pageIdx=idx+1-(curPage-1)*PAGE_SIZE;
+    const el=document.querySelectorAll('.grid-row')[pageIdx];
+    if (el) selectRow(el,idx+1);
+  } else if (e.key==='ArrowUp'&&idx>0){
+    e.preventDefault();
+    const pageIdx=idx-1-(curPage-1)*PAGE_SIZE;
+    const el=document.querySelectorAll('.grid-row')[pageIdx];
+    if (el) selectRow(el,idx-1);
+  }
 });
-document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
