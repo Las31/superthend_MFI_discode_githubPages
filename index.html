@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SuperTrend × MFI Dashboard</title>
+<style>
+@font-face {
+  font-family: 'neonavy';
+  src: url('fonts/neonavy.ttf') format('truetype');
+}
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -39,8 +45,45 @@ header{
   background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
   flex-shrink:0;
 }
-.logo{font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.3px;color:var(--text)}
-.logo em{color:var(--accent);font-style:normal}
+.logo{
+  font-family:'neonavy',var(--display),sans-serif;
+  font-size:22px;
+  text-transform:uppercase;
+  color:#ffffff;
+  letter-spacing:.5px;
+  text-shadow:
+    0 0 6px  #00e5a0,
+    0 0 14px #00e5a0,
+    0 0 32px #00e5a0,
+    0 0 60px rgba(197,197,197,0.4);
+  animation:neon-flicker 4s infinite;
+  line-height:1.2;
+}
+.logo em.t{
+  font-style:normal;
+  color:#00e5a0;
+  text-shadow:
+    0 0 6px  #00e5a0,
+    0 0 18px #00e5a0,
+    0 0 40px #00e5a0,
+    0 0 80px rgba(148,136,177,0.5);
+}
+.logo em.x{
+  font-style:normal;
+  color:#7b6cff;
+  text-shadow:
+    0 0 6px  #7b6cff,
+    0 0 18px #7b6cff,
+    0 0 40px #7b6cff,
+    0 0 80px rgba(87,82,126,0.5);
+}
+@keyframes neon-flicker{
+  0%,95%,100%{opacity:1}
+  96%{opacity:.6}
+  97%{opacity:1}
+  98%{opacity:.4}
+  99%{opacity:1}
+}
 .header-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .param-pill{font-size:11px;color:var(--text2);border:1px solid var(--border2);padding:4px 10px;letter-spacing:.5px}
 #scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
@@ -102,6 +145,21 @@ header{
 .filter-divider{height:1px;background:var(--border);margin:8px 0}
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
+/* ── Index Tabs ── */
+.tabs{display:flex;gap:0}
+.tab{
+  font-family:var(--font);font-size:11px;padding:6px 14px;
+  border:1px solid var(--border2);border-right:none;
+  background:transparent;color:var(--text2);cursor:pointer;
+  letter-spacing:.5px;transition:all .15s;text-transform:uppercase;
+}
+.tab:last-child{border-right:1px solid var(--border2)}
+.tab:hover{color:var(--text);background:var(--surface2)}
+.tab.active{
+  background:rgba(0,229,160,.08);
+  border-color:var(--accent);color:var(--accent);
+}
+
 /* Sort */
 .sort-group{display:flex;gap:4px;align-items:center;margin-left:auto}
 .sort-lbl{font-size:10px;color:var(--text3);letter-spacing:1px;margin-right:2px}
@@ -121,8 +179,21 @@ header{
 /* ── Left Chart Panel ── */
 #chart-panel{
   width:var(--chart-w);flex-shrink:0;display:flex;flex-direction:column;
-  border-right:1px solid var(--border);background:var(--surface);
-  min-height:0;overflow:hidden;
+  background:var(--surface);min-height:0;overflow:hidden;
+}
+
+/* ── Drag Resizer ── */
+#resizer{
+  width:6px;flex-shrink:0;cursor:col-resize;
+  background:#3a4460;
+  transition:background .15s;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+}
+#resizer:hover,#resizer.dragging{background:#5a6a85}
+#resizer::after{
+  content:'⋮';
+  color:#8a9ab8;font-size:14px;line-height:1;
+  pointer-events:none;
 }
 #chart-panel-head{
   padding:12px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
@@ -240,10 +311,10 @@ canvas#mfi-chart{width:100%!important}
 @media(max-width:760px){
   :root{--chart-w:100%}
   #app-body{flex-direction:column;overflow-y:auto}
-  #chart-panel{width:100%;height:auto;flex-shrink:0;border-right:none;border-bottom:1px solid var(--border)}
-  #lw-wrap{height:220px;flex:none}
-  #mfi-panel canvas{height:60px!important}
-  #list-panel{flex:none;overflow:visible}
+  #resizer{display:none}
+  #pin-panel{display:none}
+  #chart-panel{display:none}
+  #list-panel{flex:none;overflow:visible;width:100%}
   #list-scroll{overflow:visible;height:auto}
   #grid-table{display:none}
   #card-list{display:block;padding:8px 12px}
@@ -259,7 +330,7 @@ canvas#mfi-chart{width:100%!important}
   .card-mfi-bar{height:2px;background:var(--border2);margin-top:5px;border-radius:1px}
   .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
   header{padding:10px 14px}
-  .logo{font-size:16px}
+  .logo{font-size:16px;letter-spacing:.3px}
   #stats{flex-wrap:wrap}
   .stat{width:50%;min-width:0;padding:8px}
   .stat-n{font-size:20px}
@@ -268,6 +339,48 @@ canvas#mfi-chart{width:100%!important}
   .sort-lbl{display:none}
 }
 @media(min-width:761px){#card-list{display:none}}
+
+/* ── Mobile Chart Modal ── */
+#mobile-modal-backdrop{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.7);z-index:500;
+  align-items:flex-end;justify-content:center;
+}
+#mobile-modal-backdrop.open{display:flex}
+#mobile-modal{
+  background:var(--surface);
+  width:100%;height:88vh;
+  border-top:1px solid var(--border2);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  border-radius:12px 12px 0 0;
+}
+#mobile-modal-head{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+#mobile-modal-ticker{font-family:var(--display);font-size:20px;font-weight:800;color:var(--text)}
+#mobile-modal-sub{font-size:11px;color:var(--text2);letter-spacing:.3px;flex:1;min-width:0}
+#mobile-modal-close{
+  margin-left:auto;background:none;border:none;
+  color:var(--text2);font-size:20px;cursor:pointer;
+  font-family:var(--font);padding:0 4px;line-height:1;flex-shrink:0;
+}
+#mobile-modal-close:hover{color:var(--text)}
+#mobile-modal-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+#mobile-lw-wrap{flex:1;min-height:0;overflow:hidden}
+#mobile-lw-container{width:100%;height:100%}
+#mobile-mfi-section{flex-shrink:0;padding:6px 16px 8px;border-top:1px solid var(--border)}
+#mobile-mfi-section .mfi-label{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+#mobile-modal-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:6px;padding:10px 14px 14px;flex-shrink:0;
+}
+#mobile-modal-cards .cmeta{background:var(--bg);border:1px solid var(--border);padding:6px 10px}
+#mobile-modal-cards .cmeta .lbl{font-size:9px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
+#mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:13px;font-weight:700;margin-top:2px;color:var(--text)}
 
 /* ── Pin Panel ── */
 #pin-panel{
@@ -338,7 +451,7 @@ footer a:hover{color:var(--accent)}
 <body>
 
 <header>
-  <div class="logo">Super<em>Trend</em> <em style="color:var(--accent3)">×</em> MFI</div>
+  <div class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</div>
   <div class="header-right">
     <span class="param-pill" id="param-pills">Loading params...</span>
     <span id="scan-time">—</span>
@@ -354,6 +467,13 @@ footer a:hover{color:var(--accent)}
 
 <div id="controls">
   <div class="controls-inner">
+    <!-- 指數 Tab -->
+    <div class="tabs" id="index-tabs">
+      <button class="tab active" data-idx="all"    onclick="setIndexTab(this)">ALL</button>
+      <button class="tab"        data-idx="NDX100" onclick="setIndexTab(this)">NASDAQ 100</button>
+      <button class="tab"        data-idx="SP500"  onclick="setIndexTab(this)">S&P 500</button>
+    </div>
+
     <div class="search-wrap">
       <input id="search" type="text" placeholder="ticker..." oninput="curPage=1;render()">
     </div>
@@ -480,6 +600,25 @@ footer a:hover{color:var(--accent)}
 
 </div>
 
+<!-- Mobile Chart Modal -->
+<div id="mobile-modal-backdrop">
+  <div id="mobile-modal">
+    <div id="mobile-modal-head">
+      <span id="mobile-modal-ticker"></span>
+      <span id="mobile-modal-sub"></span>
+      <button id="mobile-modal-close" onclick="closeMobileModal()">✕</button>
+    </div>
+    <div id="mobile-modal-body">
+      <div id="mobile-lw-wrap"><div id="mobile-lw-container"></div></div>
+      <div id="mobile-mfi-section">
+        <div class="mfi-label">MFI</div>
+        <canvas id="mobile-mfi-chart" height="70" style="width:100%!important"></canvas>
+      </div>
+    </div>
+    <div id="mobile-modal-cards"></div>
+  </div>
+</div>
+
 <footer>
   <span>NASDAQ 100 · SuperTrend × MFI Dynamic Multiplier</span>
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
@@ -492,6 +631,7 @@ footer a:hover{color:var(--accent)}
 /* ── State ── */
 let ALL = [], meta = {};
 let curSort = 'mfi', sortAsc = false;
+let curIndex = 'all';  /* 指數篩選：'all' | 'NDX100' | 'SP500' */
 let curPage = 1;
 const PAGE_SIZE = 20;
 let lwChartInst = null;
@@ -675,6 +815,15 @@ document.addEventListener('click', e => {
   if (wrap && !wrap.contains(e.target)) document.getElementById('filter-panel')?.classList.remove('open');
 });
 
+/* ── Index Tab ── */
+function setIndexTab(btn) {
+  curIndex = btn.dataset.idx;
+  document.querySelectorAll('#index-tabs .tab').forEach(b =>
+    b.classList.toggle('active', b === btn));
+  curPage = 1;
+  render();
+}
+
 /* ── Render ── */
 function render() {
   const q=document.getElementById('search').value.toUpperCase().trim();
@@ -683,6 +832,10 @@ function render() {
 
   let rows=ALL.filter(r => {
     if (q && !r.ticker.includes(q)) return false;
+    if (curIndex !== 'all') {
+      const idxs = r.indices || [];
+      if (!idxs.includes(curIndex)) return false;
+    }
     return applyFilters(r,f);
   });
 
@@ -813,6 +966,8 @@ function updateThArrows(){
 /* ════════════════════════════════════════════
    ROW SELECT → update left chart
    ════════════════════════════════════════════ */
+function isMobile(){ return window.innerWidth <= 760; }
+
 function selectRow(el, idx) {
   const tbody=document.getElementById('tbody');
   const r=tbody._rows?tbody._rows[idx]:null;
@@ -826,8 +981,120 @@ function selectRow(el, idx) {
   document.querySelectorAll('.stock-card').forEach(c=>
     c.classList.toggle('selected', c.dataset.ticker===r.ticker));
 
-  loadChartPanel(r);
+  if (isMobile()) openMobileModal(r);
+  else loadChartPanel(r);
 }
+
+/* ── Mobile Chart Modal ── */
+let _mobileLwChart=null, _mobileMfiChart=null;
+
+function openMobileModal(r) {
+  const GRADE_COLOR={Strong:'#00e5a0',Normal:'#f5a623',Weak:'#4a5878'};
+  document.getElementById('mobile-modal-ticker').textContent = r.ticker;
+  const chg=r.change_pct, sign=chg>=0?'+':'';
+  const chgClr=chg>0?'#3ddc84':chg<0?'#ff5c5c':'#8a9ab8';
+  document.getElementById('mobile-modal-sub').innerHTML =
+    `Flip: <b>${r.flip_date}</b> · MFI: <b style="color:${GRADE_COLOR[r.mfi_grade]}">${r.mfi.toFixed(1)}</b> · <b style="color:${chgClr}">${sign}${chg.toFixed(2)}%</b>`;
+
+  /* meta cards */
+  document.getElementById('mobile-modal-cards').innerHTML = [
+    {l:'Flip Price', v:'$'+r.flip_price.toFixed(2)},
+    {l:'Last Price', v:'$'+r.last_price.toFixed(2)},
+    {l:'SuperTrend', v:'$'+r.supertrend.toFixed(2)},
+    {l:'ATR',        v:r.atr.toFixed(2)},
+    {l:'Weight',     v:r.best_weight},
+    {l:'Dyn Mult',   v:r.dyn_mult?.toFixed(3)?? '—'},
+  ].map(c=>`<div class="cmeta"><div class="lbl">${c.l}</div><div class="val">${c.v}</div></div>`).join('');
+
+  document.getElementById('mobile-modal-backdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+
+  /* 等 DOM 渲染完再建圖 */
+  requestAnimationFrame(()=>requestAnimationFrame(()=>_buildMobileChart(r)));
+}
+
+function _buildMobileChart(r) {
+  const cont = document.getElementById('mobile-lw-container');
+  if (_mobileLwChart) {
+    if (_mobileLwChart._ro) _mobileLwChart._ro.disconnect();
+    try { _mobileLwChart.remove(); } catch(e){}
+    _mobileLwChart=null;
+  }
+  if (_mobileMfiChart){ _mobileMfiChart.destroy(); _mobileMfiChart=null; }
+
+  const c=r.chart||{}, dates=c.dates||[];
+  if (!dates.length||typeof LightweightCharts==='undefined') return;
+
+  const lw=LightweightCharts.createChart(cont,{
+    width: cont.clientWidth||window.innerWidth,
+    height:cont.clientHeight||280,
+    layout:{background:{color:'transparent'},textColor:'#6b7a99'},
+    grid:{vertLines:{color:'#1c2130'},horzLines:{color:'#1c2130'}},
+    rightPriceScale:{borderColor:'#1c2130'},
+    timeScale:{borderColor:'#1c2130',timeVisible:true},
+    crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+  });
+  _mobileLwChart=lw;
+
+  const cs=lw.addCandlestickSeries({
+    upColor:'#3ddc84',downColor:'#ff5c5c',
+    borderUpColor:'#3ddc84',borderDownColor:'#ff5c5c',
+    wickUpColor:'#3ddc84',wickDownColor:'#ff5c5c',
+  });
+  cs.setData(dates.map((d,i)=>({time:d,open:c.open?.[i]??null,high:c.high?.[i]??null,low:c.low?.[i]??null,close:c.close?.[i]??null})).filter(d=>d.open!==null));
+
+  let stS=null;
+  if(c.supertrend){
+    stS=lw.addLineSeries({color:'#facc15',lineWidth:1.5,lineStyle:LightweightCharts.LineStyle.Dashed,priceLineVisible:false,lastValueVisible:false});
+    stS.setData(dates.map((d,i)=>({time:d,value:c.supertrend[i]})).filter(d=>d.value!==null));
+  }
+  if(c.ema50)  lw.addLineSeries({color:'#7b6cff',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(dates.map((d,i)=>({time:d,value:c.ema50[i]})).filter(d=>d.value!==null));
+  if(c.ema200) lw.addLineSeries({color:'#e05555',lineWidth:1,priceLineVisible:false,lastValueVisible:false}).setData(dates.map((d,i)=>({time:d,value:c.ema200[i]})).filter(d=>d.value!==null));
+
+  const fi=dates.indexOf(r.flip_date);
+  if(fi>=0)(stS||cs).setMarkers([{time:dates[fi],position:'belowBar',color:'#ff6b35',shape:'arrowUp',text:'FLIP',size:1}]);
+  lw.timeScale().fitContent();
+
+  const ro=new ResizeObserver(()=>lw.applyOptions({width:cont.clientWidth,height:cont.clientHeight}));
+  ro.observe(cont); lw._ro=ro;
+
+  /* MFI */
+  const mfiCtx=document.getElementById('mobile-mfi-chart')?.getContext('2d');
+  if(mfiCtx&&c.mfi){
+    _mobileMfiChart=new Chart(mfiCtx,{
+      type:'line',
+      data:{labels:dates,datasets:[{label:'MFI',data:c.mfi,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,.08)',borderWidth:1.5,pointRadius:0,tension:.3,fill:true}]},
+      options:{animation:{duration:0},responsive:true,
+        plugins:{legend:{display:false},
+          annotation:{annotations:{
+            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
+            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
+          }}
+        },
+        scales:{
+          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:6},grid:{color:'#1c2130'}},
+          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#1c2130'},min:0,max:100},
+        }
+      },
+      plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
+    });
+  }
+}
+
+function closeMobileModal() {
+  document.getElementById('mobile-modal-backdrop').classList.remove('open');
+  document.body.style.overflow='';
+  if(_mobileLwChart){
+    if(_mobileLwChart._ro) _mobileLwChart._ro.disconnect();
+    try{_mobileLwChart.remove();}catch(e){}
+    _mobileLwChart=null;
+  }
+  if(_mobileMfiChart){_mobileMfiChart.destroy();_mobileMfiChart=null;}
+}
+/* 點背景關閉 */
+document.getElementById('mobile-modal-backdrop').addEventListener('click',e=>{
+  if(e.target===e.currentTarget) closeMobileModal();
+});
 
 function openByTicker(ticker) {
   const tbody=document.getElementById('tbody');
