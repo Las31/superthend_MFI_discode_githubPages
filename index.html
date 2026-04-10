@@ -366,7 +366,25 @@ header{
 /* ── Left Chart Panel ── */
 #chart-panel{
   width:var(--chart-w);flex-shrink:0;display:flex;flex-direction:column;
-  background:var(--surface);min-height:0;overflow:hidden;
+  background:var(--surface);min-height:0;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+#chart-panel::-webkit-scrollbar{width:4px}
+#chart-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* chart-fixed 和 chart-scroll 不再需要獨立捲動，合併成普通 block */
+#chart-fixed{
+  display:flex;flex-direction:column;flex-shrink:0;
+}
+#chart-scroll{
+  flex-shrink:0;border-top:1px solid var(--border);
+}
+
+/* K線圖固定高度，不被壓縮 */
+#lw-wrap{
+  height:55vh;min-height:300px;
+  flex-shrink:0;padding:0;overflow:hidden;position:relative;
 }
 
 /* ── Drag Resizer ── */
@@ -415,41 +433,38 @@ header{
 .legend-item{display:flex;align-items:center;gap:4px}
 
 /* chart fills remaining space */
-#lw-wrap{flex:1;min-height:0;padding:0;overflow:hidden;position:relative}
+#lw-wrap{flex:1;min-height:0;padding:0;overflow:hidden;position:relative;min-height:180px}
 #lw-container{width:100%;height:100%;margin:0}
 
 #mfi-panel{flex-shrink:0;padding:6px 16px 10px;border-top:1px solid var(--border)}
 #mfi-panel .mfi-label{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 canvas#mfi-chart{width:100%!important}
 
-#chart-info{flex-shrink:0;padding:8px 16px;border-top:1px solid var(--border);font-size:11px}
+#chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:11px}
 
-/* ── Financials Panel ── */
+/* ── Financials Panel（2×2 小卡）── */
 #fin-panel{
-  flex-shrink:0;border-top:1px solid var(--border);
-  display:none;flex-direction:column;
-  max-height:420px;overflow-y:auto;
-  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+  display:none;padding:10px 14px 12px;
+  flex-direction:column;gap:8px;
 }
-#fin-panel::-webkit-scrollbar{width:4px}
-#fin-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.fin-section{padding:10px 16px 6px;border-bottom:1px solid var(--border)}
-.fin-section:last-child{border-bottom:none}
-.fin-section-head{
-  display:flex;align-items:center;gap:8px;margin-bottom:6px;
-}
-.fin-section-label{
+.fin-title{
   font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--text3);font-family:var(--font);
+  color:var(--text3);margin-bottom:0;
 }
-.fin-legend{display:flex;gap:12px;margin-left:auto}
-.fin-legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text3);letter-spacing:.5px}
-.fin-legend-dot{width:8px;height:2px;border-radius:1px}
-.fin-loading{
-  padding:20px;text-align:center;font-size:10px;
-  color:var(--text3);letter-spacing:1px;
+.fin-cards{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:6px;
 }
-.fin-error{padding:10px 16px;font-size:10px;color:var(--down);letter-spacing:.5px}
+.fin-card{
+  background:var(--bg);border:1px solid var(--border);
+  padding:8px 10px;display:flex;flex-direction:column;gap:3px;
+}
+.fin-card-label{
+  font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text3);white-space:nowrap;
+}
+.fin-card-legend{display:flex;gap:8px;margin-bottom:1px}
+.fin-card-legend-item{display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text3)}
+.fin-card-legend-dot{width:10px;height:1.5px;border-radius:1px;flex-shrink:0}
 .info-tags{display:flex;gap:6px;flex-wrap:wrap}
 .info-tag{font-size:10px;padding:2px 8px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text2)}
 .info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
@@ -737,82 +752,42 @@ footer a:hover{color:var(--accent)}
 
   <!-- LEFT: Chart Panel -->
   <div id="chart-panel">
-    <div id="chart-panel-head">
-      <div id="chart-ticker-row">
-        <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
-        <span id="chart-grade" style="display:none"></span>
-        <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
-      </div>
-      <div id="chart-sub" style="display:none;font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px"></div>
-      <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
-    </div>
 
-    <div id="chart-legend" style="display:none;gap:12px;flex-wrap:wrap;padding:6px 16px 4px;font-size:10px;font-family:var(--font);letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border)">
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #facc15;vertical-align:middle"></span>SuperTrend</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle"></span>EMA 50</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle"></span>EMA 150</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle"></span>EMA 200</span>
-      <span style="color:#ff6b35">▲ FLIP</span>
-
-    </div>
-
-    <div id="chart-empty">
-      <div class="big">K</div>
-      <span>點擊右側股票<br>查看 K 線圖表</span>
-    </div>
-
-    <div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
-
-    <div id="mfi-panel" style="display:none">
-      <div class="mfi-label">MFI</div>
-      <canvas id="mfi-chart" height="72"></canvas>
-    </div>
-
-    <div id="chart-info" style="display:none"></div>
-
-    <!-- Financials -->
-    <div id="fin-panel">
-      <div class="fin-section" id="fin-revenue">
-        <div class="fin-section-head">
-          <span class="fin-section-label">Total Revenue</span>
-          <div class="fin-legend">
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
-          </div>
+    <!-- 上方固定：head + legend + K線 + MFI -->
+    <div id="chart-fixed">
+      <div id="chart-panel-head">
+        <div id="chart-ticker-row">
+          <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
+          <span id="chart-grade" style="display:none"></span>
+          <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
         </div>
-        <canvas id="fin-revenue-chart" height="80"></canvas>
+        <div id="chart-sub" style="display:none;font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px"></div>
+        <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
       </div>
-      <div class="fin-section" id="fin-margin">
-        <div class="fin-section-head">
-          <span class="fin-section-label">Net Profit Margin %</span>
-          <div class="fin-legend">
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
-          </div>
-        </div>
-        <canvas id="fin-margin-chart" height="80"></canvas>
+      <div id="chart-legend" style="display:none;gap:12px;flex-wrap:wrap;padding:6px 16px 4px;font-size:10px;font-family:var(--font);letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #facc15;vertical-align:middle"></span>SuperTrend</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle"></span>EMA 50</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle"></span>EMA 150</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle"></span>EMA 200</span>
+        <span style="color:#ff6b35">▲ FLIP</span>
       </div>
-      <div class="fin-section" id="fin-eps">
-        <div class="fin-section-head">
-          <span class="fin-section-label">EPS (Earnings Per Share)</span>
-          <div class="fin-legend">
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
-          </div>
-        </div>
-        <canvas id="fin-eps-chart" height="80"></canvas>
+      <div id="chart-empty">
+        <div class="big">K</div>
+        <span>點擊右側股票<br>查看 K 線圖表</span>
       </div>
-      <div class="fin-section" id="fin-opincome">
-        <div class="fin-section-head">
-          <span class="fin-section-label">Operating Income</span>
-          <div class="fin-legend">
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
-            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
-          </div>
-        </div>
-        <canvas id="fin-opincome-chart" height="80"></canvas>
+      <div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
+      <div id="mfi-panel" style="display:none">
+        <div class="mfi-label">MFI</div>
+        <canvas id="mfi-chart" height="72"></canvas>
       </div>
     </div>
+
+    <!-- 下方可捲動：財務卡 + 公司簡介 -->
+    <div id="chart-scroll">
+      <div id="fin-panel" style="display:none"></div>
+      <div id="chart-info" style="display:none"></div>
+    </div>
+
   </div>
 
   <!-- Drag Resizer -->
@@ -1609,8 +1584,7 @@ function _buildCharts(c, flipDate) {
 
 
 /* ════════════════════════════════════════════
-   FINANCIALS — 從 data.json 讀取後端預存數據
-   年報(實線綠) + 季報(虛線紫) 同一張圖
+   FINANCIALS — 小卡 + 迷你折線圖
    ════════════════════════════════════════════ */
 let _finChartInsts = {};
 
@@ -1624,12 +1598,11 @@ function _buildFinancials(fin) {
   const panel = document.getElementById('fin-panel');
   if (!fin || (!fin.annual?.length && !fin.quarterly?.length)) {
     panel.style.display = 'none';
+    panel.innerHTML = '';
     return;
   }
-  panel.style.display = 'flex';
 
-  // 資料整理：舊→新
-  const ann = (fin.annual    || []).slice().reverse();
+  const ann = (fin.annual    || []).slice().reverse();  // 舊→新
   const qtr = (fin.quarterly || []).slice().reverse();
 
   const FONT  = 'IBM Plex Mono';
@@ -1637,95 +1610,117 @@ function _buildFinancials(fin) {
   const PURP  = '#7b6cff';
 
   function fmtVal(v, unit) {
-    if (v === null || v === undefined) return '—';
-    if (unit === '%') return v.toFixed(2) + '%';
-    if (Math.abs(v) >= 1e9) return (v/1e9).toFixed(2) + 'B';
-    if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(2) + 'M';
+    if (v===null||v===undefined) return '—';
+    if (unit==='%') return v.toFixed(1)+'%';
+    if (Math.abs(v)>=1e9) return (v/1e9).toFixed(1)+'B';
+    if (Math.abs(v)>=1e6) return (v/1e6).toFixed(1)+'M';
+    if (Math.abs(v)>=1e3) return (v/1e3).toFixed(1)+'K';
     return v.toFixed(2);
   }
 
-  function makeChart(canvasId, annData, qtrData, field, unit='') {
-    const ctx = document.getElementById(canvasId)?.getContext('2d');
-    if (!ctx) return null;
+  // 每張卡的定義
+  const cards = [
+    {id:'revenue',  label:'Total Revenue',       field:'revenue',    unit:''},
+    {id:'margin',   label:'Net Margin',           field:'net_margin', unit:'%'},
+    {id:'eps',      label:'EPS',                  field:'eps',        unit:''},
+    {id:'opincome', label:'Operating Income',     field:'op_income',  unit:''},
+  ];
 
-    const annVals = annData.map(d => d[field] ?? null);
-    const qtrVals = qtrData.map(d => d[field] ?? null);
-    const annLbls = annData.map(d => d.date);
-    const qtrLbls = qtrData.map(d => d.date);
+  // 合併 x 軸
+  function mergeLabels(a, q) {
+    return [...new Set([...a.map(d=>d.date), ...q.map(d=>d.date)])].sort();
+  }
+  function align(data, allLbls, field) {
+    const map = Object.fromEntries(data.map(d=>[d.date, d[field]??null]));
+    return allLbls.map(l => map[l]??null);
+  }
 
-    // 合併 x 軸 label（年報 + 季報，去重排序）
-    const allLbls = [...new Set([...annLbls, ...qtrLbls])].sort();
+  // 建 HTML
+  panel.innerHTML = `
+    <div class="fin-title">Financial Highlights</div>
+    <div class="fin-cards">
+      ${cards.map(c=>`
+        <div class="fin-card">
+          <div class="fin-card-label">${c.label}</div>
+          <div class="fin-card-legend">
+            <span class="fin-card-legend-item">
+              <span class="fin-card-legend-dot" style="background:${GREEN}"></span>Annual
+            </span>
+            <span class="fin-card-legend-item">
+              <span class="fin-card-legend-dot" style="background:${PURP};opacity:.8"></span>Quarterly
+            </span>
+          </div>
+          <canvas id="fin-${c.id}-chart" height="90"></canvas>
+        </div>`).join('')}
+    </div>`;
 
-    // 對齊到統一 x 軸
-    const annAligned = allLbls.map(l => { const i = annLbls.indexOf(l); return i>=0 ? annVals[i] : null; });
-    const qtrAligned = allLbls.map(l => { const i = qtrLbls.indexOf(l); return i>=0 ? qtrVals[i] : null; });
+  panel.style.display = 'flex';
 
-    const tickCb = v => {
-      if (v===null||v===undefined) return '';
-      return fmtVal(v, unit);
-    };
+  // 畫每張迷你圖
+  cards.forEach(c => {
+    const ctx = document.getElementById(`fin-${c.id}-chart`)?.getContext('2d');
+    if (!ctx) return;
+    const allLbls = mergeLabels(ann, qtr);
+    const annVals = align(ann, allLbls, c.field);
+    const qtrVals = align(qtr, allLbls, c.field);
+    const unit    = c.unit;
 
-    return new Chart(ctx, {
-      type: 'line',
-      data: {
+    _finChartInsts[c.id] = new Chart(ctx, {
+      type:'line',
+      data:{
         labels: allLbls,
-        datasets: [
+        datasets:[
           {
-            label: 'Annual',
-            data: annAligned,
-            borderColor: GREEN, borderWidth: 1.8,
-            pointRadius: 3, pointHoverRadius: 5,
-            pointBackgroundColor: GREEN,
-            fill: false, tension: .3, spanGaps: true,
+            label:'Annual', data:annVals,
+            borderColor:GREEN, borderWidth:1.8,
+            pointRadius:2, pointHoverRadius:4,
+            pointBackgroundColor:GREEN,
+            fill:false, tension:.35, spanGaps:true,
           },
           {
-            label: 'Quarterly',
-            data: qtrAligned,
-            borderColor: PURP, borderWidth: 1.2,
-            borderDash: [4,3],
-            pointRadius: 2, pointHoverRadius: 4,
-            pointBackgroundColor: PURP,
-            fill: false, tension: .3, spanGaps: true,
+            label:'Quarterly', data:qtrVals,
+            borderColor:PURP, borderWidth:1.2,
+            borderDash:[4,3],
+            pointRadius:1, pointHoverRadius:3,
+            pointBackgroundColor:PURP,
+            fill:false, tension:.35, spanGaps:true,
           },
         ]
       },
-      options: {
-        animation: {duration: 300},
-        responsive: true,
-        interaction: {mode:'index', intersect:false},
-        plugins: {
-          legend: {display:false},
-          tooltip: {
-            backgroundColor:'#0e1117', borderColor:'#1c2130', borderWidth:1,
-            titleColor:'#dce3ef', bodyColor:'#8a9ab8',
-            titleFont:{family:FONT,size:10}, bodyFont:{family:FONT,size:10},
-            callbacks: {
+      options:{
+        animation:{duration:250},
+        responsive:true,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+            titleColor:'#dce3ef',bodyColor:'#8a9ab8',
+            titleFont:{family:FONT,size:9},bodyFont:{family:FONT,size:9},
+            callbacks:{
+              title: items => items[0]?.label || '',
               label: ctx => {
-                const v = ctx.raw;
-                if (v===null||v===undefined) return null;
-                return ctx.dataset.label + ': ' + fmtVal(v, unit);
+                const v=ctx.raw;
+                if(v===null||v===undefined) return null;
+                return ctx.dataset.label+': '+fmtVal(v,unit);
               }
             }
           }
         },
-        scales: {
-          x: {
-            ticks: {color:'#3d4a63', font:{family:FONT,size:9}, maxRotation:0, maxTicksLimit:8},
-            grid: {color:'#1c2130'}
+        scales:{
+          x:{
+            ticks:{color:'#3d4a63',font:{family:FONT,size:8},maxRotation:0,maxTicksLimit:5},
+            grid:{color:'#151b28'}
           },
-          y: {
-            ticks: {color:'#5a6a85', font:{family:FONT,size:9}, maxTicksLimit:5, callback:tickCb},
-            grid: {color:'#1c2130'}
+          y:{
+            ticks:{color:'#4a5878',font:{family:FONT,size:8},maxTicksLimit:4,
+              callback:v=>fmtVal(v,unit)},
+            grid:{color:'#151b28'}
           }
         }
       }
     });
-  }
-
-  _finChartInsts.revenue  = makeChart('fin-revenue-chart',  ann, qtr, 'revenue');
-  _finChartInsts.margin   = makeChart('fin-margin-chart',   ann, qtr, 'net_margin', '%');
-  _finChartInsts.eps      = makeChart('fin-eps-chart',      ann, qtr, 'eps');
-  _finChartInsts.opincome = makeChart('fin-opincome-chart', ann, qtr, 'op_income');
+  });
 }
 
 /* ── Keyboard ↑↓ navigation ── */
