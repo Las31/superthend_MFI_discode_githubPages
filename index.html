@@ -9,6 +9,10 @@
   font-family: 'neonavy';
   src: url('fonts/neonavy.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'PositiveSystem';
+  src: url('fonts/Positive System.ttf') format('truetype');
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -89,23 +93,184 @@ header{
 #scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
 
 /* ── Stats ── */
+/* ══ CRT Stats ══════════════════════════════════════════════ */
 #stats{
-  display:flex;justify-content:center;gap:1px;
-  background:var(--border);border-bottom:1px solid var(--border);flex-shrink:0
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);
+  border-bottom:1px solid var(--border);flex-shrink:0;
+  position:relative;overflow:hidden;
 }
-.stat{width:180px;flex-shrink:0;background:var(--surface);padding:12px 20px;text-align:center}
-.stat-n{font-family:var(--display);font-size:24px;font-weight:800;line-height:1}
-.stat-l{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
-.s-total .stat-n{color:var(--text)}
-.s-strong .stat-n{color:var(--strong)}
-.s-normal .stat-n{color:var(--normal)}
-.s-weak   .stat-n{color:var(--weak)}
+
+/* 掃描光束 */
+#stats::after{
+  content:'';position:absolute;left:0;right:0;height:80px;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    rgba(0,229,160,.012) 40%,
+    rgba(0,229,160,.025) 50%,
+    rgba(0,229,160,.012) 60%,
+    transparent 100%
+  );
+  animation:crt-beam 6s linear infinite;
+  pointer-events:none;z-index:10;
+}
+@keyframes crt-beam{0%{top:-80px}100%{top:100%}}
+
+.stat{
+  background:var(--surface);padding:18px 16px 14px;
+  text-align:center;overflow:hidden;position:relative;z-index:5;
+}
+.stat-n{
+  font-family:'PositiveSystem',var(--font);font-size:46px;font-weight:700;
+  line-height:1;letter-spacing:-2px;
+  display:block;position:relative;
+}
+/* 色差殘影 */
+.stat-n::before,.stat-n::after{
+  content:attr(data-val);
+  position:absolute;top:0;left:0;width:100%;
+  font-family:inherit;font-size:inherit;font-weight:inherit;
+  letter-spacing:inherit;text-align:center;
+  opacity:0;mix-blend-mode:screen;pointer-events:none;
+}
+.stat-n::before{color:#ff2020;}
+.stat-n::after {color:#00cfff;}
+
+.stat-l{
+  font-family:var(--font);font-size:9px;
+  letter-spacing:2px;text-transform:uppercase;
+  margin-top:8px;display:block;
+}
+
+/* ── 各格閃爍動畫 ── */
+@keyframes crt-flicker-a{
+  0%,80%,100%{opacity:1;filter:brightness(1)}
+  82%{opacity:.5;filter:brightness(.55)}
+  83%{opacity:1;filter:brightness(1.04)}
+}
+@keyframes crt-flicker-b{
+  0%,38%,100%{opacity:1;filter:brightness(1)}
+  40%{opacity:.45;filter:brightness(.5)}
+  41%{opacity:1;filter:brightness(1.05)}
+}
+@keyframes crt-flicker-c{
+  0%,68%,100%{opacity:1;filter:brightness(1)}
+  70%{opacity:.55;filter:brightness(.6)}
+  71%{opacity:1;filter:brightness(1.03)}
+}
+@keyframes crt-flicker-d{
+  0%,53%,100%{opacity:.72;filter:brightness(.78)}
+  55%{opacity:.35;filter:brightness(.4)}
+  56%{opacity:.72;filter:brightness(.78)}
+}
+
+/* ── 色差動畫 ── */
+@keyframes crt-red-a{
+  0%,74%,100%{opacity:0;transform:translateX(0)}
+  75%{opacity:.65;transform:translateX(-6px)}
+  76%{opacity:.45;transform:translateX(-9px)}
+  77%{opacity:.65;transform:translateX(-5px)}
+  78%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-blue-a{
+  0%,74%,100%{opacity:0;transform:translateX(0)}
+  75%{opacity:.65;transform:translateX(6px)}
+  76%{opacity:.45;transform:translateX(9px)}
+  77%{opacity:.65;transform:translateX(5px)}
+  78%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-red-b{
+  0%,52%,100%{opacity:0;transform:translateX(0)}
+  53%{opacity:.6;transform:translateX(-5px)}
+  54%{opacity:.8;transform:translateX(-8px)}
+  55%{opacity:.4;transform:translateX(-4px)}
+  56%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-blue-b{
+  0%,52%,100%{opacity:0;transform:translateX(0)}
+  53%{opacity:.6;transform:translateX(5px)}
+  54%{opacity:.8;transform:translateX(8px)}
+  55%{opacity:.4;transform:translateX(4px)}
+  56%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-red-c{
+  0%,87%,100%{opacity:0;transform:translateX(0)}
+  88%{opacity:.7;transform:translateX(-5px)}
+  89%{opacity:.9;transform:translateX(-8px)}
+  90%{opacity:.5;transform:translateX(-3px)}
+  91%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-blue-c{
+  0%,87%,100%{opacity:0;transform:translateX(0)}
+  88%{opacity:.7;transform:translateX(5px)}
+  89%{opacity:.9;transform:translateX(8px)}
+  90%{opacity:.5;transform:translateX(3px)}
+  91%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-red-d{
+  0%,63%,100%{opacity:0;transform:translateX(0)}
+  64%{opacity:.55;transform:translateX(-4px)}
+  65%{opacity:.7;transform:translateX(-7px)}
+  66%{opacity:.4;transform:translateX(-3px)}
+  67%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-blue-d{
+  0%,63%,100%{opacity:0;transform:translateX(0)}
+  64%{opacity:.55;transform:translateX(4px)}
+  65%{opacity:.7;transform:translateX(7px)}
+  66%{opacity:.4;transform:translateX(3px)}
+  67%{opacity:0;transform:translateX(0)}
+}
+@keyframes crt-pulse-strong{
+  0%,100%{text-shadow:0 0 2px #00e5a0,0 0 10px rgba(0,229,160,.6),0 0 24px rgba(0,229,160,.25)}
+  50%    {text-shadow:0 0 4px #00e5a0,0 0 18px rgba(0,229,160,.8),0 0 40px rgba(0,229,160,.4)}
+}
+
+/* Total */
+.s-total .stat-n{
+  color:#dce3ef;
+  text-shadow:0 0 2px rgba(220,227,239,.4),0 0 10px rgba(220,227,239,.15);
+  animation:crt-flicker-a 7s infinite;
+}
+.s-total .stat-l{color:#3d4a63}
+.s-total .stat-n::before{animation:crt-red-a  7s infinite}
+.s-total .stat-n::after {animation:crt-blue-a 7s infinite}
+
+/* Strong */
+.s-strong .stat-n{
+  color:#00e5a0;
+  text-shadow:0 0 2px #00e5a0,0 0 10px rgba(0,229,160,.6),0 0 24px rgba(0,229,160,.25);
+  animation:crt-flicker-b 9s infinite,crt-pulse-strong 3.5s ease-in-out infinite;
+}
+.s-strong .stat-l{color:rgba(0,229,160,.4)}
+.s-strong .stat-n::before{animation:crt-red-b  6s infinite}
+.s-strong .stat-n::after {animation:crt-blue-b 6s infinite}
+
+/* Normal */
+.s-normal .stat-n{
+  color:#f5a623;
+  text-shadow:0 0 2px #f5a623,0 0 10px rgba(245,166,35,.55),0 0 22px rgba(245,166,35,.2);
+  animation:crt-flicker-c 6s infinite;
+}
+.s-normal .stat-l{color:rgba(245,166,35,.38)}
+.s-normal .stat-n::before{animation:crt-red-c  9s infinite}
+.s-normal .stat-n::after {animation:crt-blue-c 9s infinite}
+
+/* Weak */
+.s-weak .stat-n{
+  color:#4a5878;
+  text-shadow:0 0 2px #4a5878,0 0 8px rgba(74,88,120,.4);
+  animation:crt-flicker-d 11s infinite;
+}
+.s-weak .stat-l{color:rgba(74,88,120,.5)}
+.s-weak .stat-n::before{animation:crt-red-d  5s infinite}
+.s-weak .stat-n::after {animation:crt-blue-d 5s infinite}
 
 /* ── Controls ── */
 #controls{
   display:flex;align-items:center;flex-wrap:wrap;gap:8px;
   padding:10px 28px;border-bottom:1px solid var(--border);
-  background:var(--surface);z-index:100;flex-shrink:0;
+  background:var(--surface);z-index:300;position:relative;flex-shrink:0;
 }
 .controls-inner{display:flex;align-items:center;flex-wrap:wrap;gap:8px;width:100%}
 .search-wrap{position:relative;flex-shrink:0}
@@ -133,7 +298,7 @@ header{
 .filter-badge{background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px;min-width:14px;text-align:center}
 .filter-panel{
   display:none;position:absolute;top:calc(100% + 6px);left:0;
-  background:var(--surface);border:1px solid var(--border2);min-width:240px;z-index:200;padding:12px;
+  background:var(--surface);border:1px solid var(--border2);min-width:240px;z-index:400;padding:12px;
 }
 .filter-panel.open{display:block}
 .filter-group-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;margin-top:10px}
@@ -330,9 +495,9 @@ canvas#mfi-chart{width:100%!important}
   .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
   header{padding:10px 14px}
   .logo{font-size:16px;letter-spacing:.3px}
-  #stats{flex-wrap:wrap}
-  .stat{width:50%;min-width:0;padding:8px}
-  .stat-n{font-size:20px}
+  #stats{grid-template-columns:repeat(2,1fr)}
+  .stat{padding:12px 8px}
+  .stat-n{font-size:28px;letter-spacing:-1px}
   #controls{padding:8px 12px}
   #search{width:120px}
   .sort-lbl{display:none}
@@ -457,10 +622,10 @@ footer a:hover{color:var(--accent)}
 </header>
 
 <div id="stats">
-  <div class="stat s-total" ><div class="stat-n" id="s-total">—</div><div class="stat-l">Total Flips</div></div>
-  <div class="stat s-strong"><div class="stat-n" id="s-strong">—</div><div class="stat-l">Strong</div></div>
-  <div class="stat s-normal"><div class="stat-n" id="s-normal">—</div><div class="stat-l">Normal</div></div>
-  <div class="stat s-weak"  ><div class="stat-n" id="s-weak">—</div><div class="stat-l">Weak</div></div>
+  <div class="stat s-total" ><span class="stat-n" id="s-total" data-val="—">—</span><span class="stat-l">Total Flips</span></div>
+  <div class="stat s-strong"><span class="stat-n" id="s-strong" data-val="—">—</span><span class="stat-l">Strong</span></div>
+  <div class="stat s-normal"><span class="stat-n" id="s-normal" data-val="—">—</span><span class="stat-l">Normal</span></div>
+  <div class="stat s-weak"  ><span class="stat-n" id="s-weak"   data-val="—">—</span><span class="stat-l">Weak</span></div>
 </div>
 
 <div id="controls">
@@ -760,10 +925,16 @@ function initMeta() {
   const t = meta.scan_time ? new Date(meta.scan_time) : null;
   document.getElementById('scan-time').textContent =
     t ? 'Updated '+t.toLocaleString('zh-TW',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
-  document.getElementById('s-total') .textContent = meta.total  ?? '—';
-  document.getElementById('s-strong').textContent = meta.strong ?? '—';
-  document.getElementById('s-normal').textContent = meta.normal ?? '—';
-  document.getElementById('s-weak')  .textContent = meta.weak   ?? '—';
+  const _sv = (id, v) => {
+    const el = document.getElementById(id);
+    const val = v ?? '—';
+    el.textContent = val;
+    el.dataset.val = val;
+  };
+  _sv('s-total',  meta.total);
+  _sv('s-strong', meta.strong);
+  _sv('s-normal', meta.normal);
+  _sv('s-weak',   meta.weak);
 }
 
 /* ── Filters ── */
