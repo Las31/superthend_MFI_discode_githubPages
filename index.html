@@ -146,14 +146,13 @@ header{
 .count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Index Tabs ── */
-.tabs{display:flex;gap:0}
+.tabs{display:flex;gap:4px;padding:1px}
 .tab{
   font-family:var(--font);font-size:11px;padding:6px 14px;
-  border:1px solid var(--border2);border-right:none;
+  border:1px solid var(--border2);
   background:transparent;color:var(--text2);cursor:pointer;
   letter-spacing:.5px;transition:all .15s;text-transform:uppercase;
 }
-.tab:last-child{border-right:1px solid var(--border2)}
 .tab:hover{color:var(--text);background:var(--surface2)}
 .tab.active{
   background:rgba(0,229,160,.08);
@@ -426,13 +425,12 @@ canvas#mfi-chart{width:100%!important}
   line-height:1;transition:color .15s;flex-shrink:0;
 }
 .pin-remove:hover{color:var(--down)}
-.pin-filter{display:flex;gap:1px;padding:6px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.pin-filter{display:flex;gap:1px;padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .pin-filter-btn{
   flex:1;font-family:var(--font);font-size:9px;padding:4px 4px;
   border:1px solid var(--border2);background:transparent;
   color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;text-align:center;
 }
-.pin-filter-btn+.pin-filter-btn{border-left:none}
 .pin-filter-btn:hover{color:var(--text2)}
 .pin-filter-btn.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
 .pin-empty{padding:24px 12px;text-align:center;font-size:10px;color:var(--text3);letter-spacing:.5px}
