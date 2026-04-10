@@ -13,6 +13,10 @@
   font-family: 'PositiveSystem';
   src: url('fonts/Positive System.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'Twobit';
+  src: url('fonts/Twobit.ttf') format('truetype');
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -102,28 +106,47 @@ header{
 }
 
 /* 掃描光束 */
-#stats::after{
-  content:'';position:absolute;left:0;right:0;height:80px;
+#stats-beam{
+  position:absolute;left:0;right:0;height:80px;
   background:linear-gradient(180deg,
     transparent 0%,
-    rgba(0,229,160,.012) 40%,
-    rgba(0,229,160,.025) 50%,
-    rgba(0,229,160,.012) 60%,
+    rgba(0,229,160,.015) 40%,
+    rgba(0,229,160,.032) 50%,
+    rgba(0,229,160,.015) 60%,
     transparent 100%
   );
   animation:crt-beam 6s linear infinite;
-  pointer-events:none;z-index:10;
+  pointer-events:none;z-index:20;
 }
 @keyframes crt-beam{0%{top:-80px}100%{top:100%}}
 
+/* 條紋（scanlines）*/
+#stats-scanlines{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent      0px, transparent      2px,
+    rgba(0,0,0,.22)  2px, rgba(0,0,0,.22)  4px
+  );
+  pointer-events:none;z-index:19;
+}
+
+/* 弧面反光 */
+#stats-glare{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,
+    rgba(0,229,160,.04) 0%, transparent 70%);
+  pointer-events:none;z-index:18;
+}
+
 .stat{
-  background:var(--surface);padding:18px 16px 14px;
+  background:rgba(14,17,23,.92);padding:18px 16px 14px;
   text-align:center;overflow:hidden;position:relative;z-index:5;
 }
 .stat-n{
-  font-family:'PositiveSystem',var(--font);font-size:46px;font-weight:700;
-  line-height:1;letter-spacing:-2px;
-  display:block;position:relative;
+  font-family:'Twobit',var(--font);font-size:46px;font-weight:700;
+  line-height:1;letter-spacing:4px;
+  display:block;position:relative;z-index:25;
 }
 /* 色差殘影 */
 .stat-n::before,.stat-n::after{
@@ -139,7 +162,7 @@ header{
 .stat-l{
   font-family:var(--font);font-size:9px;
   letter-spacing:2px;text-transform:uppercase;
-  margin-top:8px;display:block;
+  margin-top:8px;display:block;position:relative;z-index:25;
 }
 
 /* ── 各格閃爍動畫 ── */
@@ -622,6 +645,9 @@ footer a:hover{color:var(--accent)}
 </header>
 
 <div id="stats">
+  <div id="stats-beam"></div>
+  <div id="stats-scanlines"></div>
+  <div id="stats-glare"></div>
   <div class="stat s-total" ><span class="stat-n" id="s-total" data-val="—">—</span><span class="stat-l">Total Flips</span></div>
   <div class="stat s-strong"><span class="stat-n" id="s-strong" data-val="—">—</span><span class="stat-l">Strong</span></div>
   <div class="stat s-normal"><span class="stat-n" id="s-normal" data-val="—">—</span><span class="stat-l">Normal</span></div>
