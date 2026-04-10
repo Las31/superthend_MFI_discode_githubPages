@@ -423,6 +423,33 @@ header{
 canvas#mfi-chart{width:100%!important}
 
 #chart-info{flex-shrink:0;padding:8px 16px;border-top:1px solid var(--border);font-size:11px}
+
+/* ── Financials Panel ── */
+#fin-panel{
+  flex-shrink:0;border-top:1px solid var(--border);
+  display:none;flex-direction:column;
+  max-height:420px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+#fin-panel::-webkit-scrollbar{width:4px}
+#fin-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.fin-section{padding:10px 16px 6px;border-bottom:1px solid var(--border)}
+.fin-section:last-child{border-bottom:none}
+.fin-section-head{
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+}
+.fin-section-label{
+  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);font-family:var(--font);
+}
+.fin-legend{display:flex;gap:12px;margin-left:auto}
+.fin-legend-item{display:flex;align-items:center;gap:4px;font-size:9px;color:var(--text3);letter-spacing:.5px}
+.fin-legend-dot{width:8px;height:2px;border-radius:1px}
+.fin-loading{
+  padding:20px;text-align:center;font-size:10px;
+  color:var(--text3);letter-spacing:1px;
+}
+.fin-error{padding:10px 16px;font-size:10px;color:var(--down);letter-spacing:.5px}
 .info-tags{display:flex;gap:6px;flex-wrap:wrap}
 .info-tag{font-size:10px;padding:2px 8px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text2)}
 .info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
@@ -742,6 +769,50 @@ footer a:hover{color:var(--accent)}
     </div>
 
     <div id="chart-info" style="display:none"></div>
+
+    <!-- Financials -->
+    <div id="fin-panel">
+      <div class="fin-section" id="fin-revenue">
+        <div class="fin-section-head">
+          <span class="fin-section-label">Total Revenue</span>
+          <div class="fin-legend">
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
+          </div>
+        </div>
+        <canvas id="fin-revenue-chart" height="80"></canvas>
+      </div>
+      <div class="fin-section" id="fin-margin">
+        <div class="fin-section-head">
+          <span class="fin-section-label">Net Profit Margin %</span>
+          <div class="fin-legend">
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
+          </div>
+        </div>
+        <canvas id="fin-margin-chart" height="80"></canvas>
+      </div>
+      <div class="fin-section" id="fin-eps">
+        <div class="fin-section-head">
+          <span class="fin-section-label">EPS (Earnings Per Share)</span>
+          <div class="fin-legend">
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
+          </div>
+        </div>
+        <canvas id="fin-eps-chart" height="80"></canvas>
+      </div>
+      <div class="fin-section" id="fin-opincome">
+        <div class="fin-section-head">
+          <span class="fin-section-label">Operating Income</span>
+          <div class="fin-legend">
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#00e5a0"></span>Annual</span>
+            <span class="fin-legend-item"><span class="fin-legend-dot" style="background:#7b6cff;opacity:.7"></span>Quarterly</span>
+          </div>
+        </div>
+        <canvas id="fin-opincome-chart" height="80"></canvas>
+      </div>
+    </div>
   </div>
 
   <!-- Drag Resizer -->
@@ -1363,6 +1434,7 @@ function loadChartPanel(r) {
   document.getElementById('mfi-panel').style.display='';
 
   _buildCharts(r.chart||{}, r.flip_date);
+  _buildFinancials(r.financials||{});
 }
 
 function _buildCharts(c, flipDate) {
@@ -1533,6 +1605,128 @@ function _buildCharts(c, flipDate) {
     }
   });
 })();
+
+
+
+/* ════════════════════════════════════════════
+   FINANCIALS — 從 data.json 讀取後端預存數據
+   年報(實線綠) + 季報(虛線紫) 同一張圖
+   ════════════════════════════════════════════ */
+let _finChartInsts = {};
+
+function _destroyFinCharts() {
+  Object.values(_finChartInsts).forEach(c => { try{c.destroy()}catch(e){} });
+  _finChartInsts = {};
+}
+
+function _buildFinancials(fin) {
+  _destroyFinCharts();
+  const panel = document.getElementById('fin-panel');
+  if (!fin || (!fin.annual?.length && !fin.quarterly?.length)) {
+    panel.style.display = 'none';
+    return;
+  }
+  panel.style.display = 'flex';
+
+  // 資料整理：舊→新
+  const ann = (fin.annual    || []).slice().reverse();
+  const qtr = (fin.quarterly || []).slice().reverse();
+
+  const FONT  = 'IBM Plex Mono';
+  const GREEN = '#00e5a0';
+  const PURP  = '#7b6cff';
+
+  function fmtVal(v, unit) {
+    if (v === null || v === undefined) return '—';
+    if (unit === '%') return v.toFixed(2) + '%';
+    if (Math.abs(v) >= 1e9) return (v/1e9).toFixed(2) + 'B';
+    if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(2) + 'M';
+    return v.toFixed(2);
+  }
+
+  function makeChart(canvasId, annData, qtrData, field, unit='') {
+    const ctx = document.getElementById(canvasId)?.getContext('2d');
+    if (!ctx) return null;
+
+    const annVals = annData.map(d => d[field] ?? null);
+    const qtrVals = qtrData.map(d => d[field] ?? null);
+    const annLbls = annData.map(d => d.date);
+    const qtrLbls = qtrData.map(d => d.date);
+
+    // 合併 x 軸 label（年報 + 季報，去重排序）
+    const allLbls = [...new Set([...annLbls, ...qtrLbls])].sort();
+
+    // 對齊到統一 x 軸
+    const annAligned = allLbls.map(l => { const i = annLbls.indexOf(l); return i>=0 ? annVals[i] : null; });
+    const qtrAligned = allLbls.map(l => { const i = qtrLbls.indexOf(l); return i>=0 ? qtrVals[i] : null; });
+
+    const tickCb = v => {
+      if (v===null||v===undefined) return '';
+      return fmtVal(v, unit);
+    };
+
+    return new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: allLbls,
+        datasets: [
+          {
+            label: 'Annual',
+            data: annAligned,
+            borderColor: GREEN, borderWidth: 1.8,
+            pointRadius: 3, pointHoverRadius: 5,
+            pointBackgroundColor: GREEN,
+            fill: false, tension: .3, spanGaps: true,
+          },
+          {
+            label: 'Quarterly',
+            data: qtrAligned,
+            borderColor: PURP, borderWidth: 1.2,
+            borderDash: [4,3],
+            pointRadius: 2, pointHoverRadius: 4,
+            pointBackgroundColor: PURP,
+            fill: false, tension: .3, spanGaps: true,
+          },
+        ]
+      },
+      options: {
+        animation: {duration: 300},
+        responsive: true,
+        interaction: {mode:'index', intersect:false},
+        plugins: {
+          legend: {display:false},
+          tooltip: {
+            backgroundColor:'#0e1117', borderColor:'#1c2130', borderWidth:1,
+            titleColor:'#dce3ef', bodyColor:'#8a9ab8',
+            titleFont:{family:FONT,size:10}, bodyFont:{family:FONT,size:10},
+            callbacks: {
+              label: ctx => {
+                const v = ctx.raw;
+                if (v===null||v===undefined) return null;
+                return ctx.dataset.label + ': ' + fmtVal(v, unit);
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {color:'#3d4a63', font:{family:FONT,size:9}, maxRotation:0, maxTicksLimit:8},
+            grid: {color:'#1c2130'}
+          },
+          y: {
+            ticks: {color:'#5a6a85', font:{family:FONT,size:9}, maxTicksLimit:5, callback:tickCb},
+            grid: {color:'#1c2130'}
+          }
+        }
+      }
+    });
+  }
+
+  _finChartInsts.revenue  = makeChart('fin-revenue-chart',  ann, qtr, 'revenue');
+  _finChartInsts.margin   = makeChart('fin-margin-chart',   ann, qtr, 'net_margin', '%');
+  _finChartInsts.eps      = makeChart('fin-eps-chart',      ann, qtr, 'eps');
+  _finChartInsts.opincome = makeChart('fin-opincome-chart', ann, qtr, 'op_income');
+}
 
 /* ── Keyboard ↑↓ navigation ── */
 document.addEventListener('keydown', e=>{
