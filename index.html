@@ -93,8 +93,8 @@ header{
   99%{opacity:1}
 }
 .header-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.param-pill{font-size:11px;color:var(--text2);border:1px solid var(--border2);padding:4px 10px;letter-spacing:.5px}
-#scan-time{font-size:11px;color:var(--text2);letter-spacing:.3px}
+.param-pill{font-size:12px;color:var(--text2);border:1px solid var(--border2);padding:4px 10px;letter-spacing:.5px}
+#scan-time{font-size:12px;color:var(--text2);letter-spacing:.3px}
 
 /* ── Stats ── */
 /* ══ CRT Stats ══════════════════════════════════════════════ */
@@ -160,7 +160,7 @@ header{
 .stat-n::after {color:#00cfff;}
 
 .stat-l{
-  font-family:var(--font);font-size:9px;
+  font-family:var(--font);font-size:12px;
   letter-spacing:2px;text-transform:uppercase;
   margin-top:8px;display:block;position:relative;z-index:25;
 }
@@ -299,7 +299,7 @@ header{
 .search-wrap{position:relative;flex-shrink:0}
 .search-wrap::before{
   content:'//';position:absolute;left:10px;top:50%;transform:translateY(-50%);
-  color:var(--accent);font-size:11px;pointer-events:none;
+  color:var(--accent);font-size:12px;pointer-events:none;
 }
 #search{
   background:var(--bg);border:1px solid var(--border2);color:var(--text);
@@ -312,31 +312,31 @@ header{
 /* Filter */
 .filter-wrap{position:relative}
 .filter-btn{
-  font-family:var(--font);font-size:11px;padding:7px 14px;
+  font-family:var(--font);font-size:12px;padding:7px 14px;
   border:1px solid var(--border2);background:transparent;color:var(--text2);
   cursor:pointer;letter-spacing:.5px;transition:all .15s;display:flex;align-items:center;gap:6px;
 }
 .filter-btn:hover{color:var(--text);border-color:var(--text2)}
 .filter-btn.has-active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.08)}
-.filter-badge{background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px;min-width:14px;text-align:center}
+.filter-badge{background:var(--accent);color:#000;font-size:10px;font-weight:700;border-radius:8px;padding:1px 5px;min-width:14px;text-align:center}
 .filter-panel{
   display:none;position:absolute;top:calc(100% + 6px);left:0;
   background:var(--surface);border:1px solid var(--border2);min-width:240px;z-index:400;padding:12px;
 }
 .filter-panel.open{display:block}
-.filter-group-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;margin-top:10px}
+.filter-group-label{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;margin-top:10px}
 .filter-group-label:first-child{margin-top:0}
 .filter-item{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}
 .filter-item input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;cursor:pointer;flex-shrink:0}
-.filter-item label{font-size:11px;color:var(--text2);cursor:pointer;letter-spacing:.3px}
+.filter-item label{font-size:12px;color:var(--text2);cursor:pointer;letter-spacing:.3px}
 .filter-item:hover label{color:var(--text)}
 .filter-divider{height:1px;background:var(--border);margin:8px 0}
-.count-badge{font-size:10px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
+.count-badge{font-size:12px;color:var(--text3);margin-left:4px;letter-spacing:.3px}
 
 /* ── Index Tabs ── */
 .tabs{display:flex;gap:4px;padding:1px}
 .tab{
-  font-family:var(--font);font-size:11px;padding:6px 14px;
+  font-family:var(--font);font-size:12px;padding:6px 14px;
   border:1px solid var(--border2);
   background:transparent;color:var(--text2);cursor:pointer;
   letter-spacing:.5px;transition:all .15s;text-transform:uppercase;
@@ -349,9 +349,9 @@ header{
 
 /* Sort */
 .sort-group{display:flex;gap:4px;align-items:center;margin-left:auto}
-.sort-lbl{font-size:10px;color:var(--text3);letter-spacing:1px;margin-right:2px}
+.sort-lbl{font-size:12px;color:var(--text3);letter-spacing:1px;margin-right:2px}
 .sort-btn{
-  font-family:var(--font);font-size:10px;padding:6px 11px;
+  font-family:var(--font);font-size:12px;padding:6px 11px;
   border:1px solid var(--border2);background:transparent;
   color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s;
 }
@@ -370,27 +370,40 @@ header{
   overflow-y:auto;overflow-x:hidden;
   scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
 }
+/* 讓 MFI tooltip 不被裁切 */
+#mfi-panel{isolation:isolate}
 #chart-panel::-webkit-scrollbar{width:4px}
 #chart-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* chart-fixed 和 chart-scroll 不再需要獨立捲動，合併成普通 block */
-#chart-fixed{
-  display:flex;flex-direction:column;flex-shrink:0;
-}
-#chart-scroll{
-  flex-shrink:0;border-top:1px solid var(--border);
-}
+
 
 /* K線圖固定高度，不被壓縮 */
 #lw-wrap{
-  height:55vh;min-height:300px;
-  flex-shrink:0;padding:0;overflow:hidden;position:relative;
+  height:42vh;min-height:300px;
+  flex-shrink:0;padding:0 14px;overflow:hidden;position:relative;
+}
+
+/* ── A 方案：左側色塊邊線區隔 ── */
+#lw-wrap        {border-left:3px solid #00e5a0}
+#mfi-panel      {border-left:3px solid #f5a623}
+#fin-panel      {border-left:3px solid #7b6cff}
+
+/* ── B 方案：全寬色帶標題 ── */
+.section-title-bar{
+  padding:4px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  border-bottom:1px solid;font-family:var(--font);
+}
+.section-title-bar.mfi-bar{
+  color:#f5a623;border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.05);
+}
+.section-title-bar.fin-bar{
+  color:#7b6cff;border-color:rgba(123,108,255,.2);background:rgba(123,108,255,.05);
 }
 
 /* ── Drag Resizer ── */
 #resizer{
   width:6px;flex-shrink:0;cursor:col-resize;
-  background:#3a4460;
+  background:#212225;
   transition:background .15s;z-index:10;
   display:flex;align-items:center;justify-content:center;
 }
@@ -406,16 +419,17 @@ header{
 #chart-ticker-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 #chart-ticker{font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)}
 
-.grade{display:inline-block;padding:2px 8px;font-size:10px;font-weight:600;letter-spacing:.5px}
+.grade{display:inline-block;padding:2px 8px;font-size:12px;font-weight:600;letter-spacing:.5px}
 .grade-Strong{background:rgba(0,229,160,.1);color:var(--strong);border:1px solid rgba(0,229,160,.25)}
 .grade-Normal{background:rgba(245,166,35,.1);color:var(--normal);border:1px solid rgba(245,166,35,.25)}
 .grade-Weak{background:rgba(74,88,120,.15);color:#7a8ba8;border:1px solid rgba(74,88,120,.3)}
 
-#chart-sub{font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px}
+#chart-sub{font-size:12px;color:var(--text);letter-spacing:.3px;margin-bottom:8px}
+#chart-tags{display:none;gap:6px;flex-wrap:wrap;align-items:center}
 
 #chart-meta-cards{display:flex;gap:6px;flex-wrap:wrap}
 .cmeta{background:var(--bg);border:1px solid var(--border);padding:5px 10px;min-width:78px}
-.cmeta .lbl{font-size:9px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
+.cmeta .lbl{font-size:12px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
 .cmeta .val{font-family:var(--display);font-size:13px;font-weight:700;margin-top:2px;color:var(--text)}
 
 #chart-pin-btn{
@@ -427,83 +441,89 @@ header{
 
 #chart-legend{
   display:flex;gap:12px;flex-wrap:wrap;
-  padding:6px 16px 4px;font-size:10px;font-family:var(--font);
+  padding:6px 16px 4px;font-size:12px;font-family:var(--font);
   letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border);
 }
 .legend-item{display:flex;align-items:center;gap:4px}
 
-/* chart fills remaining space */
-#lw-wrap{flex:1;min-height:0;padding:0;overflow:hidden;position:relative;min-height:180px}
 #lw-container{width:100%;height:100%;margin:0}
 
-#mfi-panel{flex-shrink:0;padding:6px 16px 10px;border-top:1px solid var(--border)}
-#mfi-panel .mfi-label{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+#mfi-panel{flex-shrink:0;padding:0 0 8px;border-top:1px solid var(--border);overflow:visible}
+#mfi-panel .mfi-label{display:none}
 canvas#mfi-chart{width:100%!important}
 
-#chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:11px}
+#chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px}
 
 /* ── Financials Panel（2×2 小卡）── */
 #fin-panel{
-  display:none;padding:10px 14px 12px;
+  display:none;padding:0 0 12px;
   flex-direction:column;gap:8px;
 }
 .fin-title{
-  font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--text3);margin-bottom:0;
+  font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text2);margin-bottom:2px;font-weight:600;
 }
 .fin-cards{
   display:grid;grid-template-columns:repeat(2,1fr);gap:6px;
+  padding:10px 14px 0;
 }
 .fin-card{
   background:var(--bg);border:1px solid var(--border);
   padding:8px 10px;display:flex;flex-direction:column;gap:3px;
+  min-width:0;overflow:hidden;
+}
+.fin-card canvas{max-width:100%;}
+.fin-card-header{
+  display:flex;align-items:center;gap:8px;margin-bottom:2px;
 }
 .fin-card-label{
-  font-size:9px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--text3);white-space:nowrap;
+  font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text2);white-space:nowrap;flex-shrink:0;
 }
-.fin-card-legend{display:flex;gap:8px;margin-bottom:1px}
-.fin-card-legend-item{display:flex;align-items:center;gap:3px;font-size:8px;color:var(--text3)}
+.fin-card-legend{display:flex;gap:8px;margin-left:auto;}
+.fin-card-legend-item{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--text2)}
 .fin-card-legend-dot{width:10px;height:1.5px;border-radius:1px;flex-shrink:0}
 .info-tags{display:flex;gap:6px;flex-wrap:wrap}
-.info-tag{font-size:10px;padding:2px 8px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text2)}
-.info-tag.sector{border-color:rgba(123,108,255,.4);color:#7b6cff}
-.info-tag.industry{border-color:rgba(0,229,160,.3);color:#00e5a0}
-.info-tag.country{border-color:var(--border2);color:var(--text3)}
-.info-desc{font-size:10px;color:var(--text3);line-height:1.5;letter-spacing:.2px;margin-top:5px}
+.info-tag{font-size:12px;padding:3px 10px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text)}
+.info-tag.sector{border-color:rgba(123,108,255,.6);color:#a89eff}
+.info-tag.industry{border-color:rgba(0,229,160,.5);color:#00e5a0}
+.info-tag.country{border-color:var(--border2);color:var(--text2)}
+.info-desc{font-size:12px;color:var(--text2);line-height:1.6;letter-spacing:.2px;margin-top:6px}
 
 #chart-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--text3);font-size:11px;letter-spacing:1px;gap:10px;text-align:center;padding:24px;
+  color:var(--text3);font-size:12px;letter-spacing:1px;gap:10px;text-align:center;padding:24px;
 }
 #chart-empty .big{font-family:var(--display);font-size:48px;font-weight:800;opacity:.06;line-height:1}
 
 /* ── Right List Panel ── */
 #list-panel{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;min-height:0}
-#list-scroll{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+#list-scroll{flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 #list-scroll::-webkit-scrollbar{width:4px}
 #list-scroll::-webkit-scrollbar-track{background:transparent}
 #list-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-:root{--cols:36px 1fr 110px 90px 100px 110px}
+:root{--cols:36px minmax(80px,1fr) minmax(90px,120px) minmax(70px,100px) minmax(80px,110px)}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
   position:sticky;top:0;z-index:50;
   background:var(--surface2);border-bottom:1px solid var(--border2);
+  width:100%;
 }
 .grid-row{
   display:grid;grid-template-columns:var(--cols);
   border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;
+  width:100%;
 }
 .grid-row:hover{background:rgba(255,255,255,.04)}
 .grid-row.selected{background:rgba(0,229,160,.07);border-left:2px solid var(--accent)}
 .grid-th{
-  padding:9px 14px;font-size:10px;letter-spacing:.8px;text-transform:uppercase;
+  padding:9px 14px;font-size:12px;letter-spacing:.8px;text-transform:uppercase;
   color:var(--text2);font-weight:600;white-space:nowrap;cursor:pointer;user-select:none;
 }
 .grid-th:hover{color:var(--text)}
 .grid-th.col-sorted{color:var(--accent)}
-.grid-th .arr{margin-left:3px;font-size:9px}
+.grid-th .arr{margin-left:3px;font-size:12px}
 .grid-td{padding:9px 14px;white-space:nowrap;display:flex;align-items:center}
 .td-ticker{font-family:var(--display);font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px}
 .td-ticker a{color:inherit;text-decoration:none}
@@ -520,9 +540,9 @@ canvas#mfi-chart{width:100%!important}
 .grid-row.selected{border-left:2px solid var(--accent)!important}
 .pin-separator{border-top:1px dashed var(--accent);opacity:.4}
 
-#empty{display:none;padding:60px 32px;text-align:center;font-size:11px;color:var(--text3);letter-spacing:1px}
+#empty{display:none;padding:60px 32px;text-align:center;font-size:12px;color:var(--text3);letter-spacing:1px}
 #empty .big{font-family:var(--display);font-size:56px;font-weight:800;opacity:.07;line-height:1;margin-bottom:12px}
-#loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px;font-size:11px;color:var(--text3);letter-spacing:1px}
+#loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:60px;font-size:12px;color:var(--text3);letter-spacing:1px}
 .spinner{width:16px;height:16px;border:1.5px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -530,11 +550,11 @@ canvas#mfi-chart{width:100%!important}
   display:flex;align-items:center;gap:6px;justify-content:center;
   padding:10px 0;border-top:1px solid var(--border);background:var(--surface);flex-shrink:0;
 }
-.page-btn{font-family:var(--font);font-size:10px;padding:4px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s}
+.page-btn{font-family:var(--font);font-size:12px;padding:4px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.4px;transition:all .15s}
 .page-btn:hover{color:var(--text);border-color:var(--text2)}
 .page-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.05)}
 .page-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
-.page-info{font-size:10px;color:var(--text3);letter-spacing:.3px}
+.page-info{font-size:12px;color:var(--text3);letter-spacing:.3px}
 
 /* ── Mobile ── */
 @media(max-width:760px){
@@ -554,7 +574,7 @@ canvas#mfi-chart{width:100%!important}
   .card-ticker a{color:var(--text);text-decoration:none}
   .card-right{display:flex;align-items:center;gap:8px}
   .card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px 0}
-  .card-item .lbl{font-size:9px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
+  .card-item .lbl{font-size:12px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
   .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
   .card-mfi-bar{height:2px;background:var(--border2);margin-top:5px;border-radius:1px}
   .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
@@ -591,7 +611,7 @@ canvas#mfi-chart{width:100%!important}
   flex-shrink:0;
 }
 #mobile-modal-ticker{font-family:var(--display);font-size:20px;font-weight:800;color:var(--text)}
-#mobile-modal-sub{font-size:11px;color:var(--text2);letter-spacing:.3px;flex:1;min-width:0}
+#mobile-modal-sub{font-size:12px;color:var(--text2);letter-spacing:.3px;flex:1;min-width:0}
 #mobile-modal-close{
   margin-left:auto;background:none;border:none;
   color:var(--text2);font-size:20px;cursor:pointer;
@@ -602,13 +622,13 @@ canvas#mfi-chart{width:100%!important}
 #mobile-lw-wrap{flex:1;min-height:0;overflow:hidden}
 #mobile-lw-container{width:100%;height:100%}
 #mobile-mfi-section{flex-shrink:0;padding:6px 16px 8px;border-top:1px solid var(--border)}
-#mobile-mfi-section .mfi-label{font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+#mobile-mfi-section .mfi-label{font-size:12px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 #mobile-modal-cards{
   display:grid;grid-template-columns:repeat(3,1fr);
   gap:6px;padding:10px 14px 14px;flex-shrink:0;
 }
 #mobile-modal-cards .cmeta{background:var(--bg);border:1px solid var(--border);padding:6px 10px}
-#mobile-modal-cards .cmeta .lbl{font-size:9px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
+#mobile-modal-cards .cmeta .lbl{font-size:12px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
 #mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:13px;font-weight:700;margin-top:2px;color:var(--text)}
 
 /* ── Pin Panel ── */
@@ -616,15 +636,48 @@ canvas#mfi-chart{width:100%!important}
   width:180px;flex-shrink:0;display:flex;flex-direction:column;
   border-left:1px solid var(--border);background:var(--surface);
   overflow:hidden;min-height:0;
+  transition:width .2s ease;
 }
+#pin-panel.collapsed{width:32px}
+#pin-panel.collapsed .pin-panel-actions,
+#pin-panel.collapsed .pin-filter,
+#pin-panel.collapsed #pin-list{display:none}
 #pin-panel-head{
   padding:10px 12px 8px;border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  cursor:pointer;user-select:none;
 }
-#pin-panel-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);font-weight:600}
+#pin-panel-head:hover{background:var(--surface2)}
+#pin-panel-title{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);font-weight:600}
+#pin-panel.collapsed #pin-panel-title{display:none}
+#pin-toggle{
+  font-size:14px;color:var(--text2);line-height:1;
+  flex-shrink:0;transition:transform .2s;
+}
+#pin-panel.collapsed #pin-toggle{transform:rotate(0deg)}
+/* 展開時箭頭朝右（›），折疊後不旋轉保持朝右提示點擊展開 */
+
+/* 折疊後的提示圖示 */
+#pin-collapsed-icon{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;flex:1;padding:16px 0;cursor:pointer;
+  background:transparent;transition:background .15s;
+}
+#pin-panel.collapsed #pin-collapsed-icon{display:flex}
+#pin-collapsed-icon:hover{background:var(--surface2)}
+#pin-collapsed-icon svg{
+  color:var(--accent);opacity:.8;transition:opacity .15s,transform .15s;
+}
+#pin-collapsed-icon:hover svg{opacity:1;transform:scale(1.15)}
+#pin-collapsed-label{
+  font-size:13px;letter-spacing:2px;text-transform:uppercase;
+  writing-mode:vertical-rl;
+  transform:rotate(0deg);
+  color:var(--text);line-height:1;
+}
 .pin-panel-actions{display:flex;gap:6px;align-items:center}
 .pin-action-btn{
-  font-family:var(--font);font-size:9px;padding:3px 7px;
+  font-family:var(--font);font-size:12px;padding:3px 7px;
   border:1px solid var(--border2);background:transparent;
   color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;
 }
@@ -648,7 +701,7 @@ canvas#mfi-chart{width:100%!important}
 .pin-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .pin-dot.on{background:#00e5a0}
 .pin-dot.off{background:#3d4a63}
-.pin-date{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.3px}
+.pin-date{font-size:12px;color:var(--text3);margin-top:2px;letter-spacing:.3px}
 .pin-remove{
   background:none;border:none;cursor:pointer;
   color:var(--text3);font-size:12px;padding:2px 4px;
@@ -657,20 +710,20 @@ canvas#mfi-chart{width:100%!important}
 .pin-remove:hover{color:var(--down)}
 .pin-filter{display:flex;gap:1px;padding:6px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .pin-filter-btn{
-  flex:1;font-family:var(--font);font-size:9px;padding:4px 4px;
+  flex:1;font-family:var(--font);font-size:12px;padding:4px 4px;
   border:1px solid var(--border2);background:transparent;
   color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s;text-align:center;
 }
 .pin-filter-btn:hover{color:var(--text2)}
 .pin-filter-btn.active{background:rgba(0,229,160,.08);border-color:var(--accent);color:var(--accent)}
-.pin-empty{padding:24px 12px;text-align:center;font-size:10px;color:var(--text3);letter-spacing:.5px}
+.pin-empty{padding:24px 12px;text-align:center;font-size:12px;color:var(--text3);letter-spacing:.5px}
 @media(max-width:760px){#pin-panel{display:none}}
 
 /* ── Footer ── */
 footer{
   padding:8px 28px;border-top:1px solid var(--border);background:var(--surface);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
-  font-size:10px;color:var(--text3);letter-spacing:.5px;flex-shrink:0;
+  font-size:12px;color:var(--text3);letter-spacing:.5px;flex-shrink:0;
 }
 footer a{color:var(--text2);text-decoration:none}
 footer a:hover{color:var(--accent)}
@@ -731,7 +784,7 @@ footer a:hover{color:var(--accent)}
         <label class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></label>
         <label class="filter-item"><input type="checkbox" id="f-hold2"   onchange="render()"><label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label></label>
         <div class="filter-divider"></div>
-        <button onclick="clearFilters()" style="font-family:var(--font);font-size:10px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
+        <button onclick="clearFilters()" style="font-family:var(--font);font-size:12px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
       </div>
     </div>
 
@@ -754,39 +807,45 @@ footer a:hover{color:var(--accent)}
   <div id="chart-panel">
 
     <!-- 上方固定：head + legend + K線 + MFI -->
-    <div id="chart-fixed">
-      <div id="chart-panel-head">
-        <div id="chart-ticker-row">
-          <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
-          <span id="chart-grade" style="display:none"></span>
-          <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
-        </div>
-        <div id="chart-sub" style="display:none;font-size:11px;color:var(--text2);letter-spacing:.3px;margin-bottom:8px"></div>
-        <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
+    <!-- Head -->
+    <div id="chart-panel-head">
+      <div id="chart-ticker-row">
+        <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
+        <span id="chart-grade" style="display:none"></span>
+        <div id="chart-tags" style="display:none;align-items:center;gap:6px;flex-wrap:wrap"></div>
+        <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
       </div>
-      <div id="chart-legend" style="display:none;gap:12px;flex-wrap:wrap;padding:6px 16px 4px;font-size:10px;font-family:var(--font);letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border)">
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #facc15;vertical-align:middle"></span>SuperTrend</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle"></span>EMA 50</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle"></span>EMA 150</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle"></span>EMA 200</span>
-        <span style="color:#ff6b35">▲ FLIP</span>
-      </div>
-      <div id="chart-empty">
-        <div class="big">K</div>
-        <span>點擊右側股票<br>查看 K 線圖表</span>
-      </div>
-      <div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
-      <div id="mfi-panel" style="display:none">
-        <div class="mfi-label">MFI</div>
-        <canvas id="mfi-chart" height="72"></canvas>
-      </div>
+      <div id="chart-sub" style="display:none;font-size:12px;color:var(--text);letter-spacing:.3px;margin-bottom:8px"></div>
+      <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
     </div>
 
-    <!-- 下方可捲動：財務卡 + 公司簡介 -->
-    <div id="chart-scroll">
-      <div id="fin-panel" style="display:none"></div>
-      <div id="chart-info" style="display:none"></div>
+    <!-- Legend -->
+    <div id="chart-legend" style="display:none;gap:12px;flex-wrap:wrap;padding:6px 16px 4px;font-size:12px;font-family:var(--font);letter-spacing:.4px;color:#6b7a99;flex-shrink:0;border-bottom:1px solid var(--border)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:16px;height:0;border-top:2px dashed #facc15;vertical-align:middle"></span>SuperTrend</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#7b6cff;vertical-align:middle"></span>EMA 50</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#ff9f40;vertical-align:middle"></span>EMA 150</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:14px;height:2px;background:#e05555;vertical-align:middle"></span>EMA 200</span>
+      <span style="color:#ff6b35">▲ FLIP</span>
     </div>
+
+    <!-- K線 empty state -->
+    <div id="chart-empty">
+      <div class="big">K</div>
+      <span>點擊右側股票<br>查看 K 線圖表</span>
+    </div>
+
+    <!-- K線圖 -->
+<div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
+
+    <!-- MFI -->
+<div id="mfi-panel" style="display:none">
+      <div class="mfi-label">MFI</div>
+      <canvas id="mfi-chart" height="72"></canvas>
+    </div>
+
+    <!-- 財務卡 + 公司簡介（往下捲） -->
+<div id="fin-panel" style="display:none"></div>
+    <div id="chart-info" style="display:none"></div>
 
   </div>
 
@@ -806,7 +865,7 @@ footer a:hover{color:var(--accent)}
           <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
           <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
           <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
-          <div class="grid-th" data-k="supertrend" onclick="thSort(this)">SuperTrend<span class="arr"></span></div>
+
         </div>
         <div class="grid-tbody" id="tbody"></div>
       </div>
@@ -818,11 +877,12 @@ footer a:hover{color:var(--accent)}
 
   <!-- Pin Panel -->
   <div id="pin-panel">
-    <div id="pin-panel-head">
+    <div id="pin-panel-head" onclick="togglePinPanel()">
       <span id="pin-panel-title">釘選清單</span>
       <div class="pin-panel-actions">
-        <button class="pin-action-btn" onclick="exportPins()" title="匯出清單">匯出</button>
-        <button class="pin-action-btn" onclick="clearAllPins()" title="全部取消釘選">清除</button>
+        <button class="pin-action-btn" onclick="event.stopPropagation();exportPins()" title="匯出清單">匯出</button>
+        <button class="pin-action-btn" onclick="event.stopPropagation();clearAllPins()" title="全部取消釘選">清除</button>
+        <span id="pin-toggle">‹</span>
       </div>
     </div>
     <div class="pin-filter">
@@ -831,6 +891,15 @@ footer a:hover{color:var(--accent)}
       <button class="pin-filter-btn" data-f="off" onclick="setPinFilter(this)">● 未翻</button>
     </div>
     <div id="pin-list"></div>
+
+    <!-- 折疊時的提示圖示 -->
+    <div id="pin-collapsed-icon" onclick="togglePinPanel()">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L12 8L16 10L10 18L4 10L8 8L8 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="rgba(0,229,160,0.15)"/>
+        <line x1="10" y1="13" x2="10" y2="18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span id="pin-collapsed-label">釘選清單</span>
+    </div>
   </div>
 
 </div>
@@ -1135,7 +1204,6 @@ function render() {
           <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
-      <div class="grid-td">$${r.supertrend.toFixed(2)}</div>
     </div>`;
   }).join('');
 
@@ -1313,8 +1381,8 @@ function _buildMobileChart(r) {
           }}
         },
         scales:{
-          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:6},grid:{color:'#1c2130'}},
-          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#1c2130'},min:0,max:100},
+          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:12},maxTicksLimit:6},grid:{color:'#1c2130'}},
+          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#1c2130'},min:0,max:100},
         }
       },
       plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
@@ -1358,9 +1426,7 @@ function loadChartPanel(r) {
   tickerEl.style.cssText='font-family:var(--display);font-size:22px;font-weight:800;color:var(--text)';
 
   const gradeEl=document.getElementById('chart-grade');
-  gradeEl.textContent=r.mfi_grade;
-  gradeEl.className='grade grade-'+r.mfi_grade;
-  gradeEl.style.display='';
+  gradeEl.style.display='none';  /* grade 移到 sub 行 */
 
   /* Sub line */
   const chg=r.change_pct, sign=chg>=0?'+':'';
@@ -1368,7 +1434,7 @@ function loadChartPanel(r) {
   const subEl=document.getElementById('chart-sub');
   subEl.style.display='';
   subEl.innerHTML=
-    `Flip: <b>${r.flip_date}</b> · MFI: <b style="color:${GRADE_COLOR[r.mfi_grade]}">${r.mfi.toFixed(1)}</b> · Change: <b style="color:${chgClr}">${sign}${chg.toFixed(2)}%</b>`;
+    `<span class="grade grade-${r.mfi_grade}" style="vertical-align:middle;margin-right:4px">${r.mfi_grade}</span>Flip: <b style="color:var(--text)">${r.flip_date}</b> · MFI: <b style="color:${GRADE_COLOR[r.mfi_grade]}">${r.mfi.toFixed(1)}</b> · Change: <b style="color:${chgClr}">${sign}${chg.toFixed(2)}%</b>`;
 
   /* Meta cards */
   const metaCards=[
@@ -1389,24 +1455,31 @@ function loadChartPanel(r) {
   const pinBtn=document.getElementById('chart-pin-btn');
   pinBtn.style.display=''; updateChartPinBtn(r.ticker);
 
-  /* Info */
+  /* 板塊標籤 → ticker-row 旁邊 */
   const info=r.info||{};
-  const infoEl=document.getElementById('chart-info');
-  if (info.sector||info.industry||info.country||info.description) {
+  const tagsEl=document.getElementById('chart-tags');
+  if (info.sector||info.industry||info.country) {
     const tags=[
       info.sector  ?`<span class="info-tag sector">${info.sector}</span>`:'',
       info.industry?`<span class="info-tag industry">${info.industry}</span>`:'',
       info.country ?`<span class="info-tag country">${info.country}</span>`:'',
     ].filter(Boolean).join('');
-    infoEl.innerHTML=`<div class="info-tags">${tags}</div>${info.description?`<div class="info-desc">${info.description}</div>`:''}`;
+    tagsEl.innerHTML=tags;
+    tagsEl.style.display='flex';
+  } else { tagsEl.style.display='none'; tagsEl.innerHTML=''; }
+
+  /* 公司描述 → chart-info（捲動區） */
+  const infoEl=document.getElementById('chart-info');
+  if (info.description) {
+    infoEl.innerHTML=`<div class="info-desc">${info.description}</div>`;
     infoEl.style.display='';
   } else { infoEl.style.display='none'; infoEl.innerHTML=''; }
 
   /* Show panels */
   document.getElementById('chart-empty').style.display='none';
   document.getElementById('chart-legend').style.display='flex';
-  document.getElementById('lw-wrap').style.display='';
-  document.getElementById('mfi-panel').style.display='';
+document.getElementById('lw-wrap').style.display='';
+document.getElementById('mfi-panel').style.display='';
 
   _buildCharts(r.chart||{}, r.flip_date);
   _buildFinancials(r.financials||{});
@@ -1424,7 +1497,7 @@ function _buildCharts(c, flipDate) {
 
   lwWrap.innerHTML='';
   document.getElementById('mfi-panel').innerHTML=
-    '<div class="mfi-label">MFI</div><canvas id="mfi-chart" height="72"></canvas>';
+    '<div class="section-title-bar mfi-bar">MFI</div><canvas id="mfi-chart" height="100" style="display:block"></canvas>';
 
   const dates=c.dates||[], flipIdx=dates.indexOf(flipDate);
   if (!dates.length||typeof LightweightCharts==='undefined') return;
@@ -1435,7 +1508,7 @@ function _buildCharts(c, flipDate) {
     layout:{background:{color:'transparent'},textColor:'#6b7a99'},
     grid:{vertLines:{color:'#1c2130'},horzLines:{color:'#1c2130'}},
     rightPriceScale:{borderColor:'#1c2130'},
-    timeScale:{borderColor:'#1c2130',timeVisible:true},
+    timeScale:{borderColor:'#1c2130',timeVisible:true,rightOffset:2},
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
   });
   lwChartInst=lwChart;
@@ -1475,6 +1548,20 @@ function _buildCharts(c, flipDate) {
 
 
   /* MFI Chart.js */
+  /* 自訂 tooltip positioner：永遠 clamp 在圖表內 */
+  if (!Chart.registry.plugins.get('mfiClamped')) {
+    Chart.Tooltip.positioners.mfiClamped = function(elements, eventPosition) {
+      const pos = Chart.Tooltip.positioners.nearest.call(this, elements, eventPosition);
+      if (!pos) return pos;
+      const chart = this.chart;
+      const area  = chart.chartArea;
+      const tw    = this.width  || 120;
+      const th    = this.height || 60;
+      let x = Math.min(Math.max(pos.x, area.left),  area.right  - tw);
+      let y = Math.min(Math.max(pos.y, area.top+4), area.bottom - th - 4);
+      return {x, y};
+    };
+  }
   const mfiCtx=document.getElementById('mfi-chart')?.getContext('2d');
   if (mfiCtx&&c.mfi){
     mfiChartInst=new Chart(mfiCtx,{
@@ -1486,20 +1573,19 @@ function _buildCharts(c, flipDate) {
       }]},
       options:{
         animation:{duration:300},responsive:true,
-        interaction:{mode:'index',intersect:false},
+        interaction:{mode:'none'},
+        layout:{padding:{top:4}},
         plugins:{
           legend:{display:false},
-          tooltip:{backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-            titleColor:'#dce3ef',bodyColor:'#f5a623',
-            titleFont:{family:'IBM Plex Mono'},bodyFont:{family:'IBM Plex Mono',size:11}},
+          tooltip:{enabled:false},
           annotation:{annotations:{
             ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
             os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
           }}
         },
         scales:{
-          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8},grid:{color:'#1c2130'}},
-          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#1c2130'},min:0,max:100},
+          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:12},maxTicksLimit:8},grid:{color:'#1c2130'}},
+          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#1c2130'},min:0,max:105},
         }
       },
       plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
@@ -1525,13 +1611,20 @@ function _buildCharts(c, flipDate) {
   function applyPct(pct) {
     pct = Math.max(MIN_PCT, Math.min(MAX_PCT, pct));
     chart.style.width = pct + '%';
-    /* 通知 LightweightCharts resize */
-    const lw = document.getElementById('lw-container');
-    if (lw && lwChartInst) {
-      requestAnimationFrame(() =>
-        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight})
-      );
-    }
+    requestAnimationFrame(() => {
+      /* LightweightCharts resize */
+      const lw = document.getElementById('lw-container');
+      if (lw && lwChartInst) {
+        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight});
+      }
+      /* Chart.js 財務卡片：先清 canvas 尺寸再 resize 才能縮小 */
+      Object.values(_finChartInsts).forEach(c => {
+        if (!c) return;
+        const canvas = c.canvas;
+        if (canvas) { canvas.style.width = ''; canvas.style.height = ''; }
+        c.resize();
+      });
+    });
     return pct;
   }
 
@@ -1572,12 +1665,18 @@ function _buildCharts(c, flipDate) {
 
   /* 視窗縮放時保持比例正確 */
   window.addEventListener('resize', () => {
-    const lw = document.getElementById('lw-container');
-    if (lw && lwChartInst) {
-      requestAnimationFrame(() =>
-        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight})
-      );
-    }
+    requestAnimationFrame(() => {
+      const lw = document.getElementById('lw-container');
+      if (lw && lwChartInst) {
+        lwChartInst.applyOptions({width: lw.clientWidth, height: lw.clientHeight});
+      }
+      Object.values(_finChartInsts).forEach(c => {
+        if (!c) return;
+        const canvas = c.canvas;
+        if (canvas) { canvas.style.width = ''; canvas.style.height = ''; }
+        c.resize();
+      });
+    });
   });
 })();
 
@@ -1637,20 +1736,22 @@ function _buildFinancials(fin) {
 
   // 建 HTML
   panel.innerHTML = `
-    <div class="fin-title">Financial Highlights</div>
+    <div class="section-title-bar fin-bar">Financial Highlights</div>
     <div class="fin-cards">
       ${cards.map(c=>`
         <div class="fin-card">
-          <div class="fin-card-label">${c.label}</div>
-          <div class="fin-card-legend">
-            <span class="fin-card-legend-item">
-              <span class="fin-card-legend-dot" style="background:${GREEN}"></span>Annual
-            </span>
-            <span class="fin-card-legend-item">
-              <span class="fin-card-legend-dot" style="background:${PURP};opacity:.8"></span>Quarterly
-            </span>
+          <div class="fin-card-header">
+            <span class="fin-card-label">${c.label}</span>
+            <div class="fin-card-legend">
+              <span class="fin-card-legend-item">
+                <span class="fin-card-legend-dot" style="background:${GREEN}"></span>Annual
+              </span>
+              <span class="fin-card-legend-item">
+                <span class="fin-card-legend-dot" style="background:${PURP};opacity:.8"></span>Quarterly
+              </span>
+            </div>
           </div>
-          <canvas id="fin-${c.id}-chart" height="90"></canvas>
+          <canvas id="fin-${c.id}-chart" height="150"></canvas>
         </div>`).join('')}
     </div>`;
 
@@ -1673,14 +1774,15 @@ function _buildFinancials(fin) {
           {
             label:'Annual', data:annVals,
             borderColor:GREEN, borderWidth:1.8,
+            borderDash:[5,3],
             pointRadius:2, pointHoverRadius:4,
             pointBackgroundColor:GREEN,
             fill:false, tension:.35, spanGaps:true,
           },
           {
             label:'Quarterly', data:qtrVals,
-            borderColor:PURP, borderWidth:1.2,
-            borderDash:[4,3],
+            borderColor:PURP, borderWidth:1.5,
+            borderDash:[5,3],
             pointRadius:1, pointHoverRadius:3,
             pointBackgroundColor:PURP,
             fill:false, tension:.35, spanGaps:true,
@@ -1696,7 +1798,7 @@ function _buildFinancials(fin) {
           tooltip:{
             backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
             titleColor:'#dce3ef',bodyColor:'#8a9ab8',
-            titleFont:{family:FONT,size:9},bodyFont:{family:FONT,size:9},
+            titleFont:{family:FONT,size:12},bodyFont:{family:FONT,size:12},
             callbacks:{
               title: items => items[0]?.label || '',
               label: ctx => {
@@ -1709,11 +1811,11 @@ function _buildFinancials(fin) {
         },
         scales:{
           x:{
-            ticks:{color:'#3d4a63',font:{family:FONT,size:8},maxRotation:0,maxTicksLimit:5},
+            ticks:{color:'#8a9ab8',font:{family:FONT,size:12},maxRotation:0,maxTicksLimit:5},
             grid:{color:'#151b28'}
           },
           y:{
-            ticks:{color:'#4a5878',font:{family:FONT,size:8},maxTicksLimit:4,
+            ticks:{color:'#8a9ab8',font:{family:FONT,size:12},maxTicksLimit:4,
               callback:v=>fmtVal(v,unit)},
             grid:{color:'#151b28'}
           }
@@ -1721,6 +1823,19 @@ function _buildFinancials(fin) {
       }
     });
   });
+}
+
+/* ── Pin Panel 折疊 ── */
+function togglePinPanel() {
+  const panel = document.getElementById('pin-panel');
+  panel.classList.toggle('collapsed');
+  /* 折疊時通知圖表 resize */
+  const lw = document.getElementById('lw-container');
+  if (lw && lwChartInst) {
+    setTimeout(() => lwChartInst.applyOptions({
+      width: lw.clientWidth, height: lw.clientHeight
+    }), 220);
+  }
 }
 
 /* ── Keyboard ↑↓ navigation ── */
