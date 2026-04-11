@@ -1085,9 +1085,9 @@ footer a:hover{color:var(--accent)}
     <div class="cf-section">
       <div class="cf-section-label">MFI Grade</div>
       <div class="cf-chips" id="cf-grade-chips">
-        <label class="cf-chip"><input type="checkbox" value="Strong">Strong</label>
-        <label class="cf-chip"><input type="checkbox" value="Normal">Normal</label>
-        <label class="cf-chip"><input type="checkbox" value="Weak">Weak</label>
+        <div class="cf-chip grade-Strong" onclick="cfChipToggle(this)">Strong</div>
+        <div class="cf-chip grade-Normal" onclick="cfChipToggle(this)">Normal</div>
+        <div class="cf-chip grade-Weak"   onclick="cfChipToggle(this)">Weak</div>
       </div>
     </div>
 
@@ -1411,6 +1411,12 @@ function closeCustomFilter() {
   document.getElementById('cf-backdrop').classList.remove('open');
 }
 
+/* chip 通用 toggle */
+function cfChipToggle(el) {
+  el.classList.toggle('checked');
+  _cfUpdateFooterCount();
+}
+
 /* 動態產生 Sector chips（資料載入後呼叫） */
 function _cfBuildSectorChips() {
   const sectors = [...new Set(
@@ -1420,21 +1426,19 @@ function _cfBuildSectorChips() {
   if (!sectors.length) { wrap.innerHTML='<span style="color:var(--text3);font-size:12px">無 Sector 資料</span>'; return; }
   document.getElementById('cf-sector-count').textContent = `(${sectors.length})`;
   wrap.innerHTML = sectors.map(s =>
-    `<label class="cf-chip" onclick="this.classList.toggle('checked')">
-      <input type="checkbox" value="${s}">${s}
-    </label>`
+    `<div class="cf-chip" onclick="cfChipToggle(this)" data-value="${s}">${s}</div>`
   ).join('');
 }
 
 /* 讀取目前 UI 狀態 → 回傳 filter 物件 */
 function _cfRead() {
   const grades = [...document.querySelectorAll('#cf-grade-chips .cf-chip.checked')]
-    .map(el => el.querySelector('input').value);
+    .map(el => el.textContent.trim());
   const sectors = [...document.querySelectorAll('#cf-sector-chips .cf-chip.checked')]
-    .map(el => el.querySelector('input').value);
+    .map(el => el.dataset.value);
   const v = id => { const el=document.getElementById(id); return el&&el.value!==''?parseFloat(el.value):null; };
   return {
-    grades,   /* [] = 不篩 */
+    grades,
     sectors,
     mfiMin  : v('cf-mfi-min'),
     mfiMax  : v('cf-mfi-max'),
@@ -1522,13 +1526,9 @@ function applyCustomFilter() {
   closeCustomFilter();
 }
 
-/* 清除按鈕 */
 function clearCustomFilter() {
-  /* 清除 grade chips */
   document.querySelectorAll('#cf-grade-chips .cf-chip').forEach(c => c.classList.remove('checked'));
-  /* 清除 sector chips */
   document.querySelectorAll('#cf-sector-chips .cf-chip').forEach(c => c.classList.remove('checked'));
-  /* 清除 number inputs */
   ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
    'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
@@ -1538,16 +1538,6 @@ function clearCustomFilter() {
   curPage = 1;
   render();
 }
-
-/* Grade chip 初始化 click handler */
-document.querySelectorAll('#cf-grade-chips .cf-chip').forEach(chip => {
-  const val = chip.querySelector('input').value;
-  chip.classList.add('grade-'+val);
-  chip.addEventListener('click', () => {
-    chip.classList.toggle('checked');
-    _cfUpdateFooterCount();
-  });
-});
 
 /* input 變動時更新底部計數 */
 ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
