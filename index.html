@@ -33,11 +33,11 @@
   --chart-w:60vw;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{height:100%;scrollbar-width:none}
+html{height:100%;min-height:100%;scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
 body{
   background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;
-  height:100%;display:flex;flex-direction:column;overflow:hidden;
+  height:100vh;display:flex;flex-direction:column;overflow:hidden;
 }
 body::-webkit-scrollbar{display:none}
 body::after{
@@ -390,13 +390,13 @@ header{
 
 /* ── B 方案：全寬色帶標題 ── */
 .section-title-bar{
-  padding:4px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  display:block;padding:4px 14px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
   border-bottom:1px solid;font-family:var(--font);
 }
-.section-title-bar.mfi-bar{
+.section-title-bar.mfi-title-bar{
   color:#f5a623;border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.05);
 }
-.section-title-bar.fin-bar{
+.section-title-bar.fin-title-bar{
   color:#7b6cff;border-color:rgba(123,108,255,.2);background:rgba(123,108,255,.05);
 }
 
@@ -448,9 +448,9 @@ header{
 
 #lw-container{width:100%;height:100%;margin:0}
 
-#mfi-panel{flex-shrink:0;padding:0 0 8px;border-top:1px solid var(--border);overflow:visible}
+#mfi-panel{flex-shrink:0;overflow:visible;background:var(--bg);display:flex;flex-direction:column;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
 #mfi-panel .mfi-label{display:none}
-canvas#mfi-chart{width:100%!important}
+canvas#mfi-chart{width:100%!important;padding:4px 8px 6px;display:block}
 
 #chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px}
 
@@ -503,7 +503,7 @@ canvas#mfi-chart{width:100%!important}
 #list-scroll::-webkit-scrollbar-track{background:transparent}
 #list-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-:root{--cols:36px minmax(80px,1fr) minmax(90px,120px) minmax(70px,100px) minmax(80px,110px)}
+:root{--cols:36px minmax(80px,1fr) minmax(90px,120px) minmax(70px,100px) minmax(80px,110px) minmax(70px,90px)}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
   position:sticky;top:0;z-index:50;
@@ -727,8 +727,139 @@ footer{
 }
 footer a{color:var(--text2);text-decoration:none}
 footer a:hover{color:var(--accent)}
+/* ── Custom Filter Button ── */
+#cf-btn{
+  background:none;border:none;cursor:pointer;
+  color:var(--text3);padding:4px 5px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;transition:color .15s;
+}
+#cf-btn:hover{color:var(--accent)}
+#cf-btn.has-active{color:var(--accent)}
+#cf-badge{
+  position:absolute;top:0;right:0;
+  background:var(--accent);color:#000;
+  font-size:9px;font-weight:700;
+  border-radius:8px;padding:1px 4px;min-width:13px;text-align:center;
+  line-height:1.4;
+}
+
+/* ── Backdrop ── */
+#cf-backdrop{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:600;
+}
+#cf-backdrop.open{display:block}
+
+/* ── Drawer ── */
+#cf-drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:300px;
+  background:var(--surface);
+  border-left:1px solid var(--border2);
+  z-index:601;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .22s ease;
+}
+#cf-drawer.open{transform:translateX(0)}
+
+#cf-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+#cf-title{
+  font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent);font-weight:600;
+}
+#cf-close{
+  background:none;border:none;cursor:pointer;
+  color:var(--text2);font-size:16px;padding:2px 4px;line-height:1;
+  transition:color .15s;
+}
+#cf-close:hover{color:var(--text)}
+
+#cf-body{
+  flex:1;overflow-y:auto;padding:8px 0;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+#cf-body::-webkit-scrollbar{width:3px}
+#cf-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.cf-section{padding:12px 16px;border-bottom:1px solid var(--border)}
+.cf-section:last-child{border-bottom:none}
+.cf-section-label{
+  font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);margin-bottom:10px;font-weight:600;
+}
+
+/* Chips（Grade / Sector）*/
+.cf-chips{display:flex;flex-wrap:wrap;gap:5px}
+.cf-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;padding:4px 10px;
+  border:1px solid var(--border2);color:var(--text2);
+  cursor:pointer;letter-spacing:.3px;transition:all .12s;
+  user-select:none;
+}
+.cf-chip:hover{border-color:var(--text2);color:var(--text)}
+.cf-chip input{display:none}
+.cf-chip.checked{
+  background:rgba(0,229,160,.1);
+  border-color:var(--accent);color:var(--accent);
+}
+.cf-chip.grade-Strong.checked{background:rgba(0,229,160,.1);border-color:#00e5a0;color:#00e5a0}
+.cf-chip.grade-Normal.checked{background:rgba(245,166,35,.1);border-color:#f5a623;color:#f5a623}
+.cf-chip.grade-Weak.checked  {background:rgba(74,88,120,.15);border-color:#7a8ba8;color:#7a8ba8}
+
+/* Range inputs */
+.cf-range-row{display:flex;align-items:center;gap:8px}
+.cf-range-field{display:flex;flex-direction:column;gap:3px;flex:1}
+.cf-range-lbl{font-size:10px;letter-spacing:.8px;color:var(--text3);text-transform:uppercase}
+.cf-range-sep{color:var(--text3);font-size:12px;margin-top:14px;flex-shrink:0}
+.cf-input{
+  background:var(--bg);border:1px solid var(--border2);
+  color:var(--text);font-family:var(--font);font-size:12px;
+  padding:6px 8px;width:100%;outline:none;
+  transition:border-color .15s;
+  /* 移除 number input 的上下箭頭 */
+  -moz-appearance:textfield;
+  appearance:textfield;
+}
+.cf-input::-webkit-outer-spin-button,
+.cf-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cf-input:focus{border-color:var(--accent)}
+.cf-input::placeholder{color:var(--text3)}
+
+/* Footer */
+#cf-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-top:1px solid var(--border2);
+  flex-shrink:0;background:var(--surface2);
+}
+#cf-active-count{font-size:12px;color:var(--text3);letter-spacing:.3px}
+.cf-foot-btn{
+  font-family:var(--font);font-size:12px;padding:6px 14px;
+  border:1px solid var(--border2);background:transparent;
+  cursor:pointer;letter-spacing:.5px;transition:all .15s;
+}
+.cf-clear{color:var(--text2)}
+.cf-clear:hover{color:var(--text);border-color:var(--text2)}
+.cf-apply{color:#000;background:var(--accent);border-color:var(--accent)}
+.cf-apply:hover{background:#00ccaa;border-color:#00ccaa}
+
+/* Mobile：從底部滑入 */
+@media(max-width:760px){
+  #cf-drawer{
+    top:auto;left:0;right:0;bottom:0;width:100%;height:75vh;
+    border-left:none;border-top:1px solid var(--border2);
+    border-radius:12px 12px 0 0;
+    transform:translateY(100%);
+  }
+  #cf-drawer.open{transform:translateY(0)}
+}
 </style>
-</head>
 <body>
 
 <header>
@@ -768,21 +899,21 @@ footer a:hover{color:var(--accent)}
       </button>
       <div class="filter-panel" id="filter-panel">
         <div class="filter-group-label">趨勢</div>
-        <label class="filter-item"><input type="checkbox" id="f-price-ema50"  onchange="render()"><label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-price-ema200" onchange="render()"><label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-ema-golden"   onchange="render()"><label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-flip-ema50"   onchange="render()"><label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-flip-ema200"  onchange="render()"><label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label></label>
+        <div class="filter-item"><input type="checkbox" id="f-price-ema50"  onchange="render()"><label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-price-ema200" onchange="render()"><label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-ema-golden"   onchange="render()"><label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-flip-ema50"   onchange="render()"><label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-flip-ema200"  onchange="render()"><label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label></div>
         <div class="filter-divider"></div>
         <div class="filter-group-label">量能</div>
-        <label class="filter-item"><input type="checkbox" id="f-mfi50"      onchange="render()"><label for="f-mfi50">翻多當天 MFI ≥ 50</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-mfi70"      onchange="render()"><label for="f-mfi70">翻多當天 MFI ≥ 70</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-mfi-rising" onchange="render()"><label for="f-mfi-rising">MFI 持續上升（近 3 日）</label></label>
+        <div class="filter-item"><input type="checkbox" id="f-mfi50"      onchange="render()"><label for="f-mfi50">翻多當天 MFI ≥ 50</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-mfi70"      onchange="render()"><label for="f-mfi70">翻多當天 MFI ≥ 70</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-mfi-rising" onchange="render()"><label for="f-mfi-rising">MFI 持續上升（近 3 日）</label></div>
         <div class="filter-divider"></div>
         <div class="filter-group-label">價格表現</div>
-        <label class="filter-item"><input type="checkbox" id="f-chg-pos" onchange="render()"><label for="f-chg-pos">翻多後漲幅 &gt; 0%</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></label>
-        <label class="filter-item"><input type="checkbox" id="f-hold2"   onchange="render()"><label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label></label>
+        <div class="filter-item"><input type="checkbox" id="f-chg-pos" onchange="render()"><label for="f-chg-pos">翻多後漲幅 &gt; 0%</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-hold2"   onchange="render()"><label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label></div>
         <div class="filter-divider"></div>
         <button onclick="clearFilters()" style="font-family:var(--font);font-size:12px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
       </div>
@@ -840,7 +971,7 @@ footer a:hover{color:var(--accent)}
     <!-- MFI -->
 <div id="mfi-panel" style="display:none">
       <div class="mfi-label">MFI</div>
-      <canvas id="mfi-chart" height="72"></canvas>
+      <canvas id="mfi-chart" height="140"></canvas>
     </div>
 
     <!-- 財務卡 + 公司簡介（往下捲） -->
@@ -860,15 +991,22 @@ footer a:hover{color:var(--accent)}
 
       <div id="grid-table">
         <div class="grid-thead" id="grid-thead" style="display:none">
-          <div class="grid-th"></div>
+          <div class="grid-th" style="display:flex;align-items:center;justify-content:center">
+            <button id="cf-btn" onclick="toggleCustomFilter()" title="自訂篩選">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 2.5h12M3 7h8M5.5 11.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span id="cf-badge" style="display:none"></span>
+            </button>
+          </div>
           <div class="grid-th col-sorted" data-k="ticker"     onclick="thSort(this)">Ticker<span class="arr"></span></div>
           <div class="grid-th" data-k="flip_date"  onclick="thSort(this)">Flip Date<span class="arr"></span></div>
           <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
           <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
-
-        </div>
+          <div class="grid-th" data-k="change_pct"  onclick="thSort(this)">Chg%<span class="arr"></span></div>
+        </div><!-- /grid-thead -->
         <div class="grid-tbody" id="tbody"></div>
-      </div>
+      </div><!-- /grid-table -->
 
       <div id="card-list"></div>
     </div>
@@ -928,8 +1066,121 @@ footer a:hover{color:var(--accent)}
   <span>Source: <a href="https://finviz.com" target="_blank">Finviz</a> + <a href="https://finance.yahoo.com" target="_blank">yfinance</a></span>
 </footer>
 
+<!-- ══ Custom Filter Drawer ══ -->
+<div id="cf-backdrop" onclick="closeCustomFilter()"></div>
+<div id="cf-drawer">
+  <div id="cf-head">
+    <span id="cf-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="vertical-align:middle;margin-right:6px">
+        <path d="M1 2.5h12M3 7h8M5.5 11.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      自訂篩選
+    </span>
+    <button id="cf-close" onclick="closeCustomFilter()">✕</button>
+  </div>
+
+  <div id="cf-body">
+
+    <!-- Grade -->
+    <div class="cf-section">
+      <div class="cf-section-label">MFI Grade</div>
+      <div class="cf-chips" id="cf-grade-chips">
+        <label class="cf-chip"><input type="checkbox" value="Strong">Strong</label>
+        <label class="cf-chip"><input type="checkbox" value="Normal">Normal</label>
+        <label class="cf-chip"><input type="checkbox" value="Weak">Weak</label>
+      </div>
+    </div>
+
+    <!-- MFI Range -->
+    <div class="cf-section">
+      <div class="cf-section-label">MFI 值範圍</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-mfi-min" placeholder="0" min="0" max="100">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-mfi-max" placeholder="100" min="0" max="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Chg% Range -->
+    <div class="cf-section">
+      <div class="cf-section-label">翻多後漲幅 Chg%</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-chg-min" placeholder="—" step="0.1">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-chg-max" placeholder="—" step="0.1">
+        </div>
+      </div>
+    </div>
+
+    <!-- Flip Days -->
+    <div class="cf-section">
+      <div class="cf-section-label">翻多距今天數</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-days-min" placeholder="0" min="0" step="1">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-days-max" placeholder="—" min="0" step="1">
+        </div>
+      </div>
+    </div>
+
+    <!-- ATR Range -->
+    <div class="cf-section">
+      <div class="cf-section-label">ATR 值範圍</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-atr-min" placeholder="—" step="0.01">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-atr-max" placeholder="—" step="0.01">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sector -->
+    <div class="cf-section">
+      <div class="cf-section-label">Sector <span id="cf-sector-count" style="color:var(--text3);font-size:10px"></span></div>
+      <div class="cf-chips" id="cf-sector-chips">
+        <span style="color:var(--text3);font-size:12px">載入資料後自動產生</span>
+      </div>
+    </div>
+
+  </div><!-- /cf-body -->
+
+  <div id="cf-foot">
+    <span id="cf-active-count"></span>
+    <div style="display:flex;gap:6px">
+      <button class="cf-foot-btn cf-clear" onclick="clearCustomFilter()">清除</button>
+      <button class="cf-foot-btn cf-apply" onclick="applyCustomFilter()">套用</button>
+    </div>
+  </div>
+</div>
+
 <!-- cSpell:ignore cmeta supertrend finviz yfinance mfi -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3/dist/chartjs-plugin-annotation.min.js"></script>
+<script>
+  // 全域註冊 annotation plugin，所有 Chart 實例自動生效
+  if (typeof ChartAnnotation !== 'undefined') Chart.register(ChartAnnotation);
+</script>
 <script src="lightweight-charts.js"></script>
 <script>
 /* ── State ── */
@@ -942,6 +1193,7 @@ let lwChartInst = null;
 let mfiChartInst = null;
 let _selectedTicker = null;
 let _selectedRowEl  = null;
+let _finChartInsts = {};
 
 /* ── Pin ── */
 const PIN_KEY      = 'st_pinned_tickers';
@@ -1048,6 +1300,7 @@ fetch('data.json?_=' + Date.now())
     try {
       ALL=d.rows||[]; meta=d.meta||{};
       initMeta(); render(); renderPinPanel();
+      _cfBuildSectorChips();
       document.getElementById('loading').style.display='none';
       document.getElementById('grid-thead').style.display='';
     } catch(err) {
@@ -1134,6 +1387,175 @@ function setIndexTab(btn) {
   render();
 }
 
+/* ════════════════════════════════════════════
+   CUSTOM FILTER
+   ════════════════════════════════════════════ */
+
+/* 已套用的條件（按下套用後才寫入） */
+let _cfActive = {};
+
+/* 開關抽屜 */
+function toggleCustomFilter() {
+  const drawer = document.getElementById('cf-drawer');
+  const backdrop = document.getElementById('cf-backdrop');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) closeCustomFilter();
+  else {
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+    _cfUpdateFooterCount();
+  }
+}
+function closeCustomFilter() {
+  document.getElementById('cf-drawer').classList.remove('open');
+  document.getElementById('cf-backdrop').classList.remove('open');
+}
+
+/* 動態產生 Sector chips（資料載入後呼叫） */
+function _cfBuildSectorChips() {
+  const sectors = [...new Set(
+    ALL.map(r => r.info?.sector).filter(Boolean)
+  )].sort();
+  const wrap = document.getElementById('cf-sector-chips');
+  if (!sectors.length) { wrap.innerHTML='<span style="color:var(--text3);font-size:12px">無 Sector 資料</span>'; return; }
+  document.getElementById('cf-sector-count').textContent = `(${sectors.length})`;
+  wrap.innerHTML = sectors.map(s =>
+    `<label class="cf-chip" onclick="this.classList.toggle('checked')">
+      <input type="checkbox" value="${s}">${s}
+    </label>`
+  ).join('');
+}
+
+/* 讀取目前 UI 狀態 → 回傳 filter 物件 */
+function _cfRead() {
+  const grades = [...document.querySelectorAll('#cf-grade-chips .cf-chip.checked')]
+    .map(el => el.querySelector('input').value);
+  const sectors = [...document.querySelectorAll('#cf-sector-chips .cf-chip.checked')]
+    .map(el => el.querySelector('input').value);
+  const v = id => { const el=document.getElementById(id); return el&&el.value!==''?parseFloat(el.value):null; };
+  return {
+    grades,   /* [] = 不篩 */
+    sectors,
+    mfiMin  : v('cf-mfi-min'),
+    mfiMax  : v('cf-mfi-max'),
+    chgMin  : v('cf-chg-min'),
+    chgMax  : v('cf-chg-max'),
+    daysMin : v('cf-days-min'),
+    daysMax : v('cf-days-max'),
+    atrMin  : v('cf-atr-min'),
+    atrMax  : v('cf-atr-max'),
+  };
+}
+
+/* 計算翻多距今天數（台北時區，flip_date 格式 YYYY-MM-DD） */
+function _cfFlipDays(flipDate) {
+  if (!flipDate) return null;
+  const today = new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  today.setHours(0,0,0,0);
+  const flip  = new Date(flipDate+'T00:00:00');
+  return Math.round((today - flip) / 86400000);
+}
+
+/* 套用自訂篩選到單一 row（null 欄位視為通過） */
+function applyCustomFilters(r) {
+  const f = _cfActive;
+  if (!f || !Object.keys(f).length) return true;
+  /* Grade */
+  if (f.grades?.length && !f.grades.includes(r.mfi_grade)) return false;
+  /* Sector */
+  if (f.sectors?.length && !f.sectors.includes(r.info?.sector)) return false;
+  /* MFI range */
+  if (f.mfiMin !== null && (r.mfi??null) !== null && r.mfi < f.mfiMin) return false;
+  if (f.mfiMax !== null && (r.mfi??null) !== null && r.mfi > f.mfiMax) return false;
+  /* Chg% range */
+  if (f.chgMin !== null && (r.change_pct??null) !== null && r.change_pct < f.chgMin) return false;
+  if (f.chgMax !== null && (r.change_pct??null) !== null && r.change_pct > f.chgMax) return false;
+  /* Days range */
+  const days = _cfFlipDays(r.flip_date);
+  if (f.daysMin !== null && days !== null && days < f.daysMin) return false;
+  if (f.daysMax !== null && days !== null && days > f.daysMax) return false;
+  /* ATR range */
+  if (f.atrMin !== null && (r.atr??null) !== null && r.atr < f.atrMin) return false;
+  if (f.atrMax !== null && (r.atr??null) !== null && r.atr > f.atrMax) return false;
+  return true;
+}
+
+/* 計算已啟用條件數 */
+function _cfCount(f) {
+  if (!f) return 0;
+  let n = 0;
+  if (f.grades?.length)  n++;
+  if (f.sectors?.length) n++;
+  if (f.mfiMin  !== null) n++;
+  if (f.mfiMax  !== null) n++;
+  if (f.chgMin  !== null) n++;
+  if (f.chgMax  !== null) n++;
+  if (f.daysMin !== null) n++;
+  if (f.daysMax !== null) n++;
+  if (f.atrMin  !== null) n++;
+  if (f.atrMax  !== null) n++;
+  return n;
+}
+
+/* 更新抽屜底部計數 */
+function _cfUpdateFooterCount() {
+  const f   = _cfRead();
+  const n   = _cfCount(f);
+  document.getElementById('cf-active-count').textContent = n ? `${n} 個條件` : '尚未設定條件';
+}
+
+/* 更新按鈕 badge */
+function _cfUpdateBadge() {
+  const n = _cfCount(_cfActive);
+  const badge = document.getElementById('cf-badge');
+  const btn   = document.getElementById('cf-btn');
+  if (n > 0) { badge.textContent=n; badge.style.display=''; btn.classList.add('has-active'); }
+  else        { badge.style.display='none'; btn.classList.remove('has-active'); }
+}
+
+/* 套用按鈕 */
+function applyCustomFilter() {
+  _cfActive = _cfRead();
+  _cfUpdateBadge();
+  curPage = 1;
+  render();
+  closeCustomFilter();
+}
+
+/* 清除按鈕 */
+function clearCustomFilter() {
+  /* 清除 grade chips */
+  document.querySelectorAll('#cf-grade-chips .cf-chip').forEach(c => c.classList.remove('checked'));
+  /* 清除 sector chips */
+  document.querySelectorAll('#cf-sector-chips .cf-chip').forEach(c => c.classList.remove('checked'));
+  /* 清除 number inputs */
+  ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
+   'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
+    .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  _cfActive = {};
+  _cfUpdateBadge();
+  _cfUpdateFooterCount();
+  curPage = 1;
+  render();
+}
+
+/* Grade chip 初始化 click handler */
+document.querySelectorAll('#cf-grade-chips .cf-chip').forEach(chip => {
+  const val = chip.querySelector('input').value;
+  chip.classList.add('grade-'+val);
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('checked');
+    _cfUpdateFooterCount();
+  });
+});
+
+/* input 變動時更新底部計數 */
+['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
+ 'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
+  .forEach(id => {
+    document.getElementById(id)?.addEventListener('input', _cfUpdateFooterCount);
+  });
+
 /* ── Render ── */
 function render() {
   const q=document.getElementById('search').value.toUpperCase().trim();
@@ -1146,7 +1568,8 @@ function render() {
       const idxs = r.indices || [];
       if (!idxs.includes(curIndex)) return false;
     }
-    return applyFilters(r,f);
+    if (!applyFilters(r,f)) return false;
+    return applyCustomFilters(r);
   });
 
   rows.sort((a,b) => {
@@ -1204,6 +1627,7 @@ function render() {
           <div class="mfi-bar"><div class="mfi-fill" style="width:${mfiPct}%;background:${mfiFill(r.mfi)}"></div></div>
         </div>
       </div>
+      <div class="grid-td"><span class="${chg>0?'up':chg<0?'down':'neutral'}">${sign}${chg.toFixed(2)}%</span></div>
     </div>`;
   }).join('');
 
@@ -1372,12 +1796,12 @@ function _buildMobileChart(r) {
   if(mfiCtx&&c.mfi){
     _mobileMfiChart=new Chart(mfiCtx,{
       type:'line',
-      data:{labels:dates,datasets:[{label:'MFI',data:c.mfi,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,.08)',borderWidth:1.5,pointRadius:0,tension:.3,fill:true}]},
+      data:{labels:dates,datasets:[{label:'MFI',data:c.mfi,borderColor:'#f5a623',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:.3,fill:false}]},
       options:{animation:{duration:0},responsive:true,
         plugins:{legend:{display:false},
           annotation:{annotations:{
-            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
-            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
+            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.6)',borderWidth:1,borderDash:[3,3]},
+            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.6)',borderWidth:1,borderDash:[3,3]},
           }}
         },
         scales:{
@@ -1385,7 +1809,7 @@ function _buildMobileChart(r) {
           y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#1c2130'},min:0,max:100},
         }
       },
-      plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
+      plugins:[mfiFillPlugin]
     });
   }
 }
@@ -1410,9 +1834,18 @@ function openByTicker(ticker) {
   if (!tbody._rows) return;
   const idx=tbody._rows.findIndex(r=>r.ticker===ticker);
   if (idx<0) return;
+  const r=tbody._rows[idx];
+  /* 先找 DOM 元素，找不到就直接用資料開啟 */
   const el=document.querySelector(`.grid-row[data-ticker="${ticker}"]`)
           ||document.querySelector(`.stock-card[data-ticker="${ticker}"]`);
-  if (el) selectRow(el, idx);
+  if (el) {
+    selectRow(el, idx);
+  } else {
+    /* Pin Panel 點選時 row 可能不在當前頁，直接開 chart */
+    _selectedTicker=ticker;
+    if (isMobile()) openMobileModal(r);
+    else loadChartPanel(r);
+  }
 }
 
 /* ════════════════════════════════════════════
@@ -1497,7 +1930,7 @@ function _buildCharts(c, flipDate) {
 
   lwWrap.innerHTML='';
   document.getElementById('mfi-panel').innerHTML=
-    '<div class="section-title-bar mfi-bar">MFI</div><canvas id="mfi-chart" height="100" style="display:block"></canvas>';
+    '<div class="section-title-bar mfi-title-bar">MFI</div><canvas id="mfi-chart" height="140" style="display:block;width:100%"></canvas>';
 
   const dates=c.dates||[], flipIdx=dates.indexOf(flipDate);
   if (!dates.length||typeof LightweightCharts==='undefined') return;
@@ -1562,33 +1995,88 @@ function _buildCharts(c, flipDate) {
       return {x, y};
     };
   }
+
+  /* 自訂 plugin：在 70 以上畫紅色填色、30 以下畫綠色填色 */
+  const mfiFillPlugin = {
+    id: 'mfiBandFill',
+    afterDatasetsDraw(chart) {
+      const {ctx, chartArea:{left,right,top,bottom}, scales:{x:xs, y:ys}} = chart;
+      const ds = chart.getDatasetMeta(0);
+      if (!ds || !ds.data.length) return;
+      const pts = ds.data;
+
+      function drawBand(threshold, color, above) {
+        const py = ys.getPixelForValue(threshold);
+        ctx.save();
+        /* clip 到對應區域 */
+        ctx.beginPath();
+        if (above) ctx.rect(left, top, right-left, py-top);
+        else       ctx.rect(left, py, right-left, bottom-py);
+        ctx.clip();
+        /* 沿折線描邊後填色 */
+        ctx.beginPath();
+        pts.forEach((pt, i) => {
+          if (i===0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        });
+        /* 封閉到對應邊界線 */
+        if (above) {
+          ctx.lineTo(pts[pts.length-1].x, py);
+          ctx.lineTo(pts[0].x, py);
+        } else {
+          ctx.lineTo(pts[pts.length-1].x, py);
+          ctx.lineTo(pts[0].x, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      drawBand(70, 'rgba(255,92,92,0.35)',   true);  /* 70以上紅 */
+      drawBand(30, 'rgba(61,220,132,0.35)',  false); /* 30以下綠 */
+    }
+  };
+
   const mfiCtx=document.getElementById('mfi-chart')?.getContext('2d');
   if (mfiCtx&&c.mfi){
     mfiChartInst=new Chart(mfiCtx,{
       type:'line',
       data:{labels:dates,datasets:[{
         label:'MFI',data:c.mfi,
-        borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,.08)',
-        borderWidth:1.5,pointRadius:0,tension:.3,fill:true
+        borderColor:'#f5a623',
+        backgroundColor: 'transparent',
+        borderWidth:1.5,pointRadius:0,tension:.3,fill:false
       }]},
       options:{
         animation:{duration:300},responsive:true,
-        interaction:{mode:'none'},
+        interaction:{mode:'index',intersect:false},
         layout:{padding:{top:4}},
         plugins:{
           legend:{display:false},
-          tooltip:{enabled:false},
+          tooltip:{
+            enabled:true,
+            position:'mfiClamped',
+            backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+            titleColor:'#dce3ef',bodyColor:'#f5a623',
+            titleFont:{family:'IBM Plex Mono',size:12},
+            bodyFont:{family:'IBM Plex Mono',size:12},
+            callbacks:{
+              title:items=>items[0]?.label||'',
+              label:ctx=>'MFI: '+ctx.raw?.toFixed(1),
+            }
+          },
           annotation:{annotations:{
-            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.5)',borderWidth:1,borderDash:[3,3]},
-            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.5)',borderWidth:1,borderDash:[3,3]},
+            ob:{type:'line',yMin:70,yMax:70,borderColor:'rgba(255,92,92,.6)',borderWidth:1,borderDash:[3,3]},
+            os:{type:'line',yMin:30,yMax:30,borderColor:'rgba(61,220,132,.6)',borderWidth:1,borderDash:[3,3]},
           }}
         },
         scales:{
           x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:12},maxTicksLimit:8},grid:{color:'#1c2130'}},
-          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#1c2130'},min:0,max:105},
+          y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12},callback:v=>v===100?'':v},grid:{color:'#1c2130'},min:0,max:100},
         }
       },
-      plugins:typeof ChartAnnotation!=='undefined'?[ChartAnnotation]:[]
+      plugins:[mfiFillPlugin]
     });
   }
 }
@@ -1685,7 +2173,6 @@ function _buildCharts(c, flipDate) {
 /* ════════════════════════════════════════════
    FINANCIALS — 小卡 + 迷你折線圖
    ════════════════════════════════════════════ */
-let _finChartInsts = {};
 
 function _destroyFinCharts() {
   Object.values(_finChartInsts).forEach(c => { try{c.destroy()}catch(e){} });
@@ -1736,7 +2223,7 @@ function _buildFinancials(fin) {
 
   // 建 HTML
   panel.innerHTML = `
-    <div class="section-title-bar fin-bar">Financial Highlights</div>
+    <div class="section-title-bar fin-title-bar">Financial Highlights</div>
     <div class="fin-cards">
       ${cards.map(c=>`
         <div class="fin-card">
@@ -1847,14 +2334,38 @@ document.addEventListener('keydown', e=>{
   if (idx<0) return;
   if (e.key==='ArrowDown'&&idx<rows.length-1){
     e.preventDefault();
-    const pageIdx=idx+1-(curPage-1)*PAGE_SIZE;
-    const el=document.querySelectorAll('.grid-row')[pageIdx];
-    if (el) selectRow(el,idx+1);
+    const nextIdx=idx+1;
+    const pageIdx=nextIdx-(curPage-1)*PAGE_SIZE;
+    if (pageIdx>=0 && pageIdx<PAGE_SIZE) {
+      const el=document.querySelectorAll('.grid-row')[pageIdx];
+      if (el) selectRow(el, nextIdx);
+    } else {
+      /* 跨頁：先換頁再選 */
+      curPage=Math.floor(nextIdx/PAGE_SIZE)+1;
+      render();
+      requestAnimationFrame(()=>{
+        const newPageIdx=nextIdx-(curPage-1)*PAGE_SIZE;
+        const el=document.querySelectorAll('.grid-row')[newPageIdx];
+        if (el) selectRow(el, nextIdx);
+      });
+    }
   } else if (e.key==='ArrowUp'&&idx>0){
     e.preventDefault();
-    const pageIdx=idx-1-(curPage-1)*PAGE_SIZE;
-    const el=document.querySelectorAll('.grid-row')[pageIdx];
-    if (el) selectRow(el,idx-1);
+    const prevIdx=idx-1;
+    const pageIdx=prevIdx-(curPage-1)*PAGE_SIZE;
+    if (pageIdx>=0 && pageIdx<PAGE_SIZE) {
+      const el=document.querySelectorAll('.grid-row')[pageIdx];
+      if (el) selectRow(el, prevIdx);
+    } else {
+      /* 跨頁：先換頁再選 */
+      curPage=Math.floor(prevIdx/PAGE_SIZE)+1;
+      render();
+      requestAnimationFrame(()=>{
+        const newPageIdx=prevIdx-(curPage-1)*PAGE_SIZE;
+        const el=document.querySelectorAll('.grid-row')[newPageIdx];
+        if (el) selectRow(el, prevIdx);
+      });
+    }
   }
 });
 </script>
