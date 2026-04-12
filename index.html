@@ -944,6 +944,7 @@ footer a:hover{color:var(--accent)}
         <span id="chart-ticker" style="font-family:var(--display);font-size:14px;color:var(--text3);letter-spacing:.5px;font-weight:400">— 選擇標的 —</span>
         <span id="chart-grade" style="display:none"></span>
         <div id="chart-tags" style="display:none;align-items:center;gap:6px;flex-wrap:wrap"></div>
+        <button id="lang-toggle-btn" onclick="toggleLang()" style="margin-left:auto;font-size:11px;padding:2px 8px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;flex-shrink:0;display:none">中／EN</button>
         <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
       </div>
       <div id="chart-sub" style="display:none;font-size:12px;color:var(--text);letter-spacing:.3px;margin-bottom:8px"></div>
@@ -1185,6 +1186,8 @@ footer a:hover{color:var(--accent)}
 <script>
 /* ── State ── */
 let ALL = [], meta = {};
+let _langZh = true;       // 預設顯示中文
+let _currentInfo = {};    // 目前顯示的股票 info
 let curSort = 'mfi', sortAsc = false;
 let curIndex = 'all';  /* 指數篩選：'all' | 'NDX100' | 'SP500' */
 let curPage = 1;
@@ -1204,6 +1207,38 @@ function getPinned()  { try { return new Set(JSON.parse(localStorage.getItem(PIN
 function getPinTimes(){ try { return JSON.parse(localStorage.getItem(PIN_TIME_KEY)||'{}'); } catch { return {}; } }
 function savePinned(s){ localStorage.setItem(PIN_KEY, JSON.stringify([...s])); }
 function savePinTimes(t){ localStorage.setItem(PIN_TIME_KEY, JSON.stringify(t)); }
+
+function toggleLang() {
+  _langZh = !_langZh;
+  const info = _currentInfo;
+  const hasZh = info.sector_zh||info.industry_zh||info.description_zh;
+  const zh = _langZh && hasZh;
+
+  /* 更新 tags */
+  const tagsEl = document.getElementById('chart-tags');
+  const sector   = zh ? (info.sector_zh   || info.sector)   : info.sector;
+  const industry = zh ? (info.industry_zh || info.industry) : info.industry;
+  if (sector||industry||info.country) {
+    tagsEl.innerHTML = [
+      sector  ?`<span class="info-tag sector">${sector}</span>`:'',
+      industry?`<span class="info-tag industry">${industry}</span>`:'',
+      info.country?`<span class="info-tag country">${info.country}</span>`:'',
+    ].filter(Boolean).join('');
+    tagsEl.style.display='flex';
+  }
+
+  /* 更新描述 */
+  const infoEl = document.getElementById('chart-info');
+  const desc = zh ? (info.description_zh || info.description) : info.description;
+  if (desc) {
+    infoEl.innerHTML = `<div class="info-desc">${desc}</div>`;
+    infoEl.style.display = '';
+  }
+
+  /* 更新按鈕文字 */
+  const btn = document.getElementById('lang-toggle-btn');
+  if (btn) btn.textContent = zh ? 'EN' : '中';
+}
 
 function togglePin(ticker) {
   const pins=getPinned(), times=getPinTimes();
@@ -1881,23 +1916,44 @@ function loadChartPanel(r) {
 
   /* 板塊標籤 → ticker-row 旁邊 */
   const info=r.info||{};
-  const tagsEl=document.getElementById('chart-tags');
-  if (info.sector||info.industry||info.country) {
-    const tags=[
-      info.sector  ?`<span class="info-tag sector">${info.sector}</span>`:'',
-      info.industry?`<span class="info-tag industry">${info.industry}</span>`:'',
-      info.country ?`<span class="info-tag country">${info.country}</span>`:'',
-    ].filter(Boolean).join('');
-    tagsEl.innerHTML=tags;
-    tagsEl.style.display='flex';
-  } else { tagsEl.style.display='none'; tagsEl.innerHTML=''; }
 
-  /* 公司描述 → chart-info（捲動區） */
-  const infoEl=document.getElementById('chart-info');
-  if (info.description) {
-    infoEl.innerHTML=`<div class="info-desc">${info.description}</div>`;
-    infoEl.style.display='';
-  } else { infoEl.style.display='none'; infoEl.innerHTML=''; }
+  /* 語言切換按鈕 */
+  const langBtn=document.getElementById('lang-toggle-btn');
+  const hasZh = !!(info.sector_zh||info.industry_zh||info.description_zh);
+  langBtn.style.display = 'inline-block';
+  langBtn.style.opacity = hasZh ? '1' : '0.35';
+  langBtn.title = hasZh ? '' : '需重新執行 scanner_export.py 產生中文資料';
+
+  /* 渲染 tags + description（依目前語言）*/
+  function renderInfoLang() {
+    const zh = _langZh && hasZh;
+    const tagsEl=document.getElementById('chart-tags');
+    const sector   = zh ? (info.sector_zh   || info.sector)   : info.sector;
+    const industry = zh ? (info.industry_zh || info.industry) : info.industry;
+    if (sector||industry||info.country) {
+      const tags=[
+        sector  ?`<span class="info-tag sector">${sector}</span>`:'',
+        industry?`<span class="info-tag industry">${industry}</span>`:'',
+        info.country?`<span class="info-tag country">${info.country}</span>`:'',
+      ].filter(Boolean).join('');
+      tagsEl.innerHTML=tags;
+      tagsEl.style.display='flex';
+    } else { tagsEl.style.display='none'; tagsEl.innerHTML=''; }
+
+    const infoEl=document.getElementById('chart-info');
+    const desc = zh ? (info.description_zh || info.description) : info.description;
+    if (desc) {
+      infoEl.innerHTML=`<div class="info-desc">${desc}</div>`;
+      infoEl.style.display='';
+    } else { infoEl.style.display='none'; infoEl.innerHTML=''; }
+
+    /* 按鈕文字反映目前語言 */
+    if(langBtn) langBtn.textContent = zh ? 'EN' : '中';
+  }
+
+  /* 記住目前股票的 info，供 toggleLang() 使用 */
+  _currentInfo = info;
+  renderInfoLang();
 
   /* Show panels */
   document.getElementById('chart-empty').style.display='none';
