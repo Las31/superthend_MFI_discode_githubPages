@@ -383,20 +383,6 @@ header{
   flex-shrink:0;padding:0 14px;overflow:hidden;position:relative;
 }
 
-/* 成交量面板 */
-#volume-panel{
-  flex-shrink:0;overflow:hidden;background:var(--bg);
-  border-top:1px solid var(--border);
-  border-left:3px solid #3d4a63;
-  border-right:1px solid var(--border);
-  border-bottom:1px solid var(--border);
-  display:none;
-}
-#volume-panel .section-title-bar{
-  color:#5a6a85;border-color:rgba(90,106,133,.2);background:rgba(90,106,133,.04);
-}
-canvas#volume-chart{width:100%!important;padding:2px 8px 4px;display:block}
-
 /* ── A 方案：左側色塊邊線區隔 ── */
 #lw-wrap        {border-left:3px solid #00e5a0}
 #mfi-panel      {border-left:3px solid #f5a623}
@@ -981,12 +967,6 @@ footer a:hover{color:var(--accent)}
 
     <!-- K線圖 -->
 <div id="lw-wrap" style="display:none"><div id="lw-container"></div></div>
-
-    <!-- 成交量 -->
-<div id="volume-panel" style="display:none">
-      <div class="section-title-bar" style="color:#5a6a85;border-color:rgba(90,106,133,.2);background:rgba(90,106,133,.04)">VOL</div>
-      <canvas id="volume-chart" height="60"></canvas>
-    </div>
 
     <!-- MFI -->
 <div id="mfi-panel" style="display:none">
@@ -1922,9 +1902,8 @@ function loadChartPanel(r) {
   /* Show panels */
   document.getElementById('chart-empty').style.display='none';
   document.getElementById('chart-legend').style.display='flex';
-document.getElementById('lw-wrap').style.display='';
-document.getElementById('volume-panel').style.display='';
-document.getElementById('mfi-panel').style.display='';
+document.getElementById('lw-wrap').style.display='block';
+document.getElementById('mfi-panel').style.display='block';
 
   _buildCharts(r.chart||{}, r.flip_date);
   _buildFinancials(r.financials||{});
@@ -1939,11 +1918,8 @@ function _buildCharts(c, flipDate) {
     lwChartInst=null;
   }
   if (mfiChartInst){ mfiChartInst.destroy(); mfiChartInst=null; }
-  if (volumeChartInst){ volumeChartInst.destroy(); volumeChartInst=null; }
 
   lwWrap.innerHTML='';
-  document.getElementById('volume-panel').innerHTML=
-    '<div class="section-title-bar" style="color:#5a6a85;border-color:rgba(90,106,133,.2);background:rgba(90,106,133,.04)">VOL</div><canvas id="volume-chart" height="60" style="display:block;width:100%"></canvas>';
   document.getElementById('mfi-panel').innerHTML=
     '<div class="section-title-bar mfi-title-bar">MFI</div><canvas id="mfi-chart" height="140" style="display:block;width:100%"></canvas>';
 
@@ -1956,10 +1932,33 @@ function _buildCharts(c, flipDate) {
     layout:{background:{color:'transparent'},textColor:'#6b7a99'},
     grid:{vertLines:{color:'#1c2130'},horzLines:{color:'#1c2130'}},
     rightPriceScale:{borderColor:'#1c2130'},
+    leftPriceScale:{visible:false},
     timeScale:{borderColor:'#1c2130',timeVisible:true,rightOffset:2},
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
   });
   lwChartInst=lwChart;
+
+  /* 成交量 Histogram — 疊在 K 棒下方，獨立 overlay scale */
+  if (c.volume) {
+    const volSeries = lwChart.addHistogramSeries({
+      priceFormat:{type:'volume'},
+      priceScaleId:'vol',
+      lastValueVisible:false,
+      priceLineVisible:false,
+    });
+    lwChart.priceScale('vol').applyOptions({
+      scaleMargins:{top:0.8, bottom:0},
+      borderVisible:false,
+      visible:false,
+    });
+    volSeries.setData(
+      dates.map((d,i)=>{
+        const o=c.open?.[i], cl=c.close?.[i], v=c.volume?.[i];
+        if (v==null) return null;
+        return {time:d, value:v, color: cl>=o ? 'rgba(61,220,132,0.4)' : 'rgba(255,92,92,0.4)'};
+      }).filter(d=>d!==null)
+    );
+  }
 
   const candleSeries=lwChart.addCandlestickSeries({
     upColor:'#3ddc84',downColor:'#ff5c5c',
@@ -1994,58 +1993,6 @@ function _buildCharts(c, flipDate) {
   });
   ro.observe(lwWrap); lwChart._resizeObs=ro;
 
-
-  /* Volume Chart.js */
-  const volCtx=document.getElementById('volume-chart')?.getContext('2d');
-  if (volCtx && c.volume) {
-    /* 依漲跌著色：收盤 >= 開盤 → 綠，否則 → 紅 */
-    const volColors = dates.map((d,i) => {
-      const o=c.open?.[i], cl=c.close?.[i];
-      if (o==null||cl==null) return 'rgba(90,106,133,0.5)';
-      return cl >= o ? 'rgba(61,220,132,0.5)' : 'rgba(255,92,92,0.5)';
-    });
-    function fmtVol(v) {
-      if (v==null) return '';
-      if (v>=1e9) return (v/1e9).toFixed(1)+'B';
-      if (v>=1e6) return (v/1e6).toFixed(1)+'M';
-      if (v>=1e3) return (v/1e3).toFixed(0)+'K';
-      return v;
-    }
-    volumeChartInst = new Chart(volCtx, {
-      type:'bar',
-      data:{labels:dates, datasets:[{
-        label:'Volume', data:c.volume,
-        backgroundColor: volColors,
-        borderWidth:0, borderRadius:1,
-      }]},
-      options:{
-        animation:{duration:300}, responsive:true,
-        interaction:{mode:'index',intersect:false},
-        layout:{padding:{top:2}},
-        plugins:{
-          legend:{display:false},
-          tooltip:{
-            backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
-            titleColor:'#dce3ef',bodyColor:'#8a9ab8',
-            titleFont:{family:'IBM Plex Mono',size:12},
-            bodyFont:{family:'IBM Plex Mono',size:12},
-            callbacks:{
-              title:items=>items[0]?.label||'',
-              label:ctx=>'Vol: '+fmtVol(ctx.raw),
-            }
-          }
-        },
-        scales:{
-          x:{display:false},
-          y:{
-            ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10},
-              maxTicksLimit:3, callback:v=>fmtVol(v)},
-            grid:{color:'#1c2130'},
-          }
-        }
-      }
-    });
-  }
 
   /* MFI Chart.js */
   /* 自訂 tooltip positioner：永遠 clamp 在圖表內 */
@@ -2244,6 +2191,78 @@ function _buildCharts(c, flipDate) {
 function _destroyFinCharts() {
   Object.values(_finChartInsts).forEach(c => { try{c.destroy()}catch(e){} });
   _finChartInsts = {};
+}
+
+function _buildVolumeChart(c, dates) {
+  if (volumeChartInst){ volumeChartInst.destroy(); volumeChartInst=null; }
+  const panel = document.getElementById('volume-panel');
+  if (!panel) return;
+
+  const volData = c.volume?.filter(v => v != null);
+  if (!volData || volData.length === 0) {
+    panel.innerHTML =
+      '<div class="section-title-bar" style="color:#5a6a85;border-color:rgba(90,106,133,.2);background:rgba(90,106,133,.04)">VOL</div>' +
+      '<div style="padding:8px 14px;font-size:11px;color:var(--text3)">需重新執行 scanner_export.py 產生成交量資料</div>';
+    return;
+  }
+
+  /* 確保 canvas 存在 */
+  let canvas = document.getElementById('volume-chart');
+  if (!canvas) {
+    panel.innerHTML =
+      '<div class="section-title-bar" style="color:#5a6a85;border-color:rgba(90,106,133,.2);background:rgba(90,106,133,.04)">VOL</div>' +
+      '<canvas id="volume-chart" style="display:block;width:100%;height:70px"></canvas>';
+    canvas = document.getElementById('volume-chart');
+  }
+
+  const volColors = dates.map((d,i) => {
+    const o=c.open?.[i], cl=c.close?.[i];
+    if (o==null||cl==null) return 'rgba(90,106,133,0.5)';
+    return cl >= o ? 'rgba(61,220,132,0.5)' : 'rgba(255,92,92,0.5)';
+  });
+
+  function fmtVol(v) {
+    if (v==null||isNaN(v)) return '';
+    if (v>=1e9) return (v/1e9).toFixed(1)+'B';
+    if (v>=1e6) return (v/1e6).toFixed(1)+'M';
+    if (v>=1e3) return (v/1e3).toFixed(0)+'K';
+    return String(v);
+  }
+
+  const ctx = canvas.getContext('2d');
+  volumeChartInst = new Chart(ctx, {
+    type:'bar',
+    data:{labels:dates, datasets:[{
+      label:'Volume', data:c.volume,
+      backgroundColor:volColors,
+      borderWidth:0, borderRadius:1,
+    }]},
+    options:{
+      animation:{duration:0},
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      layout:{padding:{top:2}},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+          titleColor:'#dce3ef',bodyColor:'#8a9ab8',
+          callbacks:{
+            title:items=>items[0]?.label||'',
+            label:item=>'Vol: '+fmtVol(item.raw),
+          }
+        }
+      },
+      scales:{
+        x:{display:false},
+        y:{
+          ticks:{color:'#3d4a63',font:{size:10},maxTicksLimit:3,callback:v=>fmtVol(v)},
+          grid:{color:'rgba(28,33,48,0.6)'},
+        }
+      }
+    }
+  });
 }
 
 function _buildFinancials(fin) {
