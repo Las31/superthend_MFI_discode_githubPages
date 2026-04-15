@@ -503,7 +503,7 @@ canvas#mfi-chart{width:100%!important;padding:4px 8px 6px;display:block}
 #list-scroll::-webkit-scrollbar-track{background:transparent}
 #list-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-:root{--cols:36px minmax(80px,1fr) minmax(90px,120px) minmax(70px,100px) minmax(80px,110px) minmax(70px,90px)}
+:root{--cols:36px minmax(80px,1fr) minmax(90px,120px) minmax(70px,100px) minmax(80px,110px) minmax(70px,90px) minmax(60px,80px)}
 .grid-thead{
   display:grid;grid-template-columns:var(--cols);
   position:sticky;top:0;z-index:50;
@@ -528,6 +528,11 @@ canvas#mfi-chart{width:100%!important;padding:4px 8px 6px;display:block}
 .td-ticker{font-family:var(--display);font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.3px}
 .td-ticker a{color:inherit;text-decoration:none}
 .td-ticker a:hover{color:var(--accent);text-decoration:underline;text-decoration-style:dotted}
+.rs-badge{display:inline-block;font-size:11px;font-weight:700;font-family:var(--font);padding:1px 6px;letter-spacing:.5px;border-radius:2px}
+.rs-elite{color:#000;background:var(--accent)}
+.rs-strong{color:#000;background:#f5a623}
+.rs-mid{color:var(--text2);background:rgba(138,154,184,.15);border:1px solid var(--border2)}
+.rs-weak{color:var(--text3);background:transparent}
 .up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--text2)}
 .mfi-wrap{display:flex;align-items:center;gap:6px}
 .mfi-bar{width:44px;height:3px;background:var(--border2);flex-shrink:0}
@@ -910,6 +915,11 @@ footer a:hover{color:var(--accent)}
         <div class="filter-item"><input type="checkbox" id="f-mfi70"      onchange="render()"><label for="f-mfi70">翻多當天 MFI ≥ 70</label></div>
         <div class="filter-item"><input type="checkbox" id="f-mfi-rising" onchange="render()"><label for="f-mfi-rising">MFI 持續上升（近 3 日）</label></div>
         <div class="filter-divider"></div>
+        <div class="filter-divider"></div>
+        <div class="filter-group-label">相對強度 RS</div>
+        <div class="filter-item"><input type="checkbox" id="f-rs70"       onchange="render()"><label for="f-rs70">RS Rank ≥ 70（強於大多數）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-rs90"       onchange="render()"><label for="f-rs90">RS Rank ≥ 90（市場頂尖）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-rs-near-high" onchange="render()"><label for="f-rs-near-high">翻多當天 RS Line 接近 52 週高點</label></div>
         <div class="filter-group-label">價格表現</div>
         <div class="filter-item"><input type="checkbox" id="f-chg-pos" onchange="render()"><label for="f-chg-pos">翻多後漲幅 &gt; 0%</label></div>
         <div class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></div>
@@ -933,6 +943,7 @@ footer a:hover{color:var(--accent)}
       <button class="sort-btn" data-k="flip_date"  onclick="setSort(this)">Date</button>
       <button class="sort-btn active" data-k="mfi" onclick="setSort(this)">MFI</button>
       <button class="sort-btn" data-k="change_pct" onclick="setSort(this)">Chg%</button>
+      <button class="sort-btn" data-k="rs_rank"    onclick="setSort(this)">RS</button>
     </div>
   </div>
 </div>
@@ -1010,6 +1021,7 @@ footer a:hover{color:var(--accent)}
           <div class="grid-th" data-k="flip_price" onclick="thSort(this)">Flip $<span class="arr"></span></div>
           <div class="grid-th" data-k="mfi"        onclick="thSort(this)">MFI<span class="arr"></span></div>
           <div class="grid-th" data-k="change_pct"  onclick="thSort(this)">Chg%<span class="arr"></span></div>
+          <div class="grid-th" data-k="rs_rank"      onclick="thSort(this)">RS<span class="arr"></span></div>
         </div><!-- /grid-thead -->
         <div class="grid-tbody" id="tbody"></div>
       </div><!-- /grid-table -->
@@ -1157,6 +1169,12 @@ footer a:hover{color:var(--accent)}
         <div class="cf-range-field">
           <span class="cf-range-lbl">最大</span>
           <input class="cf-input" type="number" id="cf-atr-max" placeholder="—" step="0.01">
+        <div class="cf-row-label">RS Rank</div>
+        <div class="cf-row-inputs">
+          <input class="cf-input" type="number" id="cf-rs-min" placeholder="0" min="0" max="99" step="1">
+          <span class="cf-range-sep">–</span>
+          <input class="cf-input" type="number" id="cf-rs-max" placeholder="99" min="0" max="99" step="1">
+        </div>
         </div>
       </div>
     </div>
@@ -1395,6 +1413,9 @@ function getActiveFilters() {
     chgPos      : document.getElementById('f-chg-pos')?.checked,
     chg3        : document.getElementById('f-chg-3')?.checked,
     hold2       : document.getElementById('f-hold2')?.checked,
+    rs70        : document.getElementById('f-rs70')?.checked,
+    rs90        : document.getElementById('f-rs90')?.checked,
+    rsNearHigh  : document.getElementById('f-rs-near-high')?.checked,
   };
 }
 function applyFilters(r,f) {
@@ -1407,6 +1428,9 @@ function applyFilters(r,f) {
   if (f.mfi50       && r.mfi < 50)                  return false;
   if (f.mfi70       && r.mfi < 70)                  return false;
   if (f.mfiRising   && !fl.mfi_rising)              return false;
+  if (f.rs70       && (r.rs_rank??-1) < 70)            return false;
+  if (f.rs90       && (r.rs_rank??-1) < 90)            return false;
+  if (f.rsNearHigh && !fl.rs_near_high)                return false;
   if (f.chgPos      && r.change_pct <= 0)           return false;
   if (f.chg3        && r.change_pct <= 3)           return false;
   if (f.hold2       && (fl.hold_days||0) < 2)       return false;
@@ -1498,6 +1522,8 @@ function _cfRead() {
     daysMax : v('cf-days-max'),
     atrMin  : v('cf-atr-min'),
     atrMax  : v('cf-atr-max'),
+    rsMin   : v('cf-rs-min'),
+    rsMax   : v('cf-rs-max'),
   };
 }
 
@@ -1531,6 +1557,8 @@ function applyCustomFilters(r) {
   /* ATR range */
   if (f.atrMin !== null && (r.atr??null) !== null && r.atr < f.atrMin) return false;
   if (f.atrMax !== null && (r.atr??null) !== null && r.atr > f.atrMax) return false;
+  if (f.rsMin  !== null && (r.rs_rank??null) !== null && r.rs_rank < f.rsMin) return false;
+  if (f.rsMax  !== null && (r.rs_rank??null) !== null && r.rs_rank > f.rsMax) return false;
   return true;
 }
 
@@ -1548,6 +1576,8 @@ function _cfCount(f) {
   if (f.daysMax !== null) n++;
   if (f.atrMin  !== null) n++;
   if (f.atrMax  !== null) n++;
+  if (f.rsMin   !== null) n++;
+  if (f.rsMax   !== null) n++;
   return n;
 }
 
@@ -1580,7 +1610,7 @@ function clearCustomFilter() {
   document.querySelectorAll('#cf-grade-chips .cf-chip').forEach(c => c.classList.remove('checked'));
   document.querySelectorAll('#cf-sector-chips .cf-chip').forEach(c => c.classList.remove('checked'));
   ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
-   'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
+   'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max','cf-rs-min','cf-rs-max']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
   _cfActive = {};
   _cfUpdateBadge();
@@ -1591,7 +1621,7 @@ function clearCustomFilter() {
 
 /* input 變動時更新底部計數 */
 ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
- 'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
+ 'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max','cf-rs-min','cf-rs-max']
   .forEach(id => {
     document.getElementById(id)?.addEventListener('input', _cfUpdateFooterCount);
   });
@@ -1668,6 +1698,7 @@ function render() {
         </div>
       </div>
       <div class="grid-td"><span class="${chg>0?'up':chg<0?'down':'neutral'}">${sign}${chg.toFixed(2)}%</span></div>
+      <div class="grid-td">${r.rs_rank!=null?`<span class="rs-badge rs-${r.rs_rank>=90?'elite':r.rs_rank>=70?'strong':r.rs_rank>=50?'mid':'weak'}">${r.rs_rank}</span>`:'<span style="color:var(--text3)">—</span>'}</div>
     </div>`;
   }).join('');
 
