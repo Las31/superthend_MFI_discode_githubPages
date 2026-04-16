@@ -19,7 +19,7 @@
 }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=Zen+Old+Mincho&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#07090d;--surface:#0e1117;--surface2:#13171f;
@@ -379,7 +379,7 @@ header{
 /* K線圖固定高度，不被壓縮 */
 #lw-wrap{
   height:42vh;min-height:300px;
-  flex-shrink:0;padding:0 14px;overflow:hidden;position:relative;
+  flex-shrink:0;padding:0 20px;overflow:hidden;position:relative;
 }
 
 /* ── A 方案：左側色塊邊線區隔 ── */
@@ -455,6 +455,7 @@ header{
   border-right:1px solid var(--border);
   border-bottom:1px solid var(--border);
   border-left:3px solid #f5a623;
+  padding:0 20px;
 }
 #sub-panel.rs-mode{border-left-color:#00e5a0}
 #sub-panel-head{
@@ -478,7 +479,7 @@ header{
 #sub-panel.rs-mode .sub-tab.active{color:#00e5a0;background:rgba(0,229,160,.08)}
 #sub-lw-container{width:100%;height:150px;}
 
-#chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:12px}
+#chart-info{padding:8px 16px;border-bottom:1px solid var(--border);font-size:16px;font-family:'Zen Old Mincho',serif}
 
 /* ── Financials Panel（2×2 小卡）── */
 #fin-panel{
@@ -514,7 +515,7 @@ header{
 .info-tag.sector{border-color:rgba(123,108,255,.6);color:#a89eff}
 .info-tag.industry{border-color:rgba(0,229,160,.5);color:#00e5a0}
 .info-tag.country{border-color:var(--border2);color:var(--text2)}
-.info-desc{font-size:12px;color:var(--text2);line-height:1.6;letter-spacing:.2px;margin-top:6px}
+.info-desc{font-size:16px;color:#ffffff;line-height:1.8;letter-spacing:.3px;margin-top:6px;font-family:'Zen Old Mincho',serif}
 
 #chart-empty{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -567,7 +568,7 @@ header{
 }
 .st-tag.day {background:rgba(0,229,160,.1);color:#00e5a0;border:1px solid rgba(0,229,160,.3)}
 .st-tag.d3  {background:rgba(123,108,255,.12);color:#7b6cff;border:1px solid rgba(123,108,255,.3)}
-.st-tag.all  {background:rgba(0,229,160,.08);color:#00e5a0;border:1px solid rgba(0,229,160,.3)}
+.st-tag.all  {background:rgba(255,92,92,.1);color:#ff5c5c;border:1px solid rgba(255,92,92,.3)}
 .st-tag.none {background:transparent;color:var(--text3);border:1px solid var(--border)}
 .up{color:var(--up)}.down{color:var(--down)}.neutral{color:var(--text2)}
 .mfi-wrap{display:flex;align-items:center;gap:6px}
@@ -619,14 +620,33 @@ header{
   .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
   .card-mfi-bar{height:2px;background:var(--border2);margin-top:5px;border-radius:1px}
   .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
-  header{padding:10px 14px}
-  .logo{font-size:16px;letter-spacing:.3px}
-  #stats{grid-template-columns:repeat(2,1fr)}
-  .stat{padding:12px 8px}
-  .stat-n{font-size:28px;letter-spacing:-1px}
-  #controls{padding:8px 12px}
-  #search{width:120px}
+  /* ── Header 壓縮 ── */
+  header{padding:6px 12px;flex-wrap:nowrap;gap:6px}
+  .logo{font-size:13px;letter-spacing:.2px}
+  .header-right{gap:8px;flex-wrap:nowrap}
+  #scan-time{font-size:10px}
+  .param-pill{font-size:10px;padding:2px 7px}
+
+  /* ── Stats 壓縮 ── */
+  #stats{grid-template-columns:repeat(4,1fr);gap:0}
+  .stat{padding:6px 4px 5px}
+  .stat-n{font-size:18px;letter-spacing:0px}
+  .stat-l{font-size:9px;letter-spacing:1px;margin-top:3px}
+
+  /* ── Controls 壓縮 ── */
+  #controls{padding:5px 10px;gap:5px}
+  .controls-inner{gap:5px}
+  .tabs{padding:2px}
+  .tab{font-size:10px;padding:3px 7px;letter-spacing:.2px}
+  #search{width:100px;font-size:11px;padding:5px 10px 5px 26px}
+  .filter-btn{font-size:11px;padding:5px 10px}
+  .count-badge{font-size:11px}
   .sort-lbl{display:none}
+  #lang-toggle-btn{display:none}
+
+  /* ── 卡片 ticker 行支援 ST 標籤 ── */
+  .card-ticker{display:flex;align-items:center;gap:0}
+  .card-ticker .st-tag{margin-right:5px;flex-shrink:0}
 }
 @media(min-width:761px){#card-list{display:none}}
 
@@ -646,13 +666,13 @@ header{
   border-radius:12px 12px 0 0;
 }
 #mobile-modal-head{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 16px 10px;
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px 8px;
   border-bottom:1px solid var(--border);
-  flex-shrink:0;
+  flex-shrink:0;flex-wrap:wrap;
 }
-#mobile-modal-ticker{font-family:var(--display);font-size:20px;font-weight:800;color:var(--text)}
-#mobile-modal-sub{font-size:12px;color:var(--text2);letter-spacing:.3px;flex:1;min-width:0}
+#mobile-modal-ticker{font-family:var(--display);font-size:17px;font-weight:800;color:var(--text)}
+#mobile-modal-sub{font-size:11px;color:var(--text2);letter-spacing:.2px;flex:1;min-width:0;width:100%}
 #mobile-modal-close{
   margin-left:auto;background:none;border:none;
   color:var(--text2);font-size:20px;cursor:pointer;
@@ -662,15 +682,15 @@ header{
 #mobile-modal-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 #mobile-lw-wrap{flex:1;min-height:0;overflow:hidden}
 #mobile-lw-container{width:100%;height:100%}
-#mobile-mfi-section{flex-shrink:0;padding:6px 16px 8px;border-top:1px solid var(--border)}
+#mobile-mfi-section{flex-shrink:0;padding:4px 12px 6px;border-top:1px solid var(--border)}
 #mobile-mfi-section .mfi-label{font-size:12px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 #mobile-modal-cards{
   display:grid;grid-template-columns:repeat(3,1fr);
-  gap:6px;padding:10px 14px 14px;flex-shrink:0;
+  gap:5px;padding:8px 12px 10px;flex-shrink:0;
 }
-#mobile-modal-cards .cmeta{background:var(--bg);border:1px solid var(--border);padding:6px 10px}
-#mobile-modal-cards .cmeta .lbl{font-size:12px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase}
-#mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:13px;font-weight:700;margin-top:2px;color:var(--text)}
+#mobile-modal-cards .cmeta{background:var(--bg);border:1px solid var(--border);padding:5px 8px}
+#mobile-modal-cards .cmeta .lbl{font-size:10px;color:var(--text3);letter-spacing:.4px;text-transform:uppercase}
+#mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:12px;font-weight:700;margin-top:2px;color:var(--text)}
 
 /* ── Pin Panel ── */
 #pin-panel{
@@ -1112,7 +1132,7 @@ footer a:hover{color:var(--accent)}
       <div id="mobile-lw-wrap"><div id="mobile-lw-container"></div></div>
       <div id="mobile-mfi-section">
         <div class="mfi-label">MFI</div>
-        <canvas id="mobile-mfi-chart" height="70" style="width:100%!important"></canvas>
+        <canvas id="mobile-mfi-chart" height="55" style="width:100%!important"></canvas>
       </div>
     </div>
     <div id="mobile-modal-cards"></div>
@@ -1399,6 +1419,35 @@ function updateChartPinBtn(ticker) {
 }
 
 const GRADE_COLOR = {Strong:'#00e5a0', Normal:'#f5a623', Weak:'#4a5878'};
+
+/* ── MFI 70/30 色塊填色 plugin（Chart.js）全域定義，主圖和手機 Modal 共用 ── */
+const mfiFillPlugin = {
+  id: 'mfiBandFill',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea:{left,right,top,bottom}, scales:{y:ys}} = chart;
+    const ds = chart.getDatasetMeta(0);
+    if (!ds || !ds.data.length) return;
+    const pts = ds.data;
+    function drawBand(threshold, color, above) {
+      const py = ys.getPixelForValue(threshold);
+      ctx.save();
+      ctx.beginPath();
+      if (above) ctx.rect(left, top, right-left, py-top);
+      else       ctx.rect(left, py, right-left, bottom-py);
+      ctx.clip();
+      ctx.beginPath();
+      pts.forEach((pt, i) => { if(i===0) ctx.moveTo(pt.x,pt.y); else ctx.lineTo(pt.x,pt.y); });
+      if (above) { ctx.lineTo(pts[pts.length-1].x, py); ctx.lineTo(pts[0].x, py); }
+      else       { ctx.lineTo(pts[pts.length-1].x, py); ctx.lineTo(pts[0].x, py); }
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.restore();
+    }
+    drawBand(70, 'rgba(255,92,92,0.35)',  true);
+    drawBand(30, 'rgba(61,220,132,0.35)', false);
+  }
+};
 
 /* ── Boot ── */
 fetch('data.json?_=' + Date.now())
@@ -1775,22 +1824,24 @@ function render() {
     const mfiPct=Math.min(100,r.mfi).toFixed(0), isSelected=r.ticker===_selectedTicker;
     return `<div class="stock-card${isSelected?' selected':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
       <div class="card-top">
-        <div class="card-ticker"><a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank" onclick="event.stopPropagation()">${r.ticker}</a></div>
+        <div class="card-ticker">${(()=>{
+          const d1=r.filters?.st1d_bullish, d3=r.filters?.st3d_bullish;
+          if(d1&&d3)  return '<span class="st-tag all">全</span>';
+          if(d1&&!d3) return '<span class="st-tag day">日</span>';
+          if(!d1&&d3) return '<span class="st-tag d3">三</span>';
+          return '<span class="st-tag none">—</span>';
+        })()}<a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank" onclick="event.stopPropagation()">${r.ticker}</a></div>
         <div class="card-right">
           <span class="${cls}" style="font-size:14px;font-weight:700">${sign}${chg.toFixed(2)}%</span>
           <span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span>
         </div>
       </div>
-      <div class="card-grid">
+      <div class="card-grid" style="grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:4px">
         <div class="card-item"><div class="lbl">Flip Date</div><div class="val">${r.flip_date}</div></div>
-        <div class="card-item"><div class="lbl">Flip $</div><div class="val">$${r.flip_price.toFixed(2)}</div></div>
-        <div class="card-item"><div class="lbl">Last $</div><div class="val">$${r.last_price.toFixed(2)}</div></div>
         <div class="card-item"><div class="lbl">MFI</div>
           <div class="val" style="color:${mfiFillColor(r.mfi)}">${r.mfi.toFixed(1)}</div>
           <div class="card-mfi-bar"><div class="card-mfi-fill" style="width:${mfiPct}%;background:${mfiFillColor(r.mfi)}"></div></div>
         </div>
-        <div class="card-item"><div class="lbl">SuperTrend</div><div class="val">$${r.supertrend.toFixed(2)}</div></div>
-        <div class="card-item"><div class="lbl">ATR</div><div class="val">${r.atr.toFixed(2)}</div></div>
       </div>
     </div>`;
   }).join('');
@@ -1925,7 +1976,11 @@ function _buildMobileChart(r) {
           }}
         },
         scales:{
-          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:12},maxTicksLimit:6},grid:{color:'#1c2130'}},
+          x:{ticks:{color:'#3d4a63',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:4,
+              callback:(v,i,ticks)=>{
+                const d=new Date(v); return (d.getMonth()+1)+'/'+(d.getDate());
+              }
+            },grid:{color:'#1c2130'}},
           y:{ticks:{color:'#f5a623',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#1c2130'},min:0,max:100},
         }
       },
@@ -2059,6 +2114,117 @@ document.getElementById('sub-panel').style.display='flex';
   _buildFinancials(r.financials||{});
 }
 
+/* ════════════════════════════════════════════
+   Price Scale Width Sync
+   量測主圖右側價格軸的實際像素寬度，強制副圖對齊，
+   確保兩圖繪圖區左緣一致，crosshair 垂直線才能對齊
+   ════════════════════════════════════════════ */
+function _syncPriceScaleWidth(mainChart, subChart) {
+  if (!mainChart || !subChart) return;
+  try {
+    /* LW v4 的 paneSize().width 是繪圖區寬度（不含價格軸），
+       容器總寬 - 繪圖區寬 = 價格軸寬度 */
+    const mainPane  = mainChart.paneSize();
+    const mainTotal = mainChart.chartElement().clientWidth;
+    const axisW     = mainTotal - mainPane.width;
+    if (axisW > 0) {
+      subChart.applyOptions({
+        rightPriceScale: { minimumWidth: axisW },
+      });
+    }
+  } catch(e) { /* 圖表尚未完全初始化時忽略 */ }
+}
+
+/* ════════════════════════════════════════════
+   Partial Price Line Primitive（LW v4.2 ISeriesPrimitive）（LW v4.2 ISeriesPrimitive）
+   只從最後一根 K 棒的右緣畫到右側價格軸，不橫跨全圖
+   ════════════════════════════════════════════ */
+class PartialPriceLinePrimitive {
+  constructor(color, lineWidth, dash) {
+    this._color     = color     || '#26a69a';
+    this._lineWidth = lineWidth || 1;
+    this._dash      = dash      || [4, 3];
+    this._price     = null;
+    this._chart     = null;
+    this._series    = null;
+    this._requestUpdate = null;
+  }
+
+  /* LW 呼叫 attached 時注入 chart/series 參照 */
+  attached({ chart, series, requestUpdate }) {
+    this._chart  = chart;
+    this._series = series;
+    this._requestUpdate = requestUpdate;
+  }
+  detached() {
+    this._chart = null; this._series = null; this._requestUpdate = null;
+  }
+
+  updatePrice(price, time) {
+    this._price    = price;
+    this._lastTime = time ?? this._lastTime;
+    if (this._requestUpdate) this._requestUpdate();
+  }
+
+  paneViews() { return [new _PPLPaneView(this)]; }
+  priceAxisViews() { return [new _PPLAxisView(this)]; }
+}
+
+class _PPLPaneView {
+  constructor(p) { this._p = p; }
+  zOrder() { return 'top'; }
+  renderer() { return new _PPLPaneRenderer(this._p); }
+}
+
+class _PPLPaneRenderer {
+  constructor(p) { this._p = p; }
+  draw(target) {
+    target.useMediaCoordinateSpace(scope => {
+      const p = this._p;
+      if (p._price == null || !p._chart || !p._series || !p._lastTime) return;
+
+      const y = p._series.priceToCoordinate(p._price);
+      if (y == null) return;
+
+      /* 用最後一根 K 棒的時間換算 x，這樣滾動時不會跑掉 */
+      const ts = p._chart.timeScale();
+      const lastBarX = ts.timeToCoordinate(p._lastTime);
+      if (lastBarX == null) return;
+
+      /* 最後一根在可視範圍左側時不繪製 */
+      if (lastBarX < 0) return;
+
+      const ctx = scope.context;
+      ctx.save();
+      ctx.beginPath();
+      ctx.setLineDash(p._dash);
+      ctx.strokeStyle = p._color;
+      ctx.lineWidth   = p._lineWidth;
+      ctx.moveTo(lastBarX, y);
+      ctx.lineTo(scope.mediaSize.width, y);
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+}
+
+class _PPLAxisView {
+  constructor(p) { this._p = p; }
+  coordinate() {
+    if (!this._p._series || this._p._price == null) return -1;
+    return this._p._series.priceToCoordinate(this._p._price) ?? -1;
+  }
+  text() {
+    if (this._p._price == null) return '';
+    return this._p._price.toFixed(2);
+  }
+  textColor()       { return '#000'; }
+  backColor()       { return this._p._color; }
+  visible()         { return this._p._price != null; }
+  tickVisible()     { return true; }
+  movePoint(coordinate) {}
+}
+
 function _buildCharts(c, flipDate) {
   const LC  = LightweightCharts;
   const mainWrap = document.getElementById('lw-container');
@@ -2100,7 +2266,11 @@ function _buildCharts(c, flipDate) {
     ...CHART_OPTS,
     width:  mainWrap.clientWidth  || 480,
     height: mainWrap.clientHeight || 260,
-    timeScale: { borderColor:'#1c2130', timeVisible:false, rightOffset:2 },
+    timeScale: {
+      borderColor:'#1c2130',
+      timeVisible:true,
+      rightOffset:2,
+    },
   });
   lwChartInst = mainChart;
 
@@ -2123,12 +2293,29 @@ function _buildCharts(c, flipDate) {
     upColor:'#3ddc84', downColor:'#ff5c5c',
     borderUpColor:'#3ddc84', borderDownColor:'#ff5c5c',
     wickUpColor:'#3ddc84', wickDownColor:'#ff5c5c',
+    /* 關閉預設橫跨全圖的 price line，改用 PartialPriceLine */
+    priceLineVisible: false,
+    lastValueVisible: true,
   });
-  candleSeries.setData(
-    dates.map((d,i)=>({time:d,open:c.open?.[i]??null,high:c.high?.[i]??null,
-                        low:c.low?.[i]??null,close:c.close?.[i]??null}))
-         .filter(d=>d.open!==null)
-  );
+
+  /* Partial Price Line：只從最後一根 K 棒畫到右側價格軸 */
+  const _ppl = new PartialPriceLinePrimitive('#26a69a', 1, [4, 3]);
+  candleSeries.attachPrimitive(_ppl);
+
+  const _candleData = dates.map((d,i)=>({time:d,open:c.open?.[i]??null,high:c.high?.[i]??null,
+                      low:c.low?.[i]??null,close:c.close?.[i]??null}))
+                     .filter(d=>d.open!==null);
+  candleSeries.setData(_candleData);
+
+  /* 取最後收盤價，更新 partial price line */
+  if (_candleData.length) {
+    const _lastClose = _candleData[_candleData.length - 1].close;
+    /* 最後收盤漲跌決定顏色 */
+    const _prevClose = _candleData.length > 1 ? _candleData[_candleData.length - 2].close : null;
+    const _lineColor = (_prevClose == null || _lastClose >= _prevClose) ? '#3ddc84' : '#ff5c5c';
+    _ppl._color = _lineColor;
+    _ppl.updatePrice(_lastClose, _candleData[_candleData.length - 1].time);
+  }
 
   let stSeries = null;
   if (c.supertrend) {
@@ -2150,6 +2337,8 @@ function _buildCharts(c, flipDate) {
   mainChart.timeScale().fitContent();
   const roMain = new ResizeObserver(()=>{
     mainChart.applyOptions({width:mainWrap.clientWidth, height:mainWrap.clientHeight});
+    /* resize 後重新對齊價格軸寬度 */
+    _syncPriceScaleWidth(mainChart, subChartInst);
   });
   roMain.observe(mainWrap);
   mainChart._ro = roMain;
@@ -2331,6 +2520,13 @@ function _buildCharts(c, flipDate) {
     syncing = false;
   });
 
+  /* 圖表建立後，量測主圖價格軸實際寬度並同步到副圖 */
+  requestAnimationFrame(() => {
+    _syncPriceScaleWidth(mainChart, subChart);
+
+    /* 時間軸高度差由 CSS padding-bottom 補齊，不用動態 minimumHeight */
+  });
+
   /* ════ Crosshair 雙向同步 ════ */
   mainChart.subscribeCrosshairMove(p => {
     if (!p.time) { subChart.clearCrosshairPosition(); return; }
@@ -2428,6 +2624,8 @@ function subTabSwitch(mode, btn) {
       if (sw && subChartInst) {
         subChartInst.applyOptions({width: sw.clientWidth, height: sw.clientHeight});
       }
+      /* 主副圖 resize 後同步價格軸寬度，確保右緣對齊 */
+      _syncPriceScaleWidth(lwChartInst, subChartInst);
       /* Chart.js 財務卡片：先清 canvas 尺寸再 resize 才能縮小 */
       [volumeChartInst, ...Object.values(_finChartInsts)].forEach(c => {
         if (!c) return;
@@ -2485,6 +2683,7 @@ function subTabSwitch(mode, btn) {
       if (sw && subChartInst) {
         subChartInst.applyOptions({width: sw.clientWidth, height: sw.clientHeight});
       }
+      _syncPriceScaleWidth(lwChartInst, subChartInst);
       [volumeChartInst, ...Object.values(_finChartInsts)].forEach(c => {
         if (!c) return;
         const canvas = c.canvas;
