@@ -640,6 +640,18 @@ header{
   .card-chg{font-size:13px;font-weight:700;flex-shrink:0;letter-spacing:-.2px}
 
   .card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;margin-bottom:5px}
+
+  /* 卡片追蹤按鈕 */
+  .card-pin-btn{
+    background:none;border:none;cursor:pointer;padding:6px;
+    color:var(--text3);transition:color .15s, transform .1s;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;margin:-6px -4px -6px 2px;
+  }
+  .card-pin-btn svg{width:18px;height:18px}
+  .card-pin-btn:active{transform:scale(.88)}
+  .card-pin-btn.pinned{color:var(--accent)}
+  .stock-card.pinned{border-color:rgba(0,229,160,.35)}
   .card-item .lbl{font-size:9px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase}
   .card-item .val{font-size:12px;font-weight:600;margin-top:1px;letter-spacing:-.2px}
   .card-mfi-bar{height:2px;background:var(--border2);border-radius:1px;overflow:hidden}
@@ -1962,8 +1974,9 @@ function render() {
     const idx=startIdx+i;
     const chg=r.change_pct, cls=chg>0?'up':chg<0?'down':'', sign=chg>=0?'+':'';
     const mfiPct=Math.min(100,r.mfi).toFixed(0), isSelected=r.ticker===_selectedTicker;
+    const isPinned=pins.has(r.ticker);
     const rs=r.rs_rank;
-    return `<div class="stock-card g-${r.mfi_grade}${isSelected?' selected':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
+    return `<div class="stock-card g-${r.mfi_grade}${isSelected?' selected':''}${isPinned?' pinned':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
       <div class="card-top">
         <div class="card-ticker">${(()=>{
           const d1=r.filters?.st1d_bullish, d3=r.filters?.st3d_bullish;
@@ -1973,6 +1986,13 @@ function render() {
           return '<span class="st-tag none">—</span>';
         })()}<a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank" onclick="event.stopPropagation()">${r.ticker}</a></div>
         <span class="card-chg ${cls}">${sign}${chg.toFixed(2)}%</span>
+        <button class="card-pin-btn${isPinned?' pinned':''}"
+          onclick="event.stopPropagation();togglePin('${r.ticker}')"
+          aria-label="${isPinned?'取消追蹤':'追蹤'}">
+          <svg viewBox="0 0 24 24" fill="${isPinned?'currentColor':'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </button>
       </div>
       <div class="card-grid">
         <div class="card-item">
@@ -3171,7 +3191,7 @@ document.addEventListener('keydown', e=>{
     <span class="mtb-badge" id="mtb-filter-badge" style="display:none">0</span>
   </button>
   <button class="mtb-item" id="mtb-pin" onclick="mtbTogglePin()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     <span>追蹤</span>
     <span class="mtb-badge" id="mtb-pin-badge" style="display:none">0</span>
   </button>
