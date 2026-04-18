@@ -496,27 +496,29 @@ header{
 }
 .fin-card{
   background:var(--bg);border:1px solid var(--border);
-  padding:8px 10px;display:flex;flex-direction:column;gap:3px;
+  padding:8px 10px 2px;display:flex;flex-direction:column;gap:3px;
   min-width:0;overflow:hidden;
 }
 .fin-card canvas{max-width:100%;}
 .fin-card-header{
-  display:flex;align-items:center;gap:8px;margin-bottom:2px;
+  display:flex;align-items:center;gap:8px;margin-bottom:2px;flex-wrap:wrap;
 }
 .fin-card-label{
   font-size:12px;letter-spacing:.8px;text-transform:uppercase;
   color:var(--text2);white-space:nowrap;flex-shrink:0;
 }
-.fin-card-legend{display:flex;gap:8px;margin-left:auto;}
+.fin-card-legend{display:flex;gap:8px;margin-left:auto;flex-shrink:0}
 .fin-card-legend-item{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--text2)}
 .fin-card-legend-dot{width:10px;height:1.5px;border-radius:1px;flex-shrink:0}
 
-.fin-card-summary{
-  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-  padding:2px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px;
+.fin-summary-group{
+  display:inline-flex;align-items:baseline;gap:6px;
+  padding:3px 8px;background:rgba(123,108,255,0.08);
+  border-left:2px solid rgba(123,108,255,0.35);
+  border-radius:2px;
 }
 .fin-summary-val{
-  font-family:var(--display);font-size:20px;font-weight:700;
+  font-family:var(--display);font-size:15px;font-weight:700;
   color:var(--text);letter-spacing:-.3px;line-height:1;
 }
 .fin-summary-chg{
@@ -524,10 +526,6 @@ header{
   display:inline-flex;align-items:baseline;gap:2px;
 }
 .fin-summary-chg sub{font-size:9px;opacity:.7;vertical-align:baseline;margin-left:1px}
-.fin-summary-date{
-  margin-left:auto;font-size:10px;color:var(--text3);
-  letter-spacing:.5px;font-variant-numeric:tabular-nums;
-}
 .info-tags{display:flex;gap:6px;flex-wrap:wrap}
 .info-tag{font-size:12px;padding:3px 10px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text)}
 .info-tag.sector{border-color:rgba(123,108,255,.6);color:#a89eff}
@@ -3121,6 +3119,11 @@ function _buildFinancials(fin) {
         <div class="fin-card">
           <div class="fin-card-header">
             <span class="fin-card-label">${c.label}</span>
+            <span class="fin-summary-group">
+              <span class="fin-summary-val">${fmtVal(latest, c.unit)}</span>
+              ${qoqChg ? `<span class="fin-summary-chg" style="color:${qoqChg.color}" title="QoQ (vs 上季)">${qoqChg.text}<sub>QoQ</sub></span>` : ''}
+              ${yoyChg ? `<span class="fin-summary-chg" style="color:${yoyChg.color}" title="YoY (vs 去年同期)">${yoyChg.text}<sub>YoY</sub></span>` : ''}
+            </span>
             <div class="fin-card-legend">
               <span class="fin-card-legend-item">
                 <span class="fin-card-legend-dot" style="background:${GREEN}"></span>A
@@ -3130,13 +3133,7 @@ function _buildFinancials(fin) {
               </span>
             </div>
           </div>
-          <div class="fin-card-summary">
-            <span class="fin-summary-val">${fmtVal(latest, c.unit)}</span>
-            ${qoqChg ? `<span class="fin-summary-chg" style="color:${qoqChg.color}" title="QoQ (vs 上季)">${qoqChg.text}<sub>QoQ</sub></span>` : ''}
-            ${yoyChg ? `<span class="fin-summary-chg" style="color:${yoyChg.color}" title="YoY (vs 去年同期)">${yoyChg.text}<sub>YoY</sub></span>` : ''}
-            <span class="fin-summary-date">${latestDate}</span>
-          </div>
-          <canvas id="fin-${c.id}-chart" height="150"></canvas>
+          <canvas id="fin-${c.id}-chart" height="130"></canvas>
         </div>`;
       }).join('')}
     </div>`;
@@ -3181,7 +3178,7 @@ function _buildFinancials(fin) {
         animation:{duration:250},
         responsive:true,
         interaction:{mode:'index',intersect:false},
-        layout:{padding:{top:16,right:8,bottom:22,left:4}},
+        layout:{padding:{top:16,right:8,bottom:4,left:4}},
         plugins:{
           legend:{display:false},
           tooltip:{
