@@ -608,24 +608,49 @@ header{
   #list-panel{flex:none;overflow:visible;width:100%}
   #list-scroll{overflow:visible;height:auto}
   #grid-table{display:none}
-  #card-list{display:block;padding:8px 12px}
-  .stock-card{background:var(--surface);border:1px solid var(--border2);margin-bottom:8px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
-  .stock-card:hover,.stock-card.selected{border-color:var(--accent)}
-  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .card-ticker{font-family:var(--display);font-size:17px;font-weight:800}
-  .card-ticker a{color:var(--text);text-decoration:none}
-  .card-right{display:flex;align-items:center;gap:8px}
-  .card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px 0}
-  .card-item .lbl{font-size:12px;color:var(--text2);letter-spacing:.8px;text-transform:uppercase}
-  .card-item .val{font-size:13px;font-weight:600;margin-top:2px}
-  .card-mfi-bar{height:2px;background:var(--border2);margin-top:5px;border-radius:1px}
-  .card-mfi-fill{height:100%;border-radius:1px;transition:width .5s}
+  #card-list{display:block;padding:6px 10px}
+
+  /* ── 新版卡片:左側色條 + 三欄資料 + MFI bar ── */
+  .stock-card{
+    background:var(--surface);
+    border:1px solid var(--border2);
+    border-left:3px solid var(--border2);
+    border-radius:4px;
+    margin-bottom:6px;padding:8px 10px 8px 8px;
+    cursor:pointer;transition:border-color .15s;
+  }
+  .stock-card.g-Strong{border-left-color:var(--strong)}
+  .stock-card.g-Normal{border-left-color:var(--normal)}
+  .stock-card.g-Weak  {border-left-color:var(--weak)}
+  .stock-card:hover{border-color:var(--border2)}
+  .stock-card.selected{border-color:currentColor}
+  .stock-card.selected .card-ticker a::before{
+    content:'●';font-size:9px;margin-right:4px;vertical-align:middle;
+  }
+  .stock-card.g-Strong.selected{background:rgba(0,229,160,.08);color:var(--strong)}
+  .stock-card.g-Normal.selected{background:rgba(245,166,35,.08);color:var(--normal)}
+  .stock-card.g-Weak.selected  {background:rgba(122,139,168,.1); color:#7a8ba8}
+  .stock-card.selected .card-ticker a{color:currentColor}
+  .stock-card.selected .card-ticker a::before{color:currentColor}
+
+  .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px}
+  .card-ticker{display:flex;align-items:center;gap:6px;min-width:0}
+  .card-ticker a{font-family:var(--display);font-size:15px;font-weight:800;color:var(--text);text-decoration:none;letter-spacing:-.2px}
+  .card-ticker .st-tag{flex-shrink:0}
+  .card-chg{font-size:13px;font-weight:700;flex-shrink:0;letter-spacing:-.2px}
+
+  .card-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 12px;margin-bottom:5px}
+  .card-item .lbl{font-size:9px;color:var(--text3);letter-spacing:.6px;text-transform:uppercase}
+  .card-item .val{font-size:12px;font-weight:600;margin-top:1px;letter-spacing:-.2px}
+  .card-mfi-bar{height:2px;background:var(--border2);border-radius:1px;overflow:hidden}
+  .card-mfi-fill{height:100%;transition:width .5s}
+
   /* ── Header 壓縮 ── */
   header{padding:6px 12px;flex-wrap:nowrap;gap:6px}
   .logo{font-size:13px;letter-spacing:.2px}
   .header-right{gap:8px;flex-wrap:nowrap}
   #scan-time{font-size:10px}
-  .param-pill{font-size:10px;padding:2px 7px}
+  .param-pill{display:none}
 
   /* ── Stats 壓縮 ── */
   #stats{grid-template-columns:repeat(4,1fr);gap:0}
@@ -633,22 +658,106 @@ header{
   .stat-n{font-size:18px;letter-spacing:0px}
   .stat-l{font-size:9px;letter-spacing:1px;margin-top:3px}
 
-  /* ── Controls 壓縮 ── */
+  /* ── Controls 壓縮(搜尋/篩選/自訂篩選移到底部工具列) ── */
   #controls{padding:5px 10px;gap:5px}
   .controls-inner{gap:5px}
   .tabs{padding:2px}
   .tab{font-size:10px;padding:3px 7px;letter-spacing:.2px}
-  #search{width:100px;font-size:11px;padding:5px 10px 5px 26px}
-  .filter-btn{font-size:11px;padding:5px 10px}
-  .count-badge{font-size:11px}
   .sort-lbl{display:none}
   #lang-toggle-btn{display:none}
+  /* 手機上隱藏 header 內的搜尋、篩選按鈕、自訂篩選(改由底部工具列觸發) */
+  /* 注意:filter-wrap 不能 display:none,否則裡面的 filter-panel 也會跟著消失 */
+  .search-wrap,#cf-btn{display:none}
+  .filter-wrap .filter-btn{display:none}
+  .filter-wrap{position:static}
 
-  /* ── 卡片 ticker 行支援 ST 標籤 ── */
-  .card-ticker{display:flex;align-items:center;gap:0}
-  .card-ticker .st-tag{margin-right:5px;flex-shrink:0}
+  /* ── Footer 手機上隱藏(騰出空間給底部工具列) ── */
+  footer{display:none !important}
+
+  /* ── 底部工具列 ── */
+  #mtb{
+    position:fixed;left:0;right:0;bottom:0;z-index:450;
+    display:flex;align-items:stretch;justify-content:space-around;
+    background:var(--surface);border-top:1px solid var(--border2);
+    padding:6px 0 max(6px,env(safe-area-inset-bottom));
+  }
+  .mtb-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:2px;background:none;border:none;cursor:pointer;
+    color:var(--text3);font-family:var(--font);font-size:10px;
+    letter-spacing:.5px;padding:4px 0;transition:color .15s;position:relative;
+  }
+  .mtb-item:hover,.mtb-item.active{color:var(--accent)}
+  .mtb-item svg{width:18px;height:18px}
+  .mtb-item .mtb-badge{
+    position:absolute;top:1px;right:calc(50% - 18px);
+    background:#ff6b35;color:#fff;font-size:9px;
+    padding:0 4px;min-width:14px;height:14px;
+    border-radius:7px;line-height:14px;text-align:center;
+    font-family:var(--font);font-weight:700;
+  }
+  /* 騰出底部空間(滾動容器是 #app-body,不是 body) */
+  body{padding-bottom:0}
+  #app-body{padding-bottom:64px}
+
+  /* ── 手機搜尋 drawer ── */
+  #mobile-search-drawer{
+    display:none;position:fixed;left:0;right:0;bottom:56px;z-index:460;
+    background:var(--surface);border-top:1px solid var(--border2);
+    padding:10px 14px;
+  }
+  #mobile-search-drawer.open{display:block}
+  #mobile-search-drawer input{
+    width:100%;background:var(--bg);border:1px solid var(--border2);
+    color:var(--text);font-family:var(--font);font-size:14px;
+    padding:10px 14px;border-radius:4px;
+  }
+  #mobile-search-drawer input:focus{outline:none;border-color:var(--accent)}
+
+  /* ── 手機追蹤 drawer ── */
+  #mobile-pin-drawer{
+    display:none;position:fixed;left:0;right:0;bottom:56px;
+    background:var(--surface);border-top:1px solid var(--border2);
+    border-radius:12px 12px 0 0;z-index:460;
+    max-height:70vh;overflow-y:auto;
+  }
+  #mobile-pin-drawer.open{display:block}
+  #mobile-pin-backdrop{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.55);z-index:455;
+  }
+  #mobile-pin-backdrop.open{display:block}
+  #mobile-pin-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-bottom:1px solid var(--border);
+    position:sticky;top:0;background:var(--surface);z-index:1;
+  }
+  #mobile-pin-head .title{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--text2)}
+  #mobile-pin-head button{
+    background:none;border:none;color:var(--text3);font-size:20px;
+    cursor:pointer;padding:0 4px;line-height:1;
+  }
+  #mobile-pin-list{padding:4px 0}
+  #mobile-pin-list .pin-empty{padding:24px 12px;text-align:center;font-size:12px;color:var(--text3)}
+
+  /* 篩選面板(從底部工具列觸發時) */
+  #filter-panel{
+    position:fixed !important;
+    left:10px !important;right:10px !important;
+    bottom:60px !important;top:auto !important;
+    max-height:70vh;overflow-y:auto;
+  }
+
+  /* 篩選面板裡的「自訂篩選」入口 */
+  .mobile-only-cf-link{display:block !important}
+
+  /* 自訂篩選 drawer 要蓋在底部工具列之上 */
+  #cf-drawer{z-index:500 !important}
+  #cf-backdrop{z-index:495 !important}
 }
-@media(min-width:761px){#card-list{display:none}}
+@media(min-width:761px){
+  #card-list,#mtb,#mobile-search-drawer,#mobile-pin-drawer,#mobile-pin-backdrop{display:none}
+}
 
 /* ── Mobile Chart Modal ── */
 #mobile-modal-backdrop{
@@ -671,8 +780,11 @@ header{
   border-bottom:1px solid var(--border);
   flex-shrink:0;flex-wrap:wrap;
 }
-#mobile-modal-ticker{font-family:var(--display);font-size:17px;font-weight:800;color:var(--text)}
-#mobile-modal-sub{font-size:11px;color:var(--text2);letter-spacing:.2px;flex:1;min-width:0;width:100%}
+#mobile-modal-ticker{
+  font-family:var(--display);font-size:17px;font-weight:800;color:var(--text);
+  display:flex;align-items:center;gap:6px;flex:1;min-width:0;
+}
+#mobile-modal-sub{font-size:11px;color:var(--text2);letter-spacing:.2px;flex:1 0 100%;min-width:0;width:100%;margin-top:2px}
 #mobile-modal-close{
   margin-left:auto;background:none;border:none;
   color:var(--text2);font-size:20px;cursor:pointer;
@@ -680,17 +792,21 @@ header{
 }
 #mobile-modal-close:hover{color:var(--text)}
 #mobile-modal-body{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-#mobile-lw-wrap{flex:1;min-height:0;overflow:hidden}
+#mobile-lw-wrap{flex:1;min-height:0;overflow:hidden;padding:0 12px}
 #mobile-lw-container{width:100%;height:100%}
-#mobile-mfi-section{flex-shrink:0;padding:4px 12px 6px;border-top:1px solid var(--border)}
-#mobile-mfi-section .mfi-label{font-size:12px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+#mobile-mfi-section{flex-shrink:0;padding:6px 16px 8px;border-top:1px solid var(--border)}
+#mobile-mfi-section .mfi-label{font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
 #mobile-modal-cards{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:5px;padding:8px 12px 10px;flex-shrink:0;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4px 14px;padding:8px 14px 10px;flex-shrink:0;
 }
-#mobile-modal-cards .cmeta{background:var(--bg);border:1px solid var(--border);padding:5px 8px}
+#mobile-modal-cards .cmeta{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:3px 0;border-bottom:1px solid var(--border);
+}
+#mobile-modal-cards .cmeta:nth-last-child(-n+2){border-bottom:none}
 #mobile-modal-cards .cmeta .lbl{font-size:10px;color:var(--text3);letter-spacing:.4px;text-transform:uppercase}
-#mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:12px;font-weight:700;margin-top:2px;color:var(--text)}
+#mobile-modal-cards .cmeta .val{font-family:var(--display);font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.2px}
 
 /* ── Pin Panel ── */
 #pin-panel{
@@ -967,11 +1083,11 @@ footer a:hover{color:var(--accent)}
       </button>
       <div class="filter-panel" id="filter-panel">
         <div class="filter-group-label">趨勢</div>
-        <div class="filter-item"><input type="checkbox" id="f-price-ema50"  onchange="render()"><label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label></div>
-        <div class="filter-item"><input type="checkbox" id="f-price-ema200" onchange="render()"><label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label></div>
-        <div class="filter-item"><input type="checkbox" id="f-ema-golden"   onchange="render()"><label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label></div>
-        <div class="filter-item"><input type="checkbox" id="f-flip-ema50"   onchange="render()"><label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label></div>
-        <div class="filter-item"><input type="checkbox" id="f-flip-ema200"  onchange="render()"><label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-price-ema50"  onchange="render()" checked><label for="f-price-ema50">現價 &gt; EMA 50（中期趨勢向上）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-price-ema200" onchange="render()" checked><label for="f-price-ema200">現價 &gt; EMA 200（長期趨勢向上）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-ema-golden"   onchange="render()" checked><label for="f-ema-golden">EMA 50 &gt; EMA 200（多頭排列）</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-flip-ema50"   onchange="render()" checked><label for="f-flip-ema50">翻多當天價格 &gt; EMA 50</label></div>
+        <div class="filter-item"><input type="checkbox" id="f-flip-ema200"  onchange="render()" checked><label for="f-flip-ema200">翻多當天價格 &gt; EMA 200</label></div>
         <div class="filter-divider"></div>
         <div class="filter-group-label">量能</div>
         <div class="filter-item"><input type="checkbox" id="f-mfi50"      onchange="render()"><label for="f-mfi50">翻多當天 MFI ≥ 50</label></div>
@@ -983,6 +1099,9 @@ footer a:hover{color:var(--accent)}
         <div class="filter-item"><input type="checkbox" id="f-chg-3"   onchange="render()"><label for="f-chg-3">翻多後漲幅 &gt; 3%</label></div>
         <div class="filter-item"><input type="checkbox" id="f-hold2"   onchange="render()"><label for="f-hold2">翻多後連續站穩 SuperTrend ≥ 2 天</label></div>
         <div class="filter-divider"></div>
+        <button class="mobile-only-cf-link" onclick="document.getElementById('filter-panel').classList.remove('open');toggleCustomFilter()" style="display:none;font-family:var(--font);font-size:12px;padding:7px 10px;border:1px solid var(--accent);background:rgba(0,229,160,.05);color:var(--accent);cursor:pointer;letter-spacing:.5px;width:100%;margin-bottom:6px">
+          ⚙ 開啟自訂篩選 (MFI/漲幅/天數/ATR/Sector)
+        </button>
         <button onclick="clearFilters()" style="font-family:var(--font);font-size:12px;padding:5px 10px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;width:100%">清除全部篩選</button>
       </div>
     </div>
@@ -1132,7 +1251,7 @@ footer a:hover{color:var(--accent)}
       <div id="mobile-lw-wrap"><div id="mobile-lw-container"></div></div>
       <div id="mobile-mfi-section">
         <div class="mfi-label">MFI</div>
-        <canvas id="mobile-mfi-chart" height="55" style="width:100%!important"></canvas>
+        <canvas id="mobile-mfi-chart" height="100" style="width:100%!important"></canvas>
       </div>
     </div>
     <div id="mobile-modal-cards"></div>
@@ -1212,7 +1331,7 @@ footer a:hover{color:var(--accent)}
         <span class="cf-range-sep">—</span>
         <div class="cf-range-field">
           <span class="cf-range-lbl">最大</span>
-          <input class="cf-input" type="number" id="cf-days-max" placeholder="—" min="0" step="1">
+          <input class="cf-input" type="number" id="cf-days-max" placeholder="—" min="0" step="1" value="1">
         </div>
       </div>
     </div>
@@ -1455,6 +1574,10 @@ fetch('data.json?_=' + Date.now())
   .then(d => {
     try {
       ALL=d.rows||[]; meta=d.meta||{};
+      _cfActive = { grades:[], sectors:[], mfiMin:null, mfiMax:null,
+                    chgMin:null, chgMax:null, daysMin:null, daysMax:1,
+                    atrMin:null, atrMax:null };
+      _cfUpdateBadge();
       initMeta(); render(); renderPinPanel();
       _cfBuildSectorChips();
       document.getElementById('loading').style.display='none';
@@ -1531,7 +1654,13 @@ function clearFilters(){
 }
 document.addEventListener('click', e => {
   const wrap=document.querySelector('.filter-wrap');
-  if (wrap && !wrap.contains(e.target)) document.getElementById('filter-panel')?.classList.remove('open');
+  const panel=document.getElementById('filter-panel');
+  const mtb=document.getElementById('mtb');
+  // 點到 filter-wrap、filter-panel、底部工具列內部 → 不關閉
+  if (wrap && wrap.contains(e.target)) return;
+  if (panel && panel.contains(e.target)) return;
+  if (mtb && mtb.contains(e.target)) return;
+  panel?.classList.remove('open');
 });
 
 /* ── Index Tab ── */
@@ -1696,7 +1825,9 @@ function clearCustomFilter() {
   ['cf-mfi-min','cf-mfi-max','cf-chg-min','cf-chg-max',
    'cf-days-min','cf-days-max','cf-atr-min','cf-atr-max']
     .forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
-  _cfActive = {};
+  _cfActive = { grades:[], sectors:[], mfiMin:null, mfiMax:null,
+                chgMin:null, chgMax:null, daysMin:null, daysMax:null,
+                atrMin:null, atrMax:null };
   _cfUpdateBadge();
   _cfUpdateFooterCount();
   curPage = 1;
@@ -1817,12 +1948,22 @@ function render() {
     pg.innerHTML=btns;
   }
 
-  /* Mobile cards */
+  /* Mobile cards — 新版:左側色條 + 三欄資料 (MFI / RS / 距今) */
   const mfiFillColor=v=>v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
-  document.getElementById('card-list').innerHTML=rows.map((r,idx)=>{
+  const rsColor=v=>v>=80?'#00e5a0':v>=50?'#f5a623':'#7a8ba8';
+  const _todayMs=Date.now();
+  const daysAgo=fd=>{
+    if(!fd) return '—';
+    const d=new Date(fd+'T00:00:00+08:00');
+    const diff=Math.max(0, Math.round((_todayMs-d.getTime())/86400000));
+    return diff+'d';
+  };
+  document.getElementById('card-list').innerHTML=pageRows.map((r,i)=>{
+    const idx=startIdx+i;
     const chg=r.change_pct, cls=chg>0?'up':chg<0?'down':'', sign=chg>=0?'+':'';
     const mfiPct=Math.min(100,r.mfi).toFixed(0), isSelected=r.ticker===_selectedTicker;
-    return `<div class="stock-card${isSelected?' selected':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
+    const rs=r.rs_rank;
+    return `<div class="stock-card g-${r.mfi_grade}${isSelected?' selected':''}" onclick="selectRow(this,${idx})" data-ticker="${r.ticker}">
       <div class="card-top">
         <div class="card-ticker">${(()=>{
           const d1=r.filters?.st1d_bullish, d3=r.filters?.st3d_bullish;
@@ -1831,22 +1972,28 @@ function render() {
           if(!d1&&d3) return '<span class="st-tag d3">三</span>';
           return '<span class="st-tag none">—</span>';
         })()}<a href="https://finviz.com/quote.ashx?t=${r.ticker}" target="_blank" onclick="event.stopPropagation()">${r.ticker}</a></div>
-        <div class="card-right">
-          <span class="${cls}" style="font-size:14px;font-weight:700">${sign}${chg.toFixed(2)}%</span>
-          <span class="grade grade-${r.mfi_grade}">${r.mfi_grade}</span>
-        </div>
+        <span class="card-chg ${cls}">${sign}${chg.toFixed(2)}%</span>
       </div>
-      <div class="card-grid" style="grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:4px">
-        <div class="card-item"><div class="lbl">Flip Date</div><div class="val">${r.flip_date}</div></div>
-        <div class="card-item"><div class="lbl">MFI</div>
+      <div class="card-grid">
+        <div class="card-item">
+          <div class="lbl">MFI</div>
           <div class="val" style="color:${mfiFillColor(r.mfi)}">${r.mfi.toFixed(1)}</div>
-          <div class="card-mfi-bar"><div class="card-mfi-fill" style="width:${mfiPct}%;background:${mfiFillColor(r.mfi)}"></div></div>
+        </div>
+        <div class="card-item">
+          <div class="lbl">RS</div>
+          <div class="val" style="color:${rs!=null?rsColor(rs):'var(--text3)'}">${rs!=null?rs:'—'}</div>
+        </div>
+        <div class="card-item">
+          <div class="lbl">距今</div>
+          <div class="val">${daysAgo(r.flip_date)}</div>
         </div>
       </div>
+      <div class="card-mfi-bar"><div class="card-mfi-fill" style="width:${mfiPct}%;background:${mfiFillColor(r.mfi)}"></div></div>
     </div>`;
   }).join('');
 
   renderPinPanel();
+  if (typeof _mtbUpdateBadges==='function') _mtbUpdateBadges();
 }
 
 function goPage(p){ curPage=p; render(); }
@@ -1894,21 +2041,36 @@ let _mobileLwChart=null, _mobileMfiChart=null;
 
 function openMobileModal(r) {
   const GRADE_COLOR={Strong:'#00e5a0',Normal:'#f5a623',Weak:'#4a5878'};
-  document.getElementById('mobile-modal-ticker').textContent = r.ticker;
+  const GRADE_BG   ={Strong:'rgba(0,229,160,.15)',Normal:'rgba(245,166,35,.15)',Weak:'rgba(74,88,120,.15)'};
   const chg=r.change_pct, sign=chg>=0?'+':'';
   const chgClr=chg>0?'#3ddc84':chg<0?'#ff5c5c':'#8a9ab8';
-  document.getElementById('mobile-modal-sub').innerHTML =
-    `Flip: <b>${r.flip_date}</b> · MFI: <b style="color:${GRADE_COLOR[r.mfi_grade]}">${r.mfi.toFixed(1)}</b> · <b style="color:${chgClr}">${sign}${chg.toFixed(2)}%</b>`;
+  const rs=r.rs_rank;
+  const rsClr=rs==null?'#5a6a85':(rs>=80?'#00e5a0':rs>=50?'#f5a623':'#7a8ba8');
 
-  /* meta cards */
-  document.getElementById('mobile-modal-cards').innerHTML = [
-    {l:'Flip Price', v:'$'+r.flip_price.toFixed(2)},
-    {l:'Last Price', v:'$'+r.last_price.toFixed(2)},
+  /* 標題行:AAPL + Strong + 漲幅 */
+  document.getElementById('mobile-modal-ticker').innerHTML =
+    `${r.ticker} <span style="background:${GRADE_BG[r.mfi_grade]};color:${GRADE_COLOR[r.mfi_grade]};font-size:10px;padding:2px 6px;border-radius:2px;font-weight:700;margin-left:6px;letter-spacing:.3px">${r.mfi_grade}</span>` +
+    `<span style="margin-left:auto;color:${chgClr};font-size:14px;font-weight:700">${sign}${chg.toFixed(2)}%</span>`;
+
+  /* 副標:Flip date · 價格變化 · 公司名/sector */
+  const sector = r.info?.sector_zh || r.info?.sector || '';
+  document.getElementById('mobile-modal-sub').innerHTML =
+    `Flip <b style="color:var(--text)">${r.flip_date}</b>` +
+    ` · $${r.flip_price.toFixed(2)} → <b style="color:var(--text)">$${r.last_price.toFixed(2)}</b>` +
+    (sector ? ` · <span style="color:var(--text3)">${sector}</span>` : '');
+
+  /* Meta:key-value 二欄布局,擴充 RS + Sector */
+  const rows = [
     {l:'SuperTrend', v:'$'+r.supertrend.toFixed(2)},
     {l:'ATR',        v:r.atr.toFixed(2)},
-    {l:'Weight',     v:r.best_weight},
     {l:'Dyn Mult',   v:r.dyn_mult?.toFixed(3)?? '—'},
-  ].map(c=>`<div class="cmeta"><div class="lbl">${c.l}</div><div class="val">${c.v}</div></div>`).join('');
+    {l:'Weight',     v:r.best_weight},
+    {l:'RS Rank',    v:rs!=null?rs:'—', color:rsClr},
+    {l:'Sector',     v:sector||'—'},
+  ];
+  document.getElementById('mobile-modal-cards').innerHTML = rows.map(c =>
+    `<div class="cmeta"><div class="lbl">${c.l}</div><div class="val"${c.color?` style="color:${c.color}"`:''}>${c.v}</div></div>`
+  ).join('');
 
   document.getElementById('mobile-modal-backdrop').classList.add('open');
   document.body.style.overflow='hidden';
@@ -1926,16 +2088,45 @@ function _buildMobileChart(r) {
   }
   if (_mobileMfiChart){ _mobileMfiChart.destroy(); _mobileMfiChart=null; }
 
-  const c=r.chart||{}, dates=c.dates||[];
-  if (!dates.length||typeof LightweightCharts==='undefined') return;
+  const cRaw=r.chart||{}, datesRaw=cRaw.dates||[];
+  if (!datesRaw.length||typeof LightweightCharts==='undefined') return;
+
+  // 手機版只顯示最近 4 個月,避免蠟燭太擠
+  const cutoffMs = Date.now() - 4 * 30 * 24 * 3600 * 1000;
+  let startIdx = datesRaw.findIndex(d => new Date(d+'T00:00:00').getTime() >= cutoffMs);
+  if (startIdx < 0) startIdx = 0;
+  const _slice = arr => Array.isArray(arr) ? arr.slice(startIdx) : arr;
+  const dates = _slice(datesRaw);
+  const c = {
+    ...cRaw,
+    dates,
+    open:       _slice(cRaw.open),
+    high:       _slice(cRaw.high),
+    low:        _slice(cRaw.low),
+    close:      _slice(cRaw.close),
+    supertrend: _slice(cRaw.supertrend),
+    ema50:      _slice(cRaw.ema50),
+    ema150:     _slice(cRaw.ema150),
+    ema200:     _slice(cRaw.ema200),
+    mfi:        _slice(cRaw.mfi),
+    volume:     _slice(cRaw.volume),
+  };
 
   const lw=LightweightCharts.createChart(cont,{
     width: cont.clientWidth||window.innerWidth,
     height:cont.clientHeight||280,
     layout:{background:{color:'transparent'},textColor:'#6b7a99'},
     grid:{vertLines:{color:'#1c2130'},horzLines:{color:'#1c2130'}},
-    rightPriceScale:{borderColor:'#1c2130'},
-    timeScale:{borderColor:'#1c2130',timeVisible:true},
+    rightPriceScale:{
+      borderColor:'#1c2130',
+      scaleMargins:{top:0.08,bottom:0.08},
+    },
+    timeScale:{
+      borderColor:'#1c2130',
+      timeVisible:true,
+      rightOffset:3,      // 右側留 3 根蠟燭寬的空間
+      barSpacing:6,
+    },
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
   });
   _mobileLwChart=lw;
@@ -2967,5 +3158,143 @@ document.addEventListener('keydown', e=>{
   }
 });
 </script>
+
+<!-- ── Mobile Bottom Toolbar ── -->
+<nav id="mtb" aria-label="Mobile toolbar">
+  <button class="mtb-item" id="mtb-search" onclick="mtbToggleSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>搜尋</span>
+  </button>
+  <button class="mtb-item" id="mtb-filter" onclick="mtbToggleFilter()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    <span>篩選</span>
+    <span class="mtb-badge" id="mtb-filter-badge" style="display:none">0</span>
+  </button>
+  <button class="mtb-item" id="mtb-pin" onclick="mtbTogglePin()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span>追蹤</span>
+    <span class="mtb-badge" id="mtb-pin-badge" style="display:none">0</span>
+  </button>
+</nav>
+
+<!-- ── Mobile Search Drawer ── -->
+<div id="mobile-search-drawer">
+  <input type="text" id="mobile-search-input" placeholder="搜尋 ticker..."
+         oninput="curPage=1;document.getElementById('search').value=this.value;render()">
+</div>
+
+<!-- ── Mobile Pin Drawer ── -->
+<div id="mobile-pin-backdrop" onclick="mtbClosePin()"></div>
+<div id="mobile-pin-drawer">
+  <div id="mobile-pin-head">
+    <span class="title">追蹤清單 <span id="mobile-pin-count" style="color:var(--text3);font-weight:400">0</span></span>
+    <button onclick="mtbClosePin()">✕</button>
+  </div>
+  <div id="mobile-pin-list"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   Mobile Toolbar behavior
+   ════════════════════════════════════════════ */
+function mtbToggleSearch(){
+  const dr=document.getElementById('mobile-search-drawer');
+  const was=dr.classList.contains('open');
+  mtbClosePin();
+  document.getElementById('filter-panel')?.classList.remove('open');
+  dr.classList.toggle('open', !was);
+  if (!was) {
+    setTimeout(()=>document.getElementById('mobile-search-input')?.focus(), 50);
+  }
+}
+function mtbCloseSearch(){
+  document.getElementById('mobile-search-drawer')?.classList.remove('open');
+}
+function mtbToggleFilter(){
+  mtbCloseSearch(); mtbClosePin();
+  const panel=document.getElementById('filter-panel');
+  panel.classList.toggle('open');
+}
+function mtbTogglePin(){
+  mtbCloseSearch();
+  document.getElementById('filter-panel')?.classList.remove('open');
+  const dr=document.getElementById('mobile-pin-drawer');
+  const bd=document.getElementById('mobile-pin-backdrop');
+  const was=dr.classList.contains('open');
+  dr.classList.toggle('open', !was);
+  bd.classList.toggle('open', !was);
+  if (!was) _mtbRenderPinList();
+}
+function mtbClosePin(){
+  document.getElementById('mobile-pin-drawer')?.classList.remove('open');
+  document.getElementById('mobile-pin-backdrop')?.classList.remove('open');
+}
+function _mtbRenderPinList(){
+  const pins=getPinned(), times=getPinTimes();
+  const list=document.getElementById('mobile-pin-list');
+  document.getElementById('mobile-pin-count').textContent=pins.size;
+  if (!pins.size){
+    list.innerHTML='<div class="pin-empty">尚未追蹤任何標的</div>';
+    return;
+  }
+  const arr=[...pins].sort((a,b)=>(times[b]||0)-(times[a]||0));
+  list.innerHTML=arr.map(t=>{
+    const r=ALL.find(x=>x.ticker===t);
+    const active=!!r;
+    return `<div class="pin-item${active?' active-pin':' inactive'}" ${active?`onclick="mtbPickPin('${t}')"`:''}>
+      <span class="pin-dot ${active?'on':'off'}"></span>
+      <div class="pin-item-info">
+        <div class="pin-ticker-row"><span class="pin-ticker">${t}</span></div>
+        <div class="pin-date">${r?r.flip_date:'已結束'}</div>
+      </div>
+      <button class="pin-remove" onclick="event.stopPropagation();togglePin('${t}');_mtbRenderPinList()">✕</button>
+    </div>`;
+  }).join('');
+}
+function mtbPickPin(t){
+  const r=ALL.find(x=>x.ticker===t);
+  if (!r) return;
+  mtbClosePin();
+  openMobileModal(r);
+}
+function _mtbUpdateBadges(){
+  /* 篩選 badge:合併 checkbox 條件 + 自訂篩選條件數 */
+  const cb=document.querySelectorAll('#filter-panel input[type=checkbox]:checked').length;
+  const cf=(typeof _cfCount==='function'?_cfCount(_cfActive):0);
+  const total=cb+cf;
+  const b=document.getElementById('mtb-filter-badge');
+  if (b){
+    if (total>0){ b.textContent=total; b.style.display=''; }
+    else b.style.display='none';
+  }
+  /* 追蹤 badge */
+  const pb=document.getElementById('mtb-pin-badge');
+  const pn=getPinned().size;
+  if (pb){
+    if (pn>0){ pb.textContent=pn; pb.style.display=''; }
+    else pb.style.display='none';
+  }
+}
+
+/* hook:原本的 badge 更新函式結束後也更新 mtb */
+(function hookBadges(){
+  const oldUpdateBadge=window._cfUpdateBadge;
+  if (typeof oldUpdateBadge==='function'){
+    window._cfUpdateBadge=function(){ oldUpdateBadge.apply(this,arguments); _mtbUpdateBadges(); };
+  }
+  const oldUpdateFilter=window._updateFilterBadge;
+  if (typeof oldUpdateFilter==='function'){
+    window._updateFilterBadge=function(){ oldUpdateFilter.apply(this,arguments); _mtbUpdateBadges(); };
+  }
+  /* 追蹤變動時也更新 */
+  const oldTogglePin=window.togglePin;
+  if (typeof oldTogglePin==='function'){
+    window.togglePin=function(){ oldTogglePin.apply(this,arguments); _mtbUpdateBadges(); };
+  }
+  /* 頁面載入完成時更新一次 */
+  setTimeout(_mtbUpdateBadges, 500);
+})();
+</script>
+
 </body>
 </html>
