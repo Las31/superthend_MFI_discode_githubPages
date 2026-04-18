@@ -510,6 +510,24 @@ header{
 .fin-card-legend{display:flex;gap:8px;margin-left:auto;}
 .fin-card-legend-item{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--text2)}
 .fin-card-legend-dot{width:10px;height:1.5px;border-radius:1px;flex-shrink:0}
+
+.fin-card-summary{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  padding:2px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px;
+}
+.fin-summary-val{
+  font-family:var(--display);font-size:20px;font-weight:700;
+  color:var(--text);letter-spacing:-.3px;line-height:1;
+}
+.fin-summary-chg{
+  font-size:11px;font-weight:600;letter-spacing:.3px;
+  display:inline-flex;align-items:baseline;gap:2px;
+}
+.fin-summary-chg sub{font-size:9px;opacity:.7;vertical-align:baseline;margin-left:1px}
+.fin-summary-date{
+  margin-left:auto;font-size:10px;color:var(--text3);
+  letter-spacing:.5px;font-variant-numeric:tabular-nums;
+}
 .info-tags{display:flex;gap:6px;flex-wrap:wrap}
 .info-tag{font-size:12px;padding:3px 10px;letter-spacing:.4px;border:1px solid var(--border2);color:var(--text)}
 .info-tag.sector{border-color:rgba(123,108,255,.6);color:#a89eff}
@@ -2997,6 +3015,42 @@ function _buildFinancials(fin) {
     return;
   }
 
+  // 把兩條線「垂直分區」:Annual 線整體擠在圖的上半,Quarterly 線擠在下半
+  // 做法:讓每條線的資料只占 Y 軸的 55% 範圍,剩下 45% 是空白(Annual 留在下方、Quarterly 留在上方)
+  function _alignZero(a, q) {
+    if (!a.length && !q.length) return {aMin:0,aMax:1,qMin:0,qMax:1};
+
+    // Annual:資料集中在圖的上 55%,下 45% 是空白
+    function adjustUpper(arr) {
+      if (!arr.length) return {min:0, max:1};
+      const hi = Math.max(...arr), lo = Math.min(...arr);
+      const span = Math.max(hi - lo, Math.abs(hi) * 0.2, Math.abs(lo) * 0.2, 1e-6);
+      const pad = span * 0.15;
+      // 資料範圍 = [lo-pad, hi+pad]; 這範圍要對應整個 Y 軸的上 55%
+      // 所以總 Y 軸範圍 = dataRange / 0.55, 其中 dataRange 在軸上方
+      const dataRange = (hi + pad) - (lo - pad);
+      const totalRange = dataRange / 0.55;
+      const max = hi + pad;               // 軸頂 = 資料最大值 + padding
+      const min = max - totalRange;       // 軸底 = 往下延伸剩餘 45%
+      return { min, max };
+    }
+    // Quarterly:資料集中在圖的下 55%,上 45% 是空白
+    function adjustLower(arr) {
+      if (!arr.length) return {min:0, max:1};
+      const hi = Math.max(...arr), lo = Math.min(...arr);
+      const span = Math.max(hi - lo, Math.abs(hi) * 0.2, Math.abs(lo) * 0.2, 1e-6);
+      const pad = span * 0.15;
+      const dataRange = (hi + pad) - (lo - pad);
+      const totalRange = dataRange / 0.55;
+      const min = lo - pad;               // 軸底 = 資料最小值 - padding
+      const max = min + totalRange;       // 軸頂 = 往上延伸剩餘 45%
+      return { min, max };
+    }
+    const A = adjustUpper(a);
+    const Q = adjustLower(q);
+    return { aMin: A.min, aMax: A.max, qMin: Q.min, qMax: Q.max };
+  }
+
   const ann = (fin.annual    || []).slice().reverse();  // 舊→新
   const qtr = (fin.quarterly || []).slice().reverse();
 
@@ -3011,6 +3065,22 @@ function _buildFinancials(fin) {
     if (Math.abs(v)>=1e6) return (v/1e6).toFixed(1)+'M';
     if (Math.abs(v)>=1e3) return (v/1e3).toFixed(1)+'K';
     return v.toFixed(2);
+  }
+
+  // 計算變化率:absolute unit 用 % (e.g. (cur-prev)/prev),百分比 unit (net_margin) 用 pp
+  function fmtChange(cur, prev, unit) {
+    if (cur==null || prev==null) return {text:'—', color:'#5a6a85'};
+    if (unit==='%') {
+      const diff = cur - prev;  // 百分比:差用 pp
+      const sign = diff>=0?'▲':'▼';
+      const color = diff>0?'#3ddc84':diff<0?'#ff5c5c':'#8a9ab8';
+      return {text:`${sign}${Math.abs(diff).toFixed(1)}pp`, color};
+    }
+    if (prev===0) return {text:'—', color:'#5a6a85'};
+    const pct = (cur - prev) / Math.abs(prev) * 100;
+    const sign = pct>=0?'▲':'▼';
+    const color = pct>0?'#3ddc84':pct<0?'#ff5c5c':'#8a9ab8';
+    return {text:`${sign}${Math.abs(pct).toFixed(1)}%`, color};
   }
 
   // 每張卡的定義
@@ -3034,21 +3104,41 @@ function _buildFinancials(fin) {
   panel.innerHTML = `
     <div class="section-title-bar fin-title-bar">Financial Highlights</div>
     <div class="fin-cards">
-      ${cards.map(c=>`
+      ${cards.map(c=>{
+        // 算 annual YoY 和 quarterly QoQ/YoY
+        const aLast = ann[ann.length-1], aPrev = ann[ann.length-2];
+        const qLast = qtr[qtr.length-1], qPrev = qtr[qtr.length-2];
+        const qYoYPrev = qtr.length>=5 ? qtr[qtr.length-5] : null;  // 季報 YoY = 對 4 季前
+
+        const latest = qLast?.[c.field] ?? aLast?.[c.field] ?? null;
+        const latestDate = qLast?.date || aLast?.date || '';
+        const qoqChg = qLast && qPrev ? fmtChange(qLast[c.field], qPrev[c.field], c.unit) : null;
+        const yoyChg = qLast && qYoYPrev
+          ? fmtChange(qLast[c.field], qYoYPrev[c.field], c.unit)
+          : (aLast && aPrev ? fmtChange(aLast[c.field], aPrev[c.field], c.unit) : null);
+
+        return `
         <div class="fin-card">
           <div class="fin-card-header">
             <span class="fin-card-label">${c.label}</span>
             <div class="fin-card-legend">
               <span class="fin-card-legend-item">
-                <span class="fin-card-legend-dot" style="background:${GREEN}"></span>Annual
+                <span class="fin-card-legend-dot" style="background:${GREEN}"></span>A
               </span>
               <span class="fin-card-legend-item">
-                <span class="fin-card-legend-dot" style="background:${PURP};opacity:.8"></span>Quarterly
+                <span class="fin-card-legend-dot" style="background:${PURP};opacity:.8"></span>Q
               </span>
             </div>
           </div>
+          <div class="fin-card-summary">
+            <span class="fin-summary-val">${fmtVal(latest, c.unit)}</span>
+            ${qoqChg ? `<span class="fin-summary-chg" style="color:${qoqChg.color}" title="QoQ (vs 上季)">${qoqChg.text}<sub>QoQ</sub></span>` : ''}
+            ${yoyChg ? `<span class="fin-summary-chg" style="color:${yoyChg.color}" title="YoY (vs 去年同期)">${yoyChg.text}<sub>YoY</sub></span>` : ''}
+            <span class="fin-summary-date">${latestDate}</span>
+          </div>
           <canvas id="fin-${c.id}-chart" height="150"></canvas>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
     </div>`;
 
   panel.style.display = 'flex';
@@ -3069,17 +3159,19 @@ function _buildFinancials(fin) {
         datasets:[
           {
             label:'Annual', data:annVals,
+            yAxisID: 'yA',
             borderColor:GREEN, borderWidth:1.8,
             borderDash:[5,3],
-            pointRadius:2, pointHoverRadius:4,
+            pointRadius:3, pointHoverRadius:5,
             pointBackgroundColor:GREEN,
             fill:false, tension:.35, spanGaps:true,
           },
           {
             label:'Quarterly', data:qtrVals,
+            yAxisID: 'yQ',
             borderColor:PURP, borderWidth:1.5,
             borderDash:[5,3],
-            pointRadius:1, pointHoverRadius:3,
+            pointRadius:2, pointHoverRadius:4,
             pointBackgroundColor:PURP,
             fill:false, tension:.35, spanGaps:true,
           },
@@ -3089,6 +3181,7 @@ function _buildFinancials(fin) {
         animation:{duration:250},
         responsive:true,
         interaction:{mode:'index',intersect:false},
+        layout:{padding:{top:16,right:8,bottom:22,left:4}},
         plugins:{
           legend:{display:false},
           tooltip:{
@@ -3100,7 +3193,21 @@ function _buildFinancials(fin) {
               label: ctx => {
                 const v=ctx.raw;
                 if(v===null||v===undefined) return null;
-                return ctx.dataset.label+': '+fmtVal(v,unit);
+                const arr = ctx.dataset.label==='Annual' ? ann : qtr;
+                const field = c.field;
+                const idx = arr.findIndex(x=>x.date===ctx.label);
+                const lines = [ctx.dataset.label+': '+fmtVal(v,unit)];
+                if (idx>0) {
+                  const prev = arr[idx-1]?.[field];
+                  const qoq = fmtChange(v, prev, unit);
+                  if (qoq && qoq.text!=='—') lines.push(`  └ ${ctx.dataset.label==='Annual'?'YoY':'QoQ'}: ${qoq.text}`);
+                }
+                if (ctx.dataset.label==='Quarterly' && idx>=4) {
+                  const yoyPrev = arr[idx-4]?.[field];
+                  const yoy = fmtChange(v, yoyPrev, unit);
+                  if (yoy && yoy.text!=='—') lines.push(`  └ YoY: ${yoy.text}`);
+                }
+                return lines;
               }
             }
           }
@@ -3110,13 +3217,139 @@ function _buildFinancials(fin) {
             ticks:{color:'#8a9ab8',font:{family:FONT,size:12},maxRotation:0,maxTicksLimit:5},
             grid:{color:'#151b28'}
           },
-          y:{
-            ticks:{color:'#8a9ab8',font:{family:FONT,size:12},maxTicksLimit:4,
-              callback:v=>fmtVal(v,unit)},
-            grid:{color:'#151b28'}
-          }
+          yA:(()=>{
+            const a = annVals.filter(v=>v!=null);
+            const q = qtrVals.filter(v=>v!=null);
+            const aligned = _alignZero(a, q);
+            return {
+              position:'left',
+              min: aligned.aMin, max: aligned.aMax,
+              ticks:{color:GREEN,font:{family:FONT,size:11},maxTicksLimit:4,
+                callback:v=>fmtVal(v,unit)},
+              grid:{color:'#151b28'},
+              border:{color:GREEN+'55'}
+            };
+          })(),
+          yQ:(()=>{
+            const a = annVals.filter(v=>v!=null);
+            const q = qtrVals.filter(v=>v!=null);
+            const aligned = _alignZero(a, q);
+            return {
+              position:'right',
+              min: aligned.qMin, max: aligned.qMax,
+              ticks:{color:PURP,font:{family:FONT,size:11},maxTicksLimit:4,
+                align:'end',crossAlign:'far',
+                callback:v=>fmtVal(v,unit)},
+              grid:{display:false},
+              border:{color:PURP+'55'}
+            };
+          })()
         }
-      }
+      },
+      plugins:[{
+        id:'finPointLabels',
+        afterDatasetsDraw(chart) {
+          const {ctx: cc, data, chartArea} = chart;
+          cc.save();
+          cc.font = `bold 10px ${FONT}`;
+
+          // 收集兩條線的所有 point 座標(含 null 點),用來做線附近的「禁區」
+          const allPointsXY = [];
+          data.datasets.forEach((ds, di) => {
+            const meta = chart.getDatasetMeta(di);
+            meta.data.forEach((pt, i) => {
+              if (ds.data[i]!=null) allPointsXY.push({x:pt.x, y:pt.y});
+            });
+          });
+
+          // 收集所有要畫的 label
+          const all = [];
+          data.datasets.forEach((ds, di) => {
+            const arr = di===0 ? ann : qtr;
+            const meta = chart.getDatasetMeta(di);
+            meta.data.forEach((pt, i) => {
+              const v = ds.data[i];
+              if (v==null) return;
+              const idx = arr.findIndex(x=>x.date===chart.data.labels[i]);
+              if (idx<=0) return;
+              const prev = arr[idx-1]?.[c.field];
+              const chg = fmtChange(v, prev, c.unit);
+              if (!chg || chg.text==='—') return;
+              all.push({
+                x: pt.x, ptY: pt.y, text: chg.text, color: chg.color,
+                isAnn: di===0, idx: i,
+              });
+            });
+          });
+          all.forEach(L => { L.w = cc.measureText(L.text).width; });
+          all.sort((a, b) => a.x - b.x || a.idx - b.idx);
+
+          const drawn = [];
+          const LINE_H = 12;
+          const H_PAD  = 3;
+          const V_PAD  = 3;
+          const MIN_POINT_DIST = 14;  // label 中心離任何 point 至少這麼遠
+
+          all.forEach(L => {
+            // 10 個候選:先近後遠,上下交錯
+            // Annual 先往上放,Quarterly 先往下放
+            const ups = [-10, -22, -34, -46, -58];
+            const dns = [ 14,  26,  38,  50,  62];
+            const seq = L.isAnn
+              ? [ups[0],dns[0],ups[1],dns[1],ups[2],dns[2],ups[3],dns[3],ups[4],dns[4]]
+              : [dns[0],ups[0],dns[1],ups[1],dns[2],ups[2],dns[3],ups[3],dns[4],ups[4]];
+            const candidates = seq.map(off => L.ptY + off);
+
+            // 水平對齊
+            let align = 'center';
+            let boxX  = L.x - L.w/2;
+            if (L.x + L.w/2 + H_PAD > chartArea.right) {
+              align = 'right';  boxX = L.x - L.w;
+            } else if (L.x - L.w/2 - H_PAD < chartArea.left) {
+              align = 'left';   boxX = L.x;
+            }
+
+            let chosenY = null;
+            let chosenBox = null;
+            for (const y of candidates) {
+              if (y < chartArea.top + LINE_H/2)   continue;
+              if (y > chartArea.bottom - 2)       continue;
+              const box = {
+                x1: boxX - H_PAD, x2: boxX + L.w + H_PAD,
+                y1: y - LINE_H/2 - V_PAD, y2: y + LINE_H/2 + V_PAD,
+              };
+              // 1. 跟已畫 label 衝突?
+              if (drawn.some(d =>
+                !(box.x2 < d.x1 || box.x1 > d.x2 || box.y2 < d.y1 || box.y1 > d.y2)
+              )) continue;
+
+              // 2. label 中心離「任何 point」太近?(避免壓在點上)
+              const cx = (box.x1+box.x2)/2, cy = (box.y1+box.y2)/2;
+              const tooClose = allPointsXY.some(p => {
+                if (p.x === L.x && Math.abs(p.y - L.ptY) < 0.5) return false; // 自己
+                const dx = p.x - cx, dy = p.y - cy;
+                return Math.sqrt(dx*dx+dy*dy) < MIN_POINT_DIST;
+              });
+              if (tooClose) continue;
+
+              chosenY = y; chosenBox = box; break;
+            }
+            if (chosenY==null) return;
+
+            drawn.push(chosenBox);
+
+            // 畫半透明背景 (避免蓋到線時看不清)
+            cc.fillStyle = 'rgba(14,17,23,0.85)';
+            cc.fillRect(chosenBox.x1, chosenBox.y1, chosenBox.x2-chosenBox.x1, chosenBox.y2-chosenBox.y1);
+
+            cc.textAlign = align;
+            cc.textBaseline = 'middle';
+            cc.fillStyle = L.color;
+            cc.fillText(L.text, L.x, chosenY);
+          });
+          cc.restore();
+        }
+      }]
     });
   });
 }
