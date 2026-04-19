@@ -1604,8 +1604,12 @@ const mfiFillPlugin = {
 };
 
 /* ── Boot ── */
-fetch('data/data.json?_=' + Date.now())
-  .then(r => { if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+function _loadData(path){
+  return fetch(path + '?_=' + Date.now())
+    .then(r => { if (!r.ok) throw new Error('HTTP '+r.status+' ('+path+')'); return r.json(); });
+}
+_loadData('data/data.json')
+  .catch(() => _loadData('data.json'))
   .then(d => {
     try {
       ALL=d.rows||[]; meta=d.meta||{};
@@ -1618,13 +1622,15 @@ fetch('data/data.json?_=' + Date.now())
       document.getElementById('loading').style.display='none';
       document.getElementById('grid-thead').style.display='';
     } catch(err) {
-      document.getElementById('loading').innerHTML='<span style="color:#ff5c5c">JS Error: '+err.message+'</span>';
+      document.getElementById('loading').innerHTML='<span style="color:#ff5c5c">JS Error: '+err.message+'<br><small>'+err.stack+'</small></span>';
+      console.error('Boot error:', err);
     }
   })
   .catch(e => {
     document.getElementById('loading').innerHTML=
       '<span style="color:#ff5c5c">Failed to load data.json — '+e.message+
       '<br><small style="color:#6b7a99">Run scanner_export.py first, then push to GitHub.</small></span>';
+    console.error('Fetch error:', e);
   });
 
 function initMeta() {
