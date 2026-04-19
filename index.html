@@ -93,6 +93,12 @@ header{
   99%{opacity:1}
 }
 .header-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+#analysis-link{
+  font-size:11px;color:var(--text2);padding:5px 10px;
+  border:1px solid var(--border2);text-decoration:none;
+  letter-spacing:.5px;transition:all .15s;font-family:var(--font);
+}
+#analysis-link:hover{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.05)}
 .param-pill{font-size:12px;color:var(--text2);border:1px solid var(--border2);padding:4px 10px;letter-spacing:.5px}
 #scan-time{font-size:12px;color:var(--text2);letter-spacing:.3px}
 
@@ -1070,6 +1076,7 @@ footer a:hover{color:var(--accent)}
 <header>
   <div class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</div>
   <div class="header-right">
+    <a href="analysis.html" id="analysis-link" title="訊號分析">分析 →</a>
     <span class="param-pill" id="param-pills">Loading params...</span>
     <span id="scan-time">—</span>
   </div>
@@ -1597,7 +1604,7 @@ const mfiFillPlugin = {
 };
 
 /* ── Boot ── */
-fetch('data.json?_=' + Date.now())
+fetch('data/data.json?_=' + Date.now())
   .then(r => { if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
   .then(d => {
     try {
