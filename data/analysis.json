@@ -1,0 +1,391 @@
+{
+  "generated_at": "2026-04-19T21:48:11",
+  "min_samples": 20,
+  "overall": {
+    "n": 8,
+    "win_rate": 0.0,
+    "avg_return": -1.17,
+    "median_return": 0.0,
+    "avg_mfe": 1.6,
+    "avg_mae": -3.39,
+    "avg_days": 0.8,
+    "closed_by_flip": 0,
+    "closed_by_timeout": 0
+  },
+  "analyses": [
+    {
+      "title": "整體表現 Overall",
+      "insight": "整體勝率 0.0%, 平均報酬 -1.17%。",
+      "stats": [
+        {
+          "metric": "Total closed signals",
+          "value": 8
+        },
+        {
+          "metric": "Win rate",
+          "value": "0.0%"
+        },
+        {
+          "metric": "Avg return",
+          "value": "-1.17%"
+        },
+        {
+          "metric": "Median return",
+          "value": "+0.00%"
+        },
+        {
+          "metric": "Avg MFE (max gain)",
+          "value": "+1.60%"
+        },
+        {
+          "metric": "Avg MAE (max drawdown)",
+          "value": "-3.39%"
+        },
+        {
+          "metric": "Avg days held",
+          "value": "0.8"
+        },
+        {
+          "metric": "Closed by flip",
+          "value": "8 (100%)"
+        },
+        {
+          "metric": "Closed by timeout",
+          "value": "0 (0%)"
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "MFI Grade 分級",
+      "insight": "MFI Grade: 所有分組樣本數 < 20,需更多資料",
+      "stats": [
+        {
+          "group": "Strong",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 0.39,
+          "avg_mae": -2.71,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        },
+        {
+          "group": "Normal",
+          "n": 7,
+          "win_rate": 0.0,
+          "avg_return": -1.33,
+          "median_return": 0.0,
+          "avg_mfe": 1.78,
+          "avg_mae": -3.48,
+          "avg_days": 0.9,
+          "wr_edge": 0.0,
+          "ret_edge": -0.17,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "MFI 五等分",
+      "insight": "樣本不足,無法做 quintile 分析",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "RS Rank 分組 (IBD 式切法)",
+      "insight": "RS Rank: 所有分組樣本數 < 20,需更多資料",
+      "stats": [
+        {
+          "group": "<50 (弱)",
+          "n": 4,
+          "win_rate": 0.0,
+          "avg_return": -1.99,
+          "median_return": 0.0,
+          "avg_mfe": 2.4,
+          "avg_mae": -3.6,
+          "avg_days": 0.5,
+          "wr_edge": 0.0,
+          "ret_edge": -0.82,
+          "insufficient": true
+        },
+        {
+          "group": "50-70",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 0.39,
+          "avg_mae": -2.71,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        },
+        {
+          "group": "70-80",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 0.87,
+          "avg_mae": -2.93,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        },
+        {
+          "group": "80-90 (強)",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 1.74,
+          "avg_mae": -1.64,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        },
+        {
+          "group": "90+ (極強)",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": -1.37,
+          "median_return": -1.37,
+          "avg_mfe": 0.22,
+          "avg_mae": -5.41,
+          "avg_days": 4.0,
+          "wr_edge": 0.0,
+          "ret_edge": -0.2,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "EMA 結構",
+      "insight": "EMA 結構: 所有分組樣本數 < 20,需更多資料",
+      "stats": [
+        {
+          "group": "full_bull",
+          "n": 6,
+          "win_rate": 0.0,
+          "avg_return": -1.56,
+          "median_return": 0.0,
+          "avg_mfe": 1.8,
+          "avg_mae": -3.9,
+          "avg_days": 1.0,
+          "wr_edge": 0.0,
+          "ret_edge": -0.39,
+          "insufficient": true
+        },
+        {
+          "group": "above_50_only",
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 1.02,
+          "avg_mae": -1.86,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "Sector 產業 (n≥20)",
+      "insight": "各產業樣本不足",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "波動率 (ATR%)",
+      "insight": "樣本不足",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "大盤環境 SPY 200MA",
+      "insight": "樣本不足",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "VIX 水準",
+      "insight": "樣本不足",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "多 flag 組合 (滿足幾個 bull 條件)",
+      "insight": "同時滿足 4 個 flag (ema50_above_ema200, mfi_rising, st3d_bullish, rs_near_high) 的訊號表現。 通常滿足越多應該勝率越高,若不是則代表 flag 之間有冗餘。",
+      "stats": [
+        {
+          "group": "1",
+          "n": 4,
+          "win_rate": 0.0,
+          "avg_return": -1.99,
+          "median_return": 0.0,
+          "avg_mfe": 1.93,
+          "avg_mae": -3.43,
+          "avg_days": 0.5,
+          "wr_edge": 0.0,
+          "ret_edge": -0.82,
+          "insufficient": true
+        },
+        {
+          "group": "2",
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 1.56,
+          "avg_mae": -3.16,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.17,
+          "insufficient": true
+        },
+        {
+          "group": "3",
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_return": -0.68,
+          "median_return": -0.68,
+          "avg_mfe": 0.98,
+          "avg_mae": -3.52,
+          "avg_days": 2.0,
+          "wr_edge": 0.0,
+          "ret_edge": 0.48,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "MFI × EMA 交叉",
+      "insight": "樣本不足做雙維度分析",
+      "stats": [],
+      "spread": null
+    },
+    {
+      "title": "持有天數分佈",
+      "insight": "這張表是『結案時持有天數 vs 當時報酬』的分佈,不是『持有到第 N 天的平均績效』。",
+      "stats": [
+        {
+          "group": "1-5",
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_return": -4.67,
+          "median_return": -4.67,
+          "avg_mfe": 0.36,
+          "avg_mae": -7.54,
+          "avg_days": 3.0,
+          "wr_edge": 0.0,
+          "ret_edge": -3.5,
+          "insufficient": true
+        },
+        {
+          "group": "11-15",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "16-20",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "21-30",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "31-45",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "46-60",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "6-10",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        },
+        {
+          "group": "60+",
+          "n": 0,
+          "win_rate": null,
+          "avg_return": null,
+          "median_return": null,
+          "avg_mfe": null,
+          "avg_mae": null,
+          "avg_days": null,
+          "wr_edge": null,
+          "ret_edge": null,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    }
+  ]
+}
