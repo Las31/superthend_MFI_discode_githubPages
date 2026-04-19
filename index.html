@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net https://finviz.com https://finance.yahoo.com;">
 <title>SuperTrend × MFI Dashboard</title>
 <style>
 @font-face {
@@ -1218,7 +1219,6 @@ footer a:hover{color:var(--accent)}
   <div id="list-panel">
     <div id="list-scroll">
       <div id="loading"><div class="spinner"></div>Loading data.json ...</div>
-      <div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
 
       <div id="grid-table">
         <div class="grid-thead" id="grid-thead" style="display:none">
@@ -1238,6 +1238,7 @@ footer a:hover{color:var(--accent)}
           <div class="grid-th" data-k="rs_rank"      onclick="thSort(this)">RS<span class="arr"></span></div>
         </div><!-- /grid-thead -->
         <div class="grid-tbody" id="tbody"></div>
+        <div id="empty"><div class="big">0</div><p>No results match your filter</p></div>
       </div><!-- /grid-table -->
 
       <div id="card-list"></div>
@@ -1785,13 +1786,17 @@ function _cfRead() {
   };
 }
 
-/* 計算翻多距今天數（台北時區，flip_date 格式 YYYY-MM-DD） */
+/* 計算翻多距今天數（以資料最新 flip_date 為基準，而非實際今天） */
+let _dataLatestDate = null;  // 由 render() 每次更新
+
 function _cfFlipDays(flipDate) {
   if (!flipDate) return null;
-  const today = new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
-  today.setHours(0,0,0,0);
-  const flip  = new Date(flipDate+'T00:00:00');
-  return Math.round((today - flip) / 86400000);
+  const base = _dataLatestDate
+    ? new Date(_dataLatestDate + 'T00:00:00')
+    : new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  base.setHours(0,0,0,0);
+  const flip = new Date(flipDate + 'T00:00:00');
+  return Math.round((base - flip) / 86400000);
 }
 
 /* 套用自訂篩選到單一 row（null 欄位視為通過） */
@@ -1884,6 +1889,12 @@ function clearCustomFilter() {
 
 /* ── Render ── */
 function render() {
+  // 以資料裡最新的 flip_date 為「今天」基準，而非實際日期
+  if (ALL.length) {
+    _dataLatestDate = ALL.reduce((max, r) =>
+      r.flip_date > max ? r.flip_date : max, ALL[0].flip_date);
+  }
+
   const q=document.getElementById('search').value.toUpperCase().trim();
   const f=getActiveFilters();
   updateFilterBadge(f);
@@ -1918,7 +1929,6 @@ function render() {
 
   if (!rows.length) {
     tbody.innerHTML=''; empty.style.display='block';
-    document.getElementById('grid-thead').style.display='none';
     document.getElementById('card-list').innerHTML=''; return;
   }
   empty.style.display='none';
@@ -1992,7 +2002,9 @@ function render() {
   /* Mobile cards — 新版:左側色條 + 三欄資料 (MFI / RS / 距今) */
   const mfiFillColor=v=>v>=70?'#00e5a0':v>=50?'#f5a623':'#4a5878';
   const rsColor=v=>v>=80?'#00e5a0':v>=50?'#f5a623':'#7a8ba8';
-  const _todayMs=Date.now();
+  const _todayMs = _dataLatestDate
+    ? new Date(_dataLatestDate+'T00:00:00').getTime()
+    : Date.now();
   const daysAgo=fd=>{
     if(!fd) return '—';
     const d=new Date(fd+'T00:00:00+08:00');
