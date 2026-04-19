@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Feature Analysis — SuperTrend × MFI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#07090d;
+  --surface:#0e1117;
+  --surface2:#0a0d13;
+  --border:#151b28;
+  --border2:#252d3d;
+  --text:#dce3ef;
+  --text2:#8a9ab8;
+  --text3:#5a6a85;
+  --accent:#00e5a0;
+  --strong:#00e5a0;
+  --normal:#f5a623;
+  --weak:#4a5878;
+  --purple:#7b6cff;
+  --up:#3ddc84;
+  --down:#ff5c5c;
+  --font:'IBM Plex Mono',ui-monospace,monospace;
+  --display:'IBM Plex Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font);
+  font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  overflow-y:auto;
+}
+a{color:inherit;text-decoration:none}
+
+/* ── Header ── */
+header{
+  padding:12px 20px;border-bottom:1px solid var(--border);
+  background:var(--surface);display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;
+}
+.logo{font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--text)}
+.logo em.t{color:var(--normal);font-style:normal}
+.logo em.x{color:var(--purple);font-style:normal;margin:0 2px}
+.logo em.a{color:var(--accent);font-style:normal}
+.page-tag{
+  font-size:10px;letter-spacing:1.5px;color:var(--text3);
+  padding:2px 8px;border:1px solid var(--border2);border-radius:2px;
+}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.back-btn{
+  font-size:11px;color:var(--text2);padding:5px 10px;
+  border:1px solid var(--border2);letter-spacing:.5px;
+  transition:all .15s;cursor:pointer;background:transparent;
+  font-family:var(--font);
+}
+.back-btn:hover{color:var(--text);border-color:var(--text2)}
+#gen-time{font-size:10px;color:var(--text3);letter-spacing:.5px}
+
+/* ── Summary stats ── */
+#summary{
+  background:var(--surface2);padding:14px 20px;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  background-color:var(--border);
+}
+.summary-card{
+  background:var(--surface);padding:12px 16px;
+}
+.summary-card .lbl{
+  font-size:9px;letter-spacing:1.2px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:3px;
+}
+.summary-card .val{
+  font-family:var(--display);font-size:24px;font-weight:700;
+  color:var(--text);letter-spacing:-.3px;
+}
+.summary-card .val.up{color:var(--up)}
+.summary-card .val.down{color:var(--down)}
+.summary-card .sub{
+  font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px;
+}
+
+/* ── Filter bar ── */
+#filter-bar{
+  padding:10px 20px;background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  display:flex;gap:6px;align-items:center;font-size:11px;flex-wrap:wrap;
+}
+#filter-bar .lbl{color:var(--text3);letter-spacing:.8px;margin-right:6px}
+.f-chip{
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text2);padding:4px 10px;cursor:pointer;
+  font-family:var(--font);font-size:11px;letter-spacing:.3px;
+  transition:all .15s;
+}
+.f-chip:hover{color:var(--text);border-color:var(--text2)}
+.f-chip.active{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.06)}
+.sort-wrap{margin-left:auto;display:flex;align-items:center;gap:6px}
+.sort-wrap select{
+  background:var(--bg);border:1px solid var(--border2);
+  color:var(--text);padding:4px 8px;font-family:var(--font);
+  font-size:11px;cursor:pointer;letter-spacing:.3px;
+}
+
+/* ── Main content ── */
+main{padding:16px 20px;max-width:1200px;margin:0 auto}
+.empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:13px}
+.empty code{color:var(--accent);background:var(--surface);padding:2px 6px;border-radius:2px}
+
+/* ── Analysis card ── */
+.a-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--border2);
+  margin-bottom:10px;padding:12px 14px 10px;
+}
+.a-card.tier-strong{border-left-color:var(--strong)}
+.a-card.tier-medium{border-left-color:var(--normal)}
+.a-card.tier-weak{border-left-color:var(--text3);opacity:.75}
+.a-card.insufficient{border-left-color:var(--text3);opacity:.55}
+
+.a-head{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px;margin-bottom:8px;flex-wrap:wrap;
+}
+.a-title{
+  font-size:14px;font-weight:700;color:var(--text);letter-spacing:.2px;
+}
+.a-tier{
+  font-size:9px;letter-spacing:1.5px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:2px;
+}
+.a-tier.strong{color:var(--strong)}
+.a-tier.medium{color:var(--normal)}
+.a-tier.weak   {color:var(--text3)}
+.a-tier.insufficient{color:var(--text3)}
+.a-spread{
+  font-family:var(--display);font-size:13px;font-weight:600;
+  color:var(--text);letter-spacing:-.2px;
+}
+.a-spread.strong{color:var(--strong)}
+.a-spread.medium{color:var(--normal)}
+.a-spread.weak,.a-spread.insufficient{color:var(--text3)}
+
+/* ── Group grid(每組勝率) ── */
+.g-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:6px;margin-bottom:8px;
+}
+.g-cell{
+  background:var(--surface2);padding:8px 10px;
+  border-left:2px solid var(--border2);min-width:0;
+}
+.g-cell.insufficient{opacity:.55}
+.g-cell .g-name{
+  font-size:9px;color:var(--text3);letter-spacing:.5px;
+  text-transform:uppercase;margin-bottom:2px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.g-cell .g-name .warn{color:var(--normal);margin-left:4px}
+.g-cell .g-wr{
+  font-family:var(--display);font-size:14px;font-weight:700;
+  letter-spacing:-.2px;
+}
+.g-cell .g-wr.up{color:var(--up)}
+.g-cell .g-wr.down{color:var(--down)}
+.g-cell .g-sub{
+  font-size:10px;color:var(--text2);margin-top:1px;
+}
+.g-cell .g-wr-bar{
+  height:2px;background:var(--border2);margin-top:4px;
+}
+.g-cell .g-wr-fill{height:100%;transition:width .5s}
+
+/* ── Insight box ── */
+.a-insight{
+  padding:7px 10px;margin-top:8px;
+  background:rgba(0,229,160,.05);
+  border-left:2px solid rgba(0,229,160,.35);
+  font-size:11px;color:var(--text);line-height:1.6;
+}
+.a-insight .tag{
+  color:var(--accent);font-weight:700;letter-spacing:.8px;
+  margin-right:6px;
+}
+.tier-medium .a-insight{
+  background:rgba(245,166,35,.04);
+  border-left-color:rgba(245,166,35,.3);
+}
+.tier-medium .a-insight .tag{color:var(--normal)}
+.tier-weak .a-insight,.insufficient .a-insight{
+  background:rgba(90,106,133,.06);
+  border-left-color:rgba(90,106,133,.3);
+}
+.tier-weak .a-insight .tag,.insufficient .a-insight .tag{color:var(--text3)}
+
+/* ── Chart row(展開時顯示) ── */
+.a-charts{
+  display:none;margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);
+  grid-template-columns:1fr 1fr;gap:12px;
+}
+.a-card.expanded .a-charts{display:grid}
+.chart-box{
+  background:var(--surface2);padding:8px 10px;min-height:160px;
+}
+.chart-box .cb-title{
+  font-size:10px;color:var(--text3);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:4px;
+}
+.chart-box canvas{max-width:100%;height:140px!important}
+
+.expand-btn{
+  font-size:10px;color:var(--text3);letter-spacing:.5px;
+  cursor:pointer;padding:2px 6px;user-select:none;
+}
+.expand-btn:hover{color:var(--text2)}
+.a-card.expanded .expand-btn::before{content:'▲ 收合'}
+.a-card:not(.expanded) .expand-btn::before{content:'▼ 展開圖表'}
+
+/* ── Mobile ── */
+@media(max-width:760px){
+  #summary{grid-template-columns:repeat(2,1fr)}
+  .summary-card:last-child{grid-column:span 2}
+  .g-grid{grid-template-columns:repeat(2,1fr)}
+  .a-charts{grid-template-columns:1fr}
+  main{padding:10px 12px}
+  header{padding:10px 14px}
+  #filter-bar{padding:8px 14px}
+  .sort-wrap{width:100%;margin-left:0;margin-top:4px}
+  #summary{padding:10px 14px}
+  .summary-card{padding:8px 10px}
+  .summary-card .val{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</div>
+  <span class="page-tag">FEATURE ANALYSIS</span>
+  <div class="header-right">
+    <a class="back-btn" href="index.html">← 掃描器</a>
+    <span id="gen-time">—</span>
+  </div>
+</header>
+
+<div id="summary">
+  <div class="summary-card"><div class="lbl">Closed Signals</div><div class="val" id="s-total">—</div><div class="sub" id="s-flip-timeout">—</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val" id="s-wr">—</div><div class="sub">overall baseline</div></div>
+  <div class="summary-card"><div class="lbl">Avg Return</div><div class="val" id="s-ret">—</div><div class="sub" id="s-median">median —</div></div>
+  <div class="summary-card"><div class="lbl">Avg MFE</div><div class="val up" id="s-mfe">—</div><div class="sub">max unrealized gain</div></div>
+  <div class="summary-card"><div class="lbl">Avg MAE</div><div class="val down" id="s-mae">—</div><div class="sub" id="s-days">hold days —</div></div>
+</div>
+
+<div id="filter-bar">
+  <span class="lbl">TIER:</span>
+  <button class="f-chip active" data-tier="all">全部</button>
+  <button class="f-chip" data-tier="strong">Strong</button>
+  <button class="f-chip" data-tier="medium">Medium</button>
+  <button class="f-chip" data-tier="weak">Weak</button>
+  <button class="f-chip" data-tier="insufficient">樣本不足</button>
+  <div class="sort-wrap">
+    <span class="lbl">排序</span>
+    <select id="sort-sel">
+      <option value="spread-desc">效應大小 ▼</option>
+      <option value="spread-asc">效應大小 ▲</option>
+      <option value="samples-desc">樣本數 ▼</option>
+      <option value="samples-asc">樣本數 ▲</option>
+      <option value="original">原順序</option>
+    </select>
+  </div>
+</div>
+
+<main id="app">
+  <div class="empty" id="loading">載入中...</div>
+</main>
+
+<script>
+const STRONG_THRESHOLD  = 15;
+const MEDIUM_THRESHOLD  = 7;
+const MIN_SAMPLES_DEFAULT = 20;
+
+let DATA = null;
+let _filterTier = 'all';
+let _sort = 'spread-desc';
+const _expanded = new Set();
+const _charts = {};
+
+function fmtNum(v, sign=false){
+  if (v==null || isNaN(v)) return '—';
+  const s = sign && v > 0 ? '+' : '';
+  return s + v.toFixed(v === Math.floor(v) ? 0 : 2);
+}
+function fmtPct(v, sign=false){
+  if (v==null || isNaN(v)) return '—';
+  const s = sign && v > 0 ? '+' : '';
+  return s + v.toFixed(1) + '%';
+}
+
+function tierOf(analysis){
+  const { stats, spread } = analysis;
+  if (!stats || stats.length === 0) return 'insufficient';
+  const validRows = stats.filter(r => !r.insufficient);
+  if (validRows.length < 2) return 'insufficient';
+  if (spread == null) return 'weak';
+  if (spread >= STRONG_THRESHOLD) return 'strong';
+  if (spread >= MEDIUM_THRESHOLD) return 'medium';
+  return 'weak';
+}
+
+function renderSummary(overall){
+  document.getElementById('s-total').textContent = overall.n || 0;
+  document.getElementById('s-flip-timeout').textContent =
+    `flip ${overall.closed_by_flip||0} / timeout ${overall.closed_by_timeout||0}`;
+
+  const wrEl = document.getElementById('s-wr');
+  wrEl.textContent = fmtPct(overall.win_rate);
+  wrEl.classList.toggle('up', overall.win_rate >= 50);
+  wrEl.classList.toggle('down', overall.win_rate < 50);
+
+  const retEl = document.getElementById('s-ret');
+  retEl.textContent = overall.avg_return==null ? '—' : fmtPct(overall.avg_return, true);
+  retEl.classList.toggle('up', (overall.avg_return||0) > 0);
+  retEl.classList.toggle('down', (overall.avg_return||0) < 0);
+
+  document.getElementById('s-median').textContent =
+    'median ' + (overall.median_return==null ? '—' : fmtPct(overall.median_return, true));
+
+  document.getElementById('s-mfe').textContent =
+    overall.avg_mfe==null ? '—' : fmtPct(overall.avg_mfe, true);
+  document.getElementById('s-mae').textContent =
+    overall.avg_mae==null ? '—' : fmtPct(overall.avg_mae, true);
+  document.getElementById('s-days').textContent =
+    'hold days ' + (overall.avg_days==null ? '—' : overall.avg_days.toFixed(1));
+}
+
+function wrColor(wr){ return wr==null?'#5a6a85':(wr>=50?'#3ddc84':wr>=30?'#f5a623':'#ff5c5c'); }
+
+function renderCard(analysis, idx){
+  const tier = tierOf(analysis);
+  const rows = analysis.stats || [];
+  const isExpanded = _expanded.has(idx);
+
+  const tierLabel = {
+    strong: 'STRONG EFFECT',
+    medium: 'MEDIUM EFFECT',
+    weak:   'WEAK EFFECT',
+    insufficient: 'INSUFFICIENT',
+  }[tier];
+
+  const spreadStr = analysis.spread==null ? '—' : `Δ${analysis.spread.toFixed(1)}pp`;
+  const nTotal = rows.reduce((a,r)=>a+(r.n||0), 0);
+
+  let groupCells = '';
+  if (rows.length){
+    rows.forEach(r=>{
+      const ins = r.insufficient;
+      const wr = r.win_rate;
+      const wrPct = Math.min(100, Math.max(0, wr||0));
+      const retStr = r.avg_return==null ? '—' : fmtPct(r.avg_return, true);
+      const color = wrColor(wr);
+      const wrCls = wr==null ? '' : (wr>=50 ? 'up' : 'down');
+      groupCells += `
+        <div class="g-cell${ins?' insufficient':''}" style="border-left-color:${color}">
+          <div class="g-name">${r.group}${ins?'<span class="warn">⚠</span>':''}</div>
+          <div class="g-wr ${wrCls}">${fmtPct(wr)}</div>
+          <div class="g-sub">n=${r.n} · ${retStr}</div>
+          <div class="g-wr-bar"><div class="g-wr-fill" style="width:${wrPct}%;background:${color}"></div></div>
+        </div>`;
+    });
+  } else {
+    groupCells = `<div class="g-cell insufficient"><div class="g-name">(no data)</div></div>`;
+  }
+
+  const insightHtml = analysis.insight
+    ? `<div class="a-insight"><span class="tag">[INSIGHT]</span>${escapeHtml(analysis.insight)}</div>`
+    : '';
+
+  return `
+    <div class="a-card tier-${tier}${tier==='insufficient'?' insufficient':''}${isExpanded?' expanded':''}"
+         data-tier="${tier}" data-idx="${idx}">
+      <div class="a-head">
+        <div>
+          <div class="a-tier ${tier}">${tierLabel} · n=${nTotal}</div>
+          <div class="a-title">${escapeHtml(analysis.title)}</div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:10px">
+          <span class="a-spread ${tier}">${spreadStr}</span>
+          <span class="expand-btn" onclick="toggleExpand(${idx})"></span>
+        </div>
+      </div>
+      <div class="g-grid">${groupCells}</div>
+      ${insightHtml}
+      <div class="a-charts">
+        <div class="chart-box">
+          <div class="cb-title">WIN RATE BY GROUP</div>
+          <canvas id="ch-wr-${idx}"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="cb-title">MFE × MAE BY GROUP</div>
+          <canvas id="ch-risk-${idx}"></canvas>
+        </div>
+      </div>
+    </div>`;
+}
+
+function escapeHtml(s){
+  if (s==null) return '';
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+function sortAnalyses(arr){
+  const copy = arr.map((a, i) => ({ a, origIdx: i }));
+  switch(_sort){
+    case 'spread-desc':
+      copy.sort((x,y) => (y.a.spread||-999) - (x.a.spread||-999));
+      break;
+    case 'spread-asc':
+      copy.sort((x,y) => (x.a.spread||999) - (y.a.spread||999));
+      break;
+    case 'samples-desc':
+      copy.sort((x,y) => sumN(y.a) - sumN(x.a));
+      break;
+    case 'samples-asc':
+      copy.sort((x,y) => sumN(x.a) - sumN(y.a));
+      break;
+    case 'original':
+    default:
+      copy.sort((x,y) => x.origIdx - y.origIdx);
+  }
+  return copy;
+}
+function sumN(a){ return (a.stats||[]).reduce((s,r)=>s+(r.n||0), 0); }
+
+function render(){
+  const app = document.getElementById('app');
+  if (!DATA || !DATA.analyses || !DATA.analyses.length){
+    app.innerHTML = `<div class="empty">尚無分析結果。請先執行 <code>python feature_analyzer.py</code> 產生資料。</div>`;
+    return;
+  }
+  const sorted = sortAnalyses(DATA.analyses);
+  const filtered = sorted.filter(({a}) =>
+    _filterTier === 'all' || tierOf(a) === _filterTier);
+
+  if (!filtered.length){
+    app.innerHTML = `<div class="empty">此分類下無資料</div>`;
+    return;
+  }
+  app.innerHTML = filtered.map(({a, origIdx}) => renderCard(a, origIdx)).join('');
+
+  // 重建展開的 chart
+  filtered.forEach(({a, origIdx}) => {
+    if (_expanded.has(origIdx)) buildCharts(a, origIdx);
+  });
+}
+
+function toggleExpand(idx){
+  if (_expanded.has(idx)){
+    _expanded.delete(idx);
+    destroyCharts(idx);
+  } else {
+    _expanded.add(idx);
+  }
+  render();
+}
+
+function destroyCharts(idx){
+  ['ch-wr-'+idx, 'ch-risk-'+idx].forEach(id => {
+    if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; }
+  });
+}
+
+function buildCharts(a, idx){
+  const rows = a.stats || [];
+  if (!rows.length) return;
+
+  const wrCtx = document.getElementById('ch-wr-'+idx)?.getContext('2d');
+  if (wrCtx){
+    destroyCharts(idx);
+    _charts['ch-wr-'+idx] = new Chart(wrCtx, {
+      type:'bar',
+      data:{
+        labels: rows.map(r => r.group + (r.insufficient?' ⚠':'')),
+        datasets:[{
+          data: rows.map(r => r.win_rate||0),
+          backgroundColor: rows.map(r => r.insufficient
+            ? 'rgba(90,106,133,.3)'
+            : (r.win_rate>=50 ? 'rgba(61,220,132,.75)'
+             : r.win_rate>=30 ? 'rgba(245,166,35,.75)'
+             : 'rgba(255,92,92,.75)')),
+          borderWidth:0,
+        }]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{
+          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+          callbacks:{label:ctx=>`${ctx.raw.toFixed(1)}% (n=${rows[ctx.dataIndex].n})`}
+        }},
+        scales:{
+          x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'},max:100},
+          y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10}},grid:{display:false}}
+        }
+      }
+    });
+  }
+
+  const riskCtx = document.getElementById('ch-risk-'+idx)?.getContext('2d');
+  if (riskCtx){
+    _charts['ch-risk-'+idx] = new Chart(riskCtx, {
+      type:'scatter',
+      data:{
+        datasets: rows.filter(r => r.avg_mfe!=null && r.avg_mae!=null).map((r,i)=>{
+          const color = r.insufficient ? '#5a6a85'
+              : (r.win_rate>=50 ? '#3ddc84' : r.win_rate>=30 ? '#f5a623' : '#ff5c5c');
+          return {
+            label: r.group,
+            data: [{x: r.avg_mae, y: r.avg_mfe}],
+            backgroundColor: color,
+            borderColor: color,
+            pointRadius: Math.max(4, Math.min(12, Math.sqrt(r.n)*1.5)),
+            pointHoverRadius: Math.max(5, Math.min(14, Math.sqrt(r.n)*1.7)),
+          };
+        })
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{
+          backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+          callbacks:{
+            title: items => items[0].dataset.label,
+            label: ctx => {
+              const row = rows.find(r => r.group === ctx.dataset.label);
+              return [
+                `MFE: ${row.avg_mfe.toFixed(2)}%`,
+                `MAE: ${row.avg_mae.toFixed(2)}%`,
+                `n=${row.n}, WR=${row.win_rate?.toFixed(1)||'—'}%`
+              ];
+            }
+          }
+        }},
+        scales:{
+          x:{title:{display:true,text:'MAE (drawdown)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:9}},
+             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'}},
+          y:{title:{display:true,text:'MFE (gain)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:9}},
+             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'}}
+        }
+      }
+    });
+  }
+}
+
+/* ── 事件 ── */
+document.querySelectorAll('#filter-bar .f-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#filter-bar .f-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    _filterTier = chip.dataset.tier;
+    render();
+  });
+});
+document.getElementById('sort-sel').addEventListener('change', e => {
+  _sort = e.target.value;
+  render();
+});
+
+/* ── 載入 JSON ── */
+fetch('data/analysis.json?_=' + Date.now())
+  .then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(d => {
+    DATA = d;
+    document.getElementById('gen-time').textContent = (d.generated_at||'').slice(0,16).replace('T',' ');
+    renderSummary(d.overall || {});
+    render();
+  })
+  .catch(err => {
+    document.getElementById('app').innerHTML =
+      `<div class="empty">無法載入 <code>data/analysis.json</code><br><br>
+       請先執行 <code>python feature_analyzer.py</code> 產生資料。<br>
+       <small style="color:#5a6a85">${escapeHtml(err.message)}</small></div>`;
+  });
+</script>
+
+</body>
+</html>
