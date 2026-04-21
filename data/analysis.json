@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-04-19T21:48:11",
+  "generated_at": "2026-04-21T11:26:47",
   "min_samples": 20,
   "overall": {
-    "n": 8,
+    "n": 10,
     "win_rate": 0.0,
-    "avg_return": -1.17,
+    "avg_return": -1.0,
     "median_return": 0.0,
-    "avg_mfe": 1.6,
-    "avg_mae": -3.39,
-    "avg_days": 0.8,
+    "avg_mfe": 1.3,
+    "avg_mae": -3.88,
+    "avg_days": 1.3,
     "closed_by_flip": 0,
     "closed_by_timeout": 0
   },
   "analyses": [
     {
       "title": "整體表現 Overall",
-      "insight": "整體勝率 0.0%, 平均報酬 -1.17%。",
+      "insight": "整體勝率 0.0%, 平均報酬 -1.00%。",
       "stats": [
         {
           "metric": "Total closed signals",
-          "value": 8
+          "value": 10
         },
         {
           "metric": "Win rate",
@@ -27,7 +27,7 @@
         },
         {
           "metric": "Avg return",
-          "value": "-1.17%"
+          "value": "-1.00%"
         },
         {
           "metric": "Median return",
@@ -35,19 +35,19 @@
         },
         {
           "metric": "Avg MFE (max gain)",
-          "value": "+1.60%"
+          "value": "+1.30%"
         },
         {
           "metric": "Avg MAE (max drawdown)",
-          "value": "-3.39%"
+          "value": "-3.88%"
         },
         {
           "metric": "Avg days held",
-          "value": "0.8"
+          "value": "1.3"
         },
         {
           "metric": "Closed by flip",
-          "value": "8 (100%)"
+          "value": "10 (100%)"
         },
         {
           "metric": "Closed by timeout",
@@ -70,20 +70,20 @@
           "avg_mae": -2.71,
           "avg_days": 0.0,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 1.0,
           "insufficient": true
         },
         {
           "group": "Normal",
-          "n": 7,
+          "n": 9,
           "win_rate": 0.0,
-          "avg_return": -1.33,
+          "avg_return": -1.11,
           "median_return": 0.0,
-          "avg_mfe": 1.78,
-          "avg_mae": -3.48,
-          "avg_days": 0.9,
+          "avg_mfe": 1.4,
+          "avg_mae": -4.01,
+          "avg_days": 1.4,
           "wr_edge": 0.0,
-          "ret_edge": -0.17,
+          "ret_edge": -0.11,
           "insufficient": true
         }
       ],
@@ -101,28 +101,28 @@
       "stats": [
         {
           "group": "<50 (弱)",
-          "n": 4,
+          "n": 5,
           "win_rate": 0.0,
-          "avg_return": -1.99,
+          "avg_return": -1.59,
           "median_return": 0.0,
-          "avg_mfe": 2.4,
-          "avg_mae": -3.6,
-          "avg_days": 0.5,
+          "avg_mfe": 1.95,
+          "avg_mae": -4.33,
+          "avg_days": 0.4,
           "wr_edge": 0.0,
-          "ret_edge": -0.82,
+          "ret_edge": -0.59,
           "insufficient": true
         },
         {
           "group": "50-70",
-          "n": 1,
+          "n": 2,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 0.39,
-          "avg_mae": -2.71,
-          "avg_days": 0.0,
+          "avg_return": -0.34,
+          "median_return": -0.34,
+          "avg_mfe": 0.22,
+          "avg_mae": -3.62,
+          "avg_days": 3.5,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 0.67,
           "insufficient": true
         },
         {
@@ -135,7 +135,7 @@
           "avg_mae": -2.93,
           "avg_days": 0.0,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 1.0,
           "insufficient": true
         },
         {
@@ -148,7 +148,7 @@
           "avg_mae": -1.64,
           "avg_days": 0.0,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 1.0,
           "insufficient": true
         },
         {
@@ -161,7 +161,7 @@
           "avg_mae": -5.41,
           "avg_days": 4.0,
           "wr_edge": 0.0,
-          "ret_edge": -0.2,
+          "ret_edge": -0.37,
           "insufficient": true
         }
       ],
@@ -173,15 +173,15 @@
       "stats": [
         {
           "group": "full_bull",
-          "n": 6,
+          "n": 7,
           "win_rate": 0.0,
-          "avg_return": -1.56,
+          "avg_return": -1.43,
           "median_return": 0.0,
-          "avg_mfe": 1.8,
-          "avg_mae": -3.9,
-          "avg_days": 1.0,
+          "avg_mfe": 1.55,
+          "avg_mae": -3.99,
+          "avg_days": 1.9,
           "wr_edge": 0.0,
-          "ret_edge": -0.39,
+          "ret_edge": -0.43,
           "insufficient": true
         },
         {
@@ -194,7 +194,20 @@
           "avg_mae": -1.86,
           "avg_days": 0.0,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 1.0,
+          "insufficient": true
+        },
+        {
+          "group": "below_both",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 0.15,
+          "avg_mae": -7.22,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.0,
           "insufficient": true
         }
       ],
@@ -229,6 +242,19 @@
       "insight": "同時滿足 4 個 flag (ema50_above_ema200, mfi_rising, st3d_bullish, rs_near_high) 的訊號表現。 通常滿足越多應該勝率越高,若不是則代表 flag 之間有冗餘。",
       "stats": [
         {
+          "group": "0",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": 0.0,
+          "median_return": 0.0,
+          "avg_mfe": 0.15,
+          "avg_mae": -7.22,
+          "avg_days": 0.0,
+          "wr_edge": 0.0,
+          "ret_edge": 1.0,
+          "insufficient": true
+        },
+        {
           "group": "1",
           "n": 4,
           "win_rate": 0.0,
@@ -238,20 +264,20 @@
           "avg_mae": -3.43,
           "avg_days": 0.5,
           "wr_edge": 0.0,
-          "ret_edge": -0.82,
+          "ret_edge": -0.99,
           "insufficient": true
         },
         {
           "group": "2",
-          "n": 2,
+          "n": 3,
           "win_rate": 0.0,
-          "avg_return": 0.0,
+          "avg_return": -0.22,
           "median_return": 0.0,
-          "avg_mfe": 1.56,
-          "avg_mae": -3.16,
-          "avg_days": 0.0,
+          "avg_mfe": 1.06,
+          "avg_mae": -3.61,
+          "avg_days": 2.3,
           "wr_edge": 0.0,
-          "ret_edge": 1.17,
+          "ret_edge": 0.78,
           "insufficient": true
         },
         {
@@ -264,7 +290,7 @@
           "avg_mae": -3.52,
           "avg_days": 2.0,
           "wr_edge": 0.0,
-          "ret_edge": 0.48,
+          "ret_edge": 0.32,
           "insufficient": true
         }
       ],
@@ -290,7 +316,7 @@
           "avg_mae": -7.54,
           "avg_days": 3.0,
           "wr_edge": 0.0,
-          "ret_edge": -3.5,
+          "ret_edge": -3.67,
           "insufficient": true
         },
         {
@@ -360,15 +386,15 @@
         },
         {
           "group": "6-10",
-          "n": 0,
-          "win_rate": null,
-          "avg_return": null,
-          "median_return": null,
-          "avg_mfe": null,
-          "avg_mae": null,
-          "avg_days": null,
-          "wr_edge": null,
-          "ret_edge": null,
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": -0.67,
+          "median_return": -0.67,
+          "avg_mfe": 0.04,
+          "avg_mae": -4.52,
+          "avg_days": 7.0,
+          "wr_edge": 0.0,
+          "ret_edge": 0.33,
           "insufficient": true
         },
         {
