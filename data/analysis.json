@@ -1,53 +1,53 @@
 {
-  "generated_at": "2026-04-21T11:26:47",
+  "generated_at": "2026-04-23T01:29:58",
   "min_samples": 20,
   "overall": {
-    "n": 10,
-    "win_rate": 0.0,
-    "avg_return": -1.0,
-    "median_return": 0.0,
-    "avg_mfe": 1.3,
-    "avg_mae": -3.88,
-    "avg_days": 1.3,
+    "n": 20,
+    "win_rate": 5.0,
+    "avg_return": -2.55,
+    "median_return": -0.31,
+    "avg_mfe": 1.27,
+    "avg_mae": -4.89,
+    "avg_days": 2.2,
     "closed_by_flip": 0,
     "closed_by_timeout": 0
   },
   "analyses": [
     {
       "title": "整體表現 Overall",
-      "insight": "整體勝率 0.0%, 平均報酬 -1.00%。",
+      "insight": "整體勝率 5.0%, 平均報酬 -2.55%。",
       "stats": [
         {
           "metric": "Total closed signals",
-          "value": 10
+          "value": 20
         },
         {
           "metric": "Win rate",
-          "value": "0.0%"
+          "value": "5.0%"
         },
         {
           "metric": "Avg return",
-          "value": "-1.00%"
+          "value": "-2.55%"
         },
         {
           "metric": "Median return",
-          "value": "+0.00%"
+          "value": "-0.31%"
         },
         {
           "metric": "Avg MFE (max gain)",
-          "value": "+1.30%"
+          "value": "+1.27%"
         },
         {
           "metric": "Avg MAE (max drawdown)",
-          "value": "-3.88%"
+          "value": "-4.89%"
         },
         {
           "metric": "Avg days held",
-          "value": "1.3"
+          "value": "2.2"
         },
         {
           "metric": "Closed by flip",
-          "value": "10 (100%)"
+          "value": "20 (100%)"
         },
         {
           "metric": "Closed by timeout",
@@ -62,28 +62,41 @@
       "stats": [
         {
           "group": "Strong",
-          "n": 1,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 0.39,
-          "avg_mae": -2.71,
-          "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "avg_return": -5.94,
+          "median_return": -6.1,
+          "avg_mfe": 1.64,
+          "avg_mae": -7.34,
+          "avg_days": 5.5,
+          "wr_edge": -5.0,
+          "ret_edge": -3.39,
           "insufficient": true
         },
         {
           "group": "Normal",
-          "n": 9,
+          "n": 15,
+          "win_rate": 6.7,
+          "avg_return": -1.8,
+          "median_return": -0.11,
+          "avg_mfe": 1.19,
+          "avg_mae": -4.2,
+          "avg_days": 1.5,
+          "wr_edge": 1.7,
+          "ret_edge": 0.75,
+          "insufficient": true
+        },
+        {
+          "group": "Weak",
+          "n": 1,
           "win_rate": 0.0,
-          "avg_return": -1.11,
-          "median_return": 0.0,
-          "avg_mfe": 1.4,
-          "avg_mae": -4.01,
-          "avg_days": 1.4,
-          "wr_edge": 0.0,
-          "ret_edge": -0.11,
+          "avg_return": -0.26,
+          "median_return": -0.26,
+          "avg_mfe": 0.91,
+          "avg_mae": -5.49,
+          "avg_days": 0.0,
+          "wr_edge": -5.0,
+          "ret_edge": 2.29,
           "insufficient": true
         }
       ],
@@ -101,41 +114,41 @@
       "stats": [
         {
           "group": "<50 (弱)",
-          "n": 5,
-          "win_rate": 0.0,
-          "avg_return": -1.59,
-          "median_return": 0.0,
-          "avg_mfe": 1.95,
-          "avg_mae": -4.33,
-          "avg_days": 0.4,
-          "wr_edge": 0.0,
-          "ret_edge": -0.59,
+          "n": 12,
+          "win_rate": 8.3,
+          "avg_return": -2.49,
+          "median_return": -0.18,
+          "avg_mfe": 1.23,
+          "avg_mae": -4.98,
+          "avg_days": 1.2,
+          "wr_edge": 3.3,
+          "ret_edge": 0.06,
           "insufficient": true
         },
         {
           "group": "50-70",
-          "n": 2,
+          "n": 3,
           "win_rate": 0.0,
-          "avg_return": -0.34,
-          "median_return": -0.34,
-          "avg_mfe": 0.22,
-          "avg_mae": -3.62,
-          "avg_days": 3.5,
-          "wr_edge": 0.0,
-          "ret_edge": 0.67,
+          "avg_return": -4.07,
+          "median_return": -0.67,
+          "avg_mfe": 1.18,
+          "avg_mae": -6.48,
+          "avg_days": 5.3,
+          "wr_edge": -5.0,
+          "ret_edge": -1.53,
           "insufficient": true
         },
         {
           "group": "70-80",
-          "n": 1,
+          "n": 3,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 0.87,
-          "avg_mae": -2.93,
-          "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "avg_return": -2.49,
+          "median_return": -2.04,
+          "avg_mfe": 1.7,
+          "avg_mae": -3.87,
+          "avg_days": 3.0,
+          "wr_edge": -5.0,
+          "ret_edge": 0.06,
           "insufficient": true
         },
         {
@@ -147,8 +160,8 @@
           "avg_mfe": 1.74,
           "avg_mae": -1.64,
           "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "wr_edge": -5.0,
+          "ret_edge": 2.55,
           "insufficient": true
         },
         {
@@ -160,8 +173,8 @@
           "avg_mfe": 0.22,
           "avg_mae": -5.41,
           "avg_days": 4.0,
-          "wr_edge": 0.0,
-          "ret_edge": -0.37,
+          "wr_edge": -5.0,
+          "ret_edge": 1.18,
           "insufficient": true
         }
       ],
@@ -173,41 +186,54 @@
       "stats": [
         {
           "group": "full_bull",
-          "n": 7,
-          "win_rate": 0.0,
-          "avg_return": -1.43,
-          "median_return": 0.0,
-          "avg_mfe": 1.55,
-          "avg_mae": -3.99,
-          "avg_days": 1.9,
-          "wr_edge": 0.0,
-          "ret_edge": -0.43,
+          "n": 12,
+          "win_rate": 8.3,
+          "avg_return": -3.59,
+          "median_return": -1.02,
+          "avg_mfe": 1.61,
+          "avg_mae": -5.47,
+          "avg_days": 3.2,
+          "wr_edge": 3.3,
+          "ret_edge": -1.04,
           "insufficient": true
         },
         {
           "group": "above_50_only",
-          "n": 2,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 1.02,
-          "avg_mae": -1.86,
+          "avg_return": -0.09,
+          "median_return": -0.06,
+          "avg_mfe": 0.78,
+          "avg_mae": -3.09,
           "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "wr_edge": -5.0,
+          "ret_edge": 2.46,
           "insufficient": true
         },
         {
           "group": "below_both",
+          "n": 3,
+          "win_rate": 0.0,
+          "avg_return": -0.24,
+          "median_return": -0.36,
+          "avg_mfe": 0.59,
+          "avg_mae": -3.63,
+          "avg_days": 0.0,
+          "wr_edge": -5.0,
+          "ret_edge": 2.3,
+          "insufficient": true
+        },
+        {
+          "group": "above_both",
           "n": 1,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 0.15,
-          "avg_mae": -7.22,
-          "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "avg_return": -6.79,
+          "median_return": -6.79,
+          "avg_mfe": 1.17,
+          "avg_mae": -8.84,
+          "avg_days": 5.0,
+          "wr_edge": -5.0,
+          "ret_edge": -4.24,
           "insufficient": true
         }
       ],
@@ -243,41 +269,41 @@
       "stats": [
         {
           "group": "0",
-          "n": 1,
+          "n": 5,
           "win_rate": 0.0,
-          "avg_return": 0.0,
-          "median_return": 0.0,
-          "avg_mfe": 0.15,
-          "avg_mae": -7.22,
-          "avg_days": 0.0,
-          "wr_edge": 0.0,
-          "ret_edge": 1.0,
+          "avg_return": -1.51,
+          "median_return": -0.26,
+          "avg_mfe": 0.54,
+          "avg_mae": -5.3,
+          "avg_days": 1.0,
+          "wr_edge": -5.0,
+          "ret_edge": 1.04,
           "insufficient": true
         },
         {
           "group": "1",
-          "n": 4,
-          "win_rate": 0.0,
-          "avg_return": -1.99,
-          "median_return": 0.0,
-          "avg_mfe": 1.93,
-          "avg_mae": -3.43,
-          "avg_days": 0.5,
-          "wr_edge": 0.0,
-          "ret_edge": -0.99,
+          "n": 8,
+          "win_rate": 12.5,
+          "avg_return": -4.24,
+          "median_return": -0.18,
+          "avg_mfe": 1.66,
+          "avg_mae": -5.59,
+          "avg_days": 2.4,
+          "wr_edge": 7.5,
+          "ret_edge": -1.69,
           "insufficient": true
         },
         {
           "group": "2",
-          "n": 3,
+          "n": 5,
           "win_rate": 0.0,
-          "avg_return": -0.22,
-          "median_return": 0.0,
-          "avg_mfe": 1.06,
-          "avg_mae": -3.61,
-          "avg_days": 2.3,
-          "wr_edge": 0.0,
-          "ret_edge": 0.78,
+          "avg_return": -1.63,
+          "median_return": -0.67,
+          "avg_mfe": 1.48,
+          "avg_mae": -3.9,
+          "avg_days": 3.2,
+          "wr_edge": -5.0,
+          "ret_edge": 0.92,
           "insufficient": true
         },
         {
@@ -289,8 +315,8 @@
           "avg_mfe": 0.98,
           "avg_mae": -3.52,
           "avg_days": 2.0,
-          "wr_edge": 0.0,
-          "ret_edge": 0.32,
+          "wr_edge": -5.0,
+          "ret_edge": 1.86,
           "insufficient": true
         }
       ],
@@ -308,15 +334,15 @@
       "stats": [
         {
           "group": "1-5",
-          "n": 2,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": -4.67,
-          "median_return": -4.67,
-          "avg_mfe": 0.36,
-          "avg_mae": -7.54,
+          "avg_return": -4.54,
+          "median_return": -4.42,
+          "avg_mfe": 1.05,
+          "avg_mae": -6.75,
           "avg_days": 3.0,
-          "wr_edge": 0.0,
-          "ret_edge": -3.67,
+          "wr_edge": -5.0,
+          "ret_edge": -1.99,
           "insufficient": true
         },
         {
@@ -386,15 +412,15 @@
         },
         {
           "group": "6-10",
-          "n": 1,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": -0.67,
-          "median_return": -0.67,
-          "avg_mfe": 0.04,
-          "avg_mae": -4.52,
-          "avg_days": 7.0,
-          "wr_edge": 0.0,
-          "ret_edge": 0.33,
+          "avg_return": -7.93,
+          "median_return": -8.48,
+          "avg_mfe": 1.35,
+          "avg_mae": -9.44,
+          "avg_days": 8.0,
+          "wr_edge": -5.0,
+          "ret_edge": -5.38,
           "insufficient": true
         },
         {
