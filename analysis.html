@@ -59,7 +59,8 @@ header{
   transition:all .15s;cursor:pointer;background:transparent;
   font-family:var(--font);
 }
-.back-btn:hover{color:var(--text);border-color:var(--text2)}
+.back-btn:hover{color:var(--accent);border-color:var(--accent)}
+.back-btn.active-page{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.08)}
 #gen-time{font-size:10px;color:var(--text3);letter-spacing:.5px}
 
 /* ── Summary stats ── */
@@ -176,6 +177,7 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   height:2px;background:var(--border2);margin-top:4px;
 }
 .g-cell .g-wr-fill{height:100%;transition:width .5s}
+.g-cell .g-mfemae{font-size:10px;margin-top:3px;display:flex;gap:8px;opacity:.8}
 
 /* ── Insight box ── */
 .a-insight{
@@ -245,17 +247,36 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   <div class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</div>
   <span class="page-tag">FEATURE ANALYSIS</span>
   <div class="header-right">
-    <a class="back-btn" href="index.html">← 掃描器</a>
+    <a class="back-btn" href="index.html">選股 →</a>
+    <a class="back-btn" href="news.html">新聞 →</a>
+    <a class="back-btn active-page" href="analysis.html">分析</a>
     <span id="gen-time">—</span>
   </div>
 </header>
 
 <div id="summary">
   <div class="summary-card"><div class="lbl">Closed Signals</div><div class="val" id="s-total">—</div><div class="sub" id="s-flip-timeout">—</div></div>
-  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val" id="s-wr">—</div><div class="sub">overall baseline</div></div>
+  <div class="summary-card"><div class="lbl">Win Rate</div><div class="val" id="s-wr">—</div><div class="sub" id="s-wr-sub">overall baseline</div></div>
   <div class="summary-card"><div class="lbl">Avg Return</div><div class="val" id="s-ret">—</div><div class="sub" id="s-median">median —</div></div>
+  <div class="summary-card"><div class="lbl">Profit Factor</div><div class="val" id="s-pf">—</div><div class="sub" id="s-win-loss">win / loss —</div></div>
   <div class="summary-card"><div class="lbl">Avg MFE</div><div class="val up" id="s-mfe">—</div><div class="sub">max unrealized gain</div></div>
   <div class="summary-card"><div class="lbl">Avg MAE</div><div class="val down" id="s-mae">—</div><div class="sub" id="s-days">hold days —</div></div>
+</div>
+
+<!-- 全域分布圖 -->
+<div id="dist-section" style="display:none;padding:14px 20px 0;gap:14px;display:grid;grid-template-columns:1fr 1fr 1fr">
+  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
+    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">RETURN DISTRIBUTION</div>
+    <canvas id="ch-ret-dist" style="max-width:100%;height:130px"></canvas>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
+    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">HOLD DAYS DISTRIBUTION</div>
+    <canvas id="ch-days-dist" style="max-width:100%;height:130px"></canvas>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
+    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">EQUITY CURVE</div>
+    <canvas id="ch-equity" style="max-width:100%;height:130px"></canvas>
+  </div>
 </div>
 
 <div id="filter-bar">
@@ -275,6 +296,12 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
       <option value="original">原順序</option>
     </select>
   </div>
+  <button id="lang-toggle-btn" onclick="toggleInsightLang()"
+    style="margin-left:auto;display:flex;align-items:center;gap:0;background:transparent;border:none;cursor:pointer;padding:0 4px;opacity:.9">
+    <span id="lang-zh" style="font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)">中文</span>
+    <span style="font-size:11px;color:#2a3448;margin:0 3px">/</span>
+    <span id="lang-en" style="font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)">EN</span>
+  </button>
 </div>
 
 <main id="app">
@@ -289,8 +316,37 @@ const MIN_SAMPLES_DEFAULT = 20;
 let DATA = null;
 let _filterTier = 'all';
 let _sort = 'spread-desc';
+let _insightZh = true;   // insight 語言狀態
 const _expanded = new Set();
 const _charts = {};
+
+function _updateLangBtn(){
+  const zh = document.getElementById('lang-zh');
+  const en = document.getElementById('lang-en');
+  if (!zh||!en) return;
+  if (_insightZh){
+    zh.style.cssText='font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
+    en.style.cssText='font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
+  } else {
+    zh.style.cssText='font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
+    en.style.cssText='font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
+  }
+}
+
+function toggleInsightLang(){
+  _insightZh = !_insightZh;
+  _updateLangBtn();
+  // 只更新所有 insight 文字，不重建整個 DOM
+  document.querySelectorAll('.a-insight').forEach(el => {
+    const idx = parseInt(el.closest('.a-card')?.dataset.idx ?? '-1');
+    const sorted = sortAnalyses(DATA.analyses);
+    const entry = sorted.find(({origIdx}) => origIdx === idx);
+    if (!entry) return;
+    const a = entry.a;
+    const text = (_insightZh && a.insight_zh) ? a.insight_zh : a.insight;
+    el.innerHTML = `<span class="tag">[INSIGHT]</span>${escapeHtml(text||'')}`;
+  });
+}
 
 function fmtNum(v, sign=false){
   if (v==null || isNaN(v)) return '—';
@@ -332,17 +388,137 @@ function renderSummary(overall){
   document.getElementById('s-median').textContent =
     'median ' + (overall.median_return==null ? '—' : fmtPct(overall.median_return, true));
 
+  // Profit Factor
+  const pfEl = document.getElementById('s-pf');
+  if (overall.profit_factor != null) {
+    pfEl.textContent = overall.profit_factor.toFixed(2);
+    pfEl.style.color = overall.profit_factor >= 2 ? 'var(--up)'
+                     : overall.profit_factor >= 1 ? 'var(--normal)' : 'var(--down)';
+  }
+  document.getElementById('s-win-loss').textContent =
+    `win ${fmtPct(overall.avg_win,true)} / loss ${fmtPct(overall.avg_loss,true)}`;
+
   document.getElementById('s-mfe').textContent =
     overall.avg_mfe==null ? '—' : fmtPct(overall.avg_mfe, true);
   document.getElementById('s-mae').textContent =
     overall.avg_mae==null ? '—' : fmtPct(overall.avg_mae, true);
   document.getElementById('s-days').textContent =
     'hold days ' + (overall.avg_days==null ? '—' : overall.avg_days.toFixed(1));
+
+  // 分布圖
+  if ((overall.return_buckets||[]).length) {
+    document.getElementById('dist-section').style.display = 'grid';
+    buildReturnDistChart(overall.return_buckets);
+  }
+  if ((overall.days_buckets||[]).length) {
+    buildDaysDistChart(overall.days_buckets);
+  }
+  if ((overall.equity_points||[]).length) {
+    buildEquityChart(overall.equity_points);
+  }
+}
+
+function buildReturnDistChart(buckets){
+  const ctx = document.getElementById('ch-ret-dist')?.getContext('2d');
+  if (!ctx) return;
+  if (window._chRetDist) { window._chRetDist.destroy(); }
+  window._chRetDist = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: buckets.map(b=>b.range),
+      datasets:[{
+        data: buckets.map(b=>b.count),
+        backgroundColor: buckets.map(b=>b.is_positive?'rgba(61,220,132,.7)':'rgba(255,92,92,.7)'),
+        borderWidth:0,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+        callbacks:{label:ctx=>`${ctx.raw} signals`}
+      }},
+      scales:{
+        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+      }
+    }
+  });
+}
+
+function buildDaysDistChart(buckets){
+  const ctx = document.getElementById('ch-days-dist')?.getContext('2d');
+  if (!ctx) return;
+  if (window._chDaysDist) { window._chDaysDist.destroy(); }
+  window._chDaysDist = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: buckets.map(b=>b.range),
+      datasets:[{
+        data: buckets.map(b=>b.count),
+        backgroundColor:'rgba(123,108,255,.65)',
+        borderWidth:0,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+        callbacks:{label:ctx=>`${ctx.raw} signals`}
+      }},
+      scales:{
+        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+      }
+    }
+  });
+}
+
+function buildEquityChart(points){
+  const ctx = document.getElementById('ch-equity')?.getContext('2d');
+  if (!ctx) return;
+  if (window._chEquity) { window._chEquity.destroy(); }
+  window._chEquity = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: points.map(p=>p.date),
+      datasets:[{
+        data: points.map(p=>p.equity),
+        borderColor:'#00e5a0',
+        backgroundColor:'rgba(0,229,160,.08)',
+        borderWidth:1.5,
+        pointRadius:0,
+        fill:true,
+        tension:.3,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{
+        backgroundColor:'#0e1117',borderColor:'#1c2130',borderWidth:1,
+        callbacks:{
+          title:items=>`${points[items[0].dataIndex].date} · ${points[items[0].dataIndex].ticker}`,
+          label:ctx=>[
+            `Equity: ${ctx.raw.toFixed(1)}`,
+            `Return: ${points[ctx.dataIndex].ret>0?'+':''}${points[ctx.dataIndex].ret}%`,
+            `Cum WR: ${points[ctx.dataIndex].cumulative_wr}%`,
+          ]
+        }
+      }},
+      scales:{
+        x:{display:false},
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+      }
+    }
+  });
 }
 
 function wrColor(wr){ return wr==null?'#5a6a85':(wr>=50?'#3ddc84':wr>=30?'#f5a623':'#ff5c5c'); }
 
 function renderCard(analysis, idx){
+  // 特殊卡片：equity_curve / return_dist — 在全域 dist-section 顯示，此處跳過
+  if (analysis._type === 'equity_curve' || analysis._type === 'return_dist') return '';
+
   const tier = tierOf(analysis);
   const rows = analysis.stats || [];
   const isExpanded = _expanded.has(idx);
@@ -366,11 +542,17 @@ function renderCard(analysis, idx){
       const retStr = r.avg_return==null ? '—' : fmtPct(r.avg_return, true);
       const color = wrColor(wr);
       const wrCls = wr==null ? '' : (wr>=50 ? 'up' : 'down');
+      const mfeStr = r.avg_mfe != null ? `↑${fmtPct(r.avg_mfe,true)}` : '';
+      const maeStr = r.avg_mae != null ? `↓${fmtPct(r.avg_mae,true)}` : '';
+      const mfemae = (mfeStr||maeStr)
+        ? `<div class="g-mfemae"><span class="up">${mfeStr}</span><span class="down">${maeStr}</span></div>`
+        : '';
       groupCells += `
         <div class="g-cell${ins?' insufficient':''}" style="border-left-color:${color}">
           <div class="g-name">${r.group}${ins?'<span class="warn">⚠</span>':''}</div>
           <div class="g-wr ${wrCls}">${fmtPct(wr)}</div>
           <div class="g-sub">n=${r.n} · ${retStr}</div>
+          ${mfemae}
           <div class="g-wr-bar"><div class="g-wr-fill" style="width:${wrPct}%;background:${color}"></div></div>
         </div>`;
     });
@@ -378,8 +560,9 @@ function renderCard(analysis, idx){
     groupCells = `<div class="g-cell insufficient"><div class="g-name">(no data)</div></div>`;
   }
 
-  const insightHtml = analysis.insight
-    ? `<div class="a-insight"><span class="tag">[INSIGHT]</span>${escapeHtml(analysis.insight)}</div>`
+  const insightText = (_insightZh && analysis.insight_zh) ? analysis.insight_zh : analysis.insight;
+  const insightHtml = insightText
+    ? `<div class="a-insight"><span class="tag">[INSIGHT]</span>${escapeHtml(insightText)}</div>`
     : '';
 
   return `
@@ -461,13 +644,20 @@ function render(){
 }
 
 function toggleExpand(idx){
+  const card = document.querySelector(`.a-card[data-idx="${idx}"]`);
+  if (!card) return;
   if (_expanded.has(idx)){
     _expanded.delete(idx);
+    card.classList.remove('expanded');
     destroyCharts(idx);
   } else {
     _expanded.add(idx);
+    card.classList.add('expanded');
+    // origIdx → analysis のマッピング: render() で渡した origIdx を使う
+    const allSorted = sortAnalyses(DATA.analyses);
+    const entry = allSorted.find(({origIdx}) => origIdx === idx);
+    if (entry) buildCharts(entry.a, idx);
   }
-  render();
 }
 
 function destroyCharts(idx){
@@ -581,6 +771,7 @@ fetch('data/analysis.json?_=' + Date.now())
     DATA = d;
     document.getElementById('gen-time').textContent = (d.generated_at||'').slice(0,16).replace('T',' ');
     renderSummary(d.overall || {});
+    _updateLangBtn();
     render();
   })
   .catch(err => {
