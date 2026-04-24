@@ -1499,6 +1499,8 @@ function toggleLang() {
   }
 
   _updateLangBtn(zh);
+  // 個股新聞 modal 同步切換
+  if (typeof _nmSyncLang === 'function') _nmSyncLang();
 }
 
 function togglePin(ticker) {
@@ -3597,7 +3599,7 @@ function _mtbUpdateBadges(){
     <div id="nm-head" style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
       <span id="nm-ticker" style="font-family:var(--display);font-size:18px;font-weight:800;color:var(--text);letter-spacing:.3px"></span>
       <span id="nm-badge" style="font-size:9px;font-weight:600;padding:2px 7px;letter-spacing:.05em"></span>
-      <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <span style="margin-left:auto;display:flex;align-items:center;gap:10px">
         <span id="nm-count" style="font-size:10px;color:var(--text3);letter-spacing:.05em"></span>
         <button onclick="closeNewsModal()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;font-family:var(--font);transition:color .15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">✕</button>
       </span>
@@ -3630,7 +3632,7 @@ function _mtbUpdateBadges(){
    個股新聞 Modal
    ════════════════════════════════════════════ */
 
-// 話題顏色（與 news.html 一致）
+// 話題顏色
 const _NM_TC = {
   '地緣政治':    'color:#ff6b35;background:rgba(255,107,53,.12)',
   'AI & 半導體': 'color:#00e5a0;background:rgba(0,229,160,.1)',
@@ -3643,6 +3645,41 @@ const _NM_TC = {
   '市場綜合':    'color:#8a9ab8;background:rgba(90,106,133,.1)',
 };
 function _nmTopicStyle(t){ return _NM_TC[t]||_NM_TC['市場綜合']; }
+
+// 語言狀態：直接讀全域 _langZh（由 lang-toggle-btn 控制）
+let _nmCurrentList = [];   // 目前顯示中的新聞列表
+
+function _nmRenderList(newsList) {
+  _nmCurrentList = newsList;
+  if (!newsList.length) return;
+  document.getElementById('nm-list').innerHTML = newsList.map(n => {
+    const topicStyle = _nmTopicStyle(n.topic || '');
+    const hasLink = n.link && n.link.startsWith('http');
+    const hasZh = !!n.title_zh;
+    const display = (_langZh && hasZh) ? n.title_zh : n.title;
+    const titleAttr = (_langZh && hasZh) ? `title="${n.title}"` : '';
+    const titleInner = hasLink
+      ? `<a href="${n.link}" target="_blank" rel="noopener" ${titleAttr} style="color:var(--text);text-decoration:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">${display}</a>`
+      : `<span ${titleAttr}>${display}</span>`;
+    return `<div style="padding:10px 16px;border-bottom:1px solid var(--border);transition:background .1s" onmouseover="this.style.background='rgba(255,255,255,.02)'" onmouseout="this.style.background='transparent'">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+        <span style="font-size:9px;padding:1px 6px;${topicStyle};font-weight:600;letter-spacing:.04em">${n.topic||'市場綜合'}</span>
+        <span style="font-size:10px;color:var(--text3);margin-left:auto">${n.source||''}</span>
+        <span style="font-size:10px;color:var(--text3)">${n.date ? n.date.slice(0,16) : ''}</span>
+      </div>
+      <div style="font-size:12px;line-height:1.55;color:var(--text)">${titleInner}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('nm-list').style.display = 'block';
+}
+
+// 由 toggleLang() 呼叫，modal 開著時同步重繪
+function _nmSyncLang() {
+  const modal = document.getElementById('news-modal-backdrop');
+  if (modal && modal.style.display !== 'none' && _nmCurrentList.length) {
+    _nmRenderList(_nmCurrentList);
+  }
+}
 
 // dashboard_data 快取
 let _dashData = null;
@@ -3665,26 +3702,24 @@ function _loadDashData(cb) {
       console.warn('[news modal] dashboard_data.json load failed:', e.message);
       _dashCallbacks.forEach(fn => fn(null));
       _dashCallbacks = [];
-      _dashLoading = false; // allow retry next time
+      _dashLoading = false;
     });
 }
 
 function openNewsModal(ticker) {
   if (!ticker) return;
 
-  // 顯示 modal
   const backdrop = document.getElementById('news-modal-backdrop');
   backdrop.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
-  // 找到該 ticker 的 row 資料（用於 badge 顯示）
+  // badge
   const tbody = document.getElementById('tbody');
   const rowData = (tbody._rows || []).find(r => r.ticker === ticker);
   const grade = rowData ? rowData.mfi_grade : '';
   const GRADE_COLOR = {Strong:'#00e5a0', Normal:'#f5a623', Weak:'#4a5878'};
   const GRADE_BG    = {Strong:'rgba(0,229,160,.15)', Normal:'rgba(245,166,35,.15)', Weak:'rgba(74,88,120,.15)'};
 
-  // 設定 header
   document.getElementById('nm-ticker').textContent = ticker;
   const badge = document.getElementById('nm-badge');
   if (grade) {
@@ -3695,7 +3730,8 @@ function openNewsModal(ticker) {
     badge.style.cssText = '';
   }
 
-  // 重置 body
+  // 重置
+  _nmCurrentList = [];
   document.getElementById('nm-loading').style.display = 'flex';
   document.getElementById('nm-list').style.display    = 'none';
   document.getElementById('nm-empty').style.display   = 'none';
@@ -3705,41 +3741,17 @@ function openNewsModal(ticker) {
   _loadDashData(d => {
     const tickerData = d && d.tickers && d.tickers[ticker];
     const newsList   = tickerData ? (tickerData.news || []) : [];
-    const topicBadge = tickerData ? (tickerData.topic_badge || '') : '';
-
-    // source / time
     const ts = d ? (d.generated_at || '') : '';
     document.getElementById('nm-source').textContent =
       ts ? `finvizfinance · ${ts.slice(0,10)} ${ts.slice(11,16)} UTC` : 'finvizfinance';
-
     document.getElementById('nm-loading').style.display = 'none';
-
     if (!newsList.length) {
       document.getElementById('nm-empty').style.display = 'block';
       document.getElementById('nm-count').textContent = '0 篇';
       return;
     }
-
     document.getElementById('nm-count').textContent = `${newsList.length} 篇`;
-
-    // 渲染新聞列表
-    document.getElementById('nm-list').innerHTML = newsList.map(n => {
-      const topicStyle = _nmTopicStyle(n.topic || '');
-      const hasLink = n.link && n.link.startsWith('http');
-      const titleHtml = hasLink
-        ? `<a href="${n.link}" target="_blank" rel="noopener" style="color:var(--text);text-decoration:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">${n.title}</a>`
-        : `<span>${n.title}</span>`;
-      return `<div style="padding:10px 16px;border-bottom:1px solid var(--border);transition:background .1s" onmouseover="this.style.background='rgba(255,255,255,.02)'" onmouseout="this.style.background='transparent'">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
-          <span style="font-size:9px;padding:1px 6px;${topicStyle};font-weight:600;letter-spacing:.04em">${n.topic||'市場綜合'}</span>
-          <span style="font-size:10px;color:var(--text3);margin-left:auto">${n.source||''}</span>
-          <span style="font-size:10px;color:var(--text3)">${n.date ? n.date.slice(0,16) : ''}</span>
-        </div>
-        <div style="font-size:12px;line-height:1.55;color:var(--text)">${titleHtml}</div>
-      </div>`;
-    }).join('');
-
-    document.getElementById('nm-list').style.display = 'block';
+    _nmRenderList(newsList);
   });
 }
 
@@ -3748,12 +3760,10 @@ function closeNewsModal() {
   document.body.style.overflow = '';
 }
 
-// 點擊 backdrop 關閉
 document.getElementById('news-modal-backdrop').addEventListener('click', function(e) {
   if (e.target === this) closeNewsModal();
 });
 
-// ESC 關閉
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     if (document.getElementById('news-modal-backdrop').style.display !== 'none') {
@@ -3762,7 +3772,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// 頁面載入後預先靜默載入 dashboard_data（加快首次點擊速度）
 setTimeout(() => _loadDashData(() => {}), 2000);
 </script>
 
