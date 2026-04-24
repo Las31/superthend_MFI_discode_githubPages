@@ -1,53 +1,53 @@
 {
-  "generated_at": "2026-04-23T01:29:58",
+  "generated_at": "2026-04-24T17:48:08",
   "min_samples": 20,
   "overall": {
-    "n": 20,
-    "win_rate": 5.0,
-    "avg_return": -2.55,
-    "median_return": -0.31,
-    "avg_mfe": 1.27,
-    "avg_mae": -4.89,
-    "avg_days": 2.2,
+    "n": 27,
+    "win_rate": 3.7,
+    "avg_return": -4.11,
+    "median_return": -1.37,
+    "avg_mfe": 1.85,
+    "avg_mae": -6.36,
+    "avg_days": 3.6,
     "closed_by_flip": 0,
     "closed_by_timeout": 0
   },
   "analyses": [
     {
       "title": "整體表現 Overall",
-      "insight": "整體勝率 5.0%, 平均報酬 -2.55%。",
+      "insight": "整體勝率 3.7%, 平均報酬 -4.11%。",
       "stats": [
         {
           "metric": "Total closed signals",
-          "value": 20
+          "value": 27
         },
         {
           "metric": "Win rate",
-          "value": "5.0%"
+          "value": "3.7%"
         },
         {
           "metric": "Avg return",
-          "value": "-2.55%"
+          "value": "-4.11%"
         },
         {
           "metric": "Median return",
-          "value": "-0.31%"
+          "value": "-1.37%"
         },
         {
           "metric": "Avg MFE (max gain)",
-          "value": "+1.27%"
+          "value": "+1.85%"
         },
         {
           "metric": "Avg MAE (max drawdown)",
-          "value": "-4.89%"
+          "value": "-6.36%"
         },
         {
           "metric": "Avg days held",
-          "value": "2.2"
+          "value": "3.6"
         },
         {
           "metric": "Closed by flip",
-          "value": "20 (100%)"
+          "value": "27 (100%)"
         },
         {
           "metric": "Closed by timeout",
@@ -58,33 +58,33 @@
     },
     {
       "title": "MFI Grade 分級",
-      "insight": "MFI Grade: 所有分組樣本數 < 20,需更多資料",
+      "insight": "MFI Grade: 最佳組 [Normal] 勝率 5.0% (n=20, 平均 -3.59%); 最差組 [Normal] 勝率 5.0% (n=20)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
       "stats": [
         {
           "group": "Strong",
-          "n": 4,
+          "n": 6,
           "win_rate": 0.0,
-          "avg_return": -5.94,
+          "avg_return": -6.49,
           "median_return": -6.1,
-          "avg_mfe": 1.64,
-          "avg_mae": -7.34,
-          "avg_days": 5.5,
-          "wr_edge": -5.0,
-          "ret_edge": -3.39,
+          "avg_mfe": 3.31,
+          "avg_mae": -8.2,
+          "avg_days": 6.8,
+          "wr_edge": -3.7,
+          "ret_edge": -2.38,
           "insufficient": true
         },
         {
           "group": "Normal",
-          "n": 15,
-          "win_rate": 6.7,
-          "avg_return": -1.8,
-          "median_return": -0.11,
-          "avg_mfe": 1.19,
-          "avg_mae": -4.2,
-          "avg_days": 1.5,
-          "wr_edge": 1.7,
-          "ret_edge": 0.75,
-          "insufficient": true
+          "n": 20,
+          "win_rate": 5.0,
+          "avg_return": -3.59,
+          "median_return": -0.52,
+          "avg_mfe": 1.45,
+          "avg_mae": -5.86,
+          "avg_days": 2.8,
+          "wr_edge": 1.3,
+          "ret_edge": 0.52,
+          "insufficient": false
         },
         {
           "group": "Weak",
@@ -95,8 +95,8 @@
           "avg_mfe": 0.91,
           "avg_mae": -5.49,
           "avg_days": 0.0,
-          "wr_edge": -5.0,
-          "ret_edge": 2.29,
+          "wr_edge": -3.7,
+          "ret_edge": 3.85,
           "insufficient": true
         }
       ],
@@ -114,15 +114,15 @@
       "stats": [
         {
           "group": "<50 (弱)",
-          "n": 12,
-          "win_rate": 8.3,
-          "avg_return": -2.49,
-          "median_return": -0.18,
-          "avg_mfe": 1.23,
-          "avg_mae": -4.98,
-          "avg_days": 1.2,
-          "wr_edge": 3.3,
-          "ret_edge": 0.06,
+          "n": 19,
+          "win_rate": 5.3,
+          "avg_return": -4.73,
+          "median_return": -4.15,
+          "avg_mfe": 2.07,
+          "avg_mae": -7.04,
+          "avg_days": 3.5,
+          "wr_edge": 1.6,
+          "ret_edge": -0.62,
           "insufficient": true
         },
         {
@@ -134,8 +134,8 @@
           "avg_mfe": 1.18,
           "avg_mae": -6.48,
           "avg_days": 5.3,
-          "wr_edge": -5.0,
-          "ret_edge": -1.53,
+          "wr_edge": -3.7,
+          "ret_edge": 0.04,
           "insufficient": true
         },
         {
@@ -147,8 +147,8 @@
           "avg_mfe": 1.7,
           "avg_mae": -3.87,
           "avg_days": 3.0,
-          "wr_edge": -5.0,
-          "ret_edge": 0.06,
+          "wr_edge": -3.7,
+          "ret_edge": 1.62,
           "insufficient": true
         },
         {
@@ -160,8 +160,8 @@
           "avg_mfe": 1.74,
           "avg_mae": -1.64,
           "avg_days": 0.0,
-          "wr_edge": -5.0,
-          "ret_edge": 2.55,
+          "wr_edge": -3.7,
+          "ret_edge": 4.11,
           "insufficient": true
         },
         {
@@ -173,8 +173,8 @@
           "avg_mfe": 0.22,
           "avg_mae": -5.41,
           "avg_days": 4.0,
-          "wr_edge": -5.0,
-          "ret_edge": 1.18,
+          "wr_edge": -3.7,
+          "ret_edge": 2.74,
           "insufficient": true
         }
       ],
@@ -186,28 +186,41 @@
       "stats": [
         {
           "group": "full_bull",
-          "n": 12,
-          "win_rate": 8.3,
-          "avg_return": -3.59,
-          "median_return": -1.02,
-          "avg_mfe": 1.61,
-          "avg_mae": -5.47,
-          "avg_days": 3.2,
-          "wr_edge": 3.3,
-          "ret_edge": -1.04,
+          "n": 13,
+          "win_rate": 7.7,
+          "avg_return": -3.96,
+          "median_return": -1.37,
+          "avg_mfe": 1.72,
+          "avg_mae": -5.96,
+          "avg_days": 3.5,
+          "wr_edge": 4.0,
+          "ret_edge": 0.15,
           "insufficient": true
         },
         {
           "group": "above_50_only",
+          "n": 7,
+          "win_rate": 0.0,
+          "avg_return": -3.1,
+          "median_return": -0.26,
+          "avg_mfe": 1.84,
+          "avg_mae": -5.63,
+          "avg_days": 2.4,
+          "wr_edge": -3.7,
+          "ret_edge": 1.02,
+          "insufficient": true
+        },
+        {
+          "group": "above_both",
           "n": 4,
           "win_rate": 0.0,
-          "avg_return": -0.09,
-          "median_return": -0.06,
-          "avg_mfe": 0.78,
-          "avg_mae": -3.09,
-          "avg_days": 0.0,
-          "wr_edge": -5.0,
-          "ret_edge": 2.46,
+          "avg_return": -9.28,
+          "median_return": -9.66,
+          "avg_mfe": 3.22,
+          "avg_mae": -11.0,
+          "avg_days": 8.2,
+          "wr_edge": -3.7,
+          "ret_edge": -5.17,
           "insufficient": true
         },
         {
@@ -219,21 +232,8 @@
           "avg_mfe": 0.59,
           "avg_mae": -3.63,
           "avg_days": 0.0,
-          "wr_edge": -5.0,
-          "ret_edge": 2.3,
-          "insufficient": true
-        },
-        {
-          "group": "above_both",
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_return": -6.79,
-          "median_return": -6.79,
-          "avg_mfe": 1.17,
-          "avg_mae": -8.84,
-          "avg_days": 5.0,
-          "wr_edge": -5.0,
-          "ret_edge": -4.24,
+          "wr_edge": -3.7,
+          "ret_edge": 3.87,
           "insufficient": true
         }
       ],
@@ -269,15 +269,15 @@
       "stats": [
         {
           "group": "0",
-          "n": 5,
+          "n": 11,
           "win_rate": 0.0,
-          "avg_return": -1.51,
-          "median_return": -0.26,
-          "avg_mfe": 0.54,
-          "avg_mae": -5.3,
-          "avg_days": 1.0,
-          "wr_edge": -5.0,
-          "ret_edge": 1.04,
+          "avg_return": -5.38,
+          "median_return": -6.3,
+          "avg_mfe": 2.2,
+          "avg_mae": -8.07,
+          "avg_days": 4.5,
+          "wr_edge": -3.7,
+          "ret_edge": -1.27,
           "insufficient": true
         },
         {
@@ -289,21 +289,21 @@
           "avg_mfe": 1.66,
           "avg_mae": -5.59,
           "avg_days": 2.4,
-          "wr_edge": 7.5,
-          "ret_edge": -1.69,
+          "wr_edge": 8.8,
+          "ret_edge": -0.13,
           "insufficient": true
         },
         {
           "group": "2",
-          "n": 5,
+          "n": 6,
           "win_rate": 0.0,
-          "avg_return": -1.63,
-          "median_return": -0.67,
-          "avg_mfe": 1.48,
-          "avg_mae": -3.9,
-          "avg_days": 3.2,
-          "wr_edge": -5.0,
-          "ret_edge": 0.92,
+          "avg_return": -2.75,
+          "median_return": -1.36,
+          "avg_mfe": 1.75,
+          "avg_mae": -5.21,
+          "avg_days": 3.8,
+          "wr_edge": -3.7,
+          "ret_edge": 1.36,
           "insufficient": true
         },
         {
@@ -315,8 +315,8 @@
           "avg_mfe": 0.98,
           "avg_mae": -3.52,
           "avg_days": 2.0,
-          "wr_edge": -5.0,
-          "ret_edge": 1.86,
+          "wr_edge": -3.7,
+          "ret_edge": 3.43,
           "insufficient": true
         }
       ],
@@ -334,15 +334,15 @@
       "stats": [
         {
           "group": "1-5",
-          "n": 4,
+          "n": 5,
           "win_rate": 0.0,
-          "avg_return": -4.54,
-          "median_return": -4.42,
-          "avg_mfe": 1.05,
-          "avg_mae": -6.75,
-          "avg_days": 3.0,
-          "wr_edge": -5.0,
-          "ret_edge": -1.99,
+          "avg_return": -4.89,
+          "median_return": -6.3,
+          "avg_mfe": 1.04,
+          "avg_mae": -7.06,
+          "avg_days": 2.6,
+          "wr_edge": -3.7,
+          "ret_edge": -0.78,
           "insufficient": true
         },
         {
@@ -412,15 +412,15 @@
         },
         {
           "group": "6-10",
-          "n": 4,
+          "n": 10,
           "win_rate": 0.0,
-          "avg_return": -7.93,
-          "median_return": -8.48,
-          "avg_mfe": 1.35,
-          "avg_mae": -9.44,
-          "avg_days": 8.0,
-          "wr_edge": -5.0,
-          "ret_edge": -5.38,
+          "avg_return": -8.54,
+          "median_return": -9.66,
+          "avg_mfe": 2.9,
+          "avg_mae": -10.34,
+          "avg_days": 8.3,
+          "wr_edge": -3.7,
+          "ret_edge": -4.43,
           "insufficient": true
         },
         {
