@@ -1,31 +1,31 @@
 {
   "overall": {
-    "n": 20,
-    "avg_return": -2.55,
-    "median_return": -0.31,
-    "win_rate": 5.0,
-    "avg_days_held": 2.2,
-    "avg_mfe": 1.27,
-    "avg_mae": -4.89
+    "n": 27,
+    "avg_return": -4.11,
+    "median_return": -1.37,
+    "win_rate": 3.7,
+    "avg_days_held": 3.6,
+    "avg_mfe": 1.85,
+    "avg_mae": -6.36
   },
   "by_mfi_grade": {
     "Strong": {
-      "n": 4,
-      "avg_return": -5.94,
+      "n": 6,
+      "avg_return": -6.49,
       "median_return": -6.11,
       "win_rate": 0.0,
-      "avg_days_held": 5.5,
-      "avg_mfe": 1.64,
-      "avg_mae": -7.34
+      "avg_days_held": 6.8,
+      "avg_mfe": 3.31,
+      "avg_mae": -8.2
     },
     "Normal": {
-      "n": 15,
-      "avg_return": -1.8,
-      "median_return": -0.11,
-      "win_rate": 6.7,
-      "avg_days_held": 1.5,
-      "avg_mfe": 1.19,
-      "avg_mae": -4.2
+      "n": 20,
+      "avg_return": -3.59,
+      "median_return": -0.52,
+      "win_rate": 5.0,
+      "avg_days_held": 2.8,
+      "avg_mfe": 1.45,
+      "avg_mae": -5.86
     },
     "Weak": {
       "n": 1,
@@ -38,32 +38,41 @@
     }
   },
   "by_sector": {
-    "Technology": {
+    "Healthcare": {
       "n": 5,
-      "avg_return": -0.17,
-      "median_return": -0.11,
+      "avg_return": -5.34,
+      "median_return": -4.15,
       "win_rate": 0.0,
-      "avg_days_held": 0.0,
-      "avg_mfe": 0.72,
-      "avg_mae": -3.01
+      "avg_days_held": 6.0,
+      "avg_mfe": 4.25,
+      "avg_mae": -7.96
     },
     "Consumer Cyclical": {
-      "n": 3,
-      "avg_return": 0.0,
+      "n": 4,
+      "avg_return": -2.1,
       "median_return": 0.0,
       "win_rate": 0.0,
-      "avg_days_held": 0.0,
-      "avg_mfe": 1.62,
-      "avg_mae": -2.65
+      "avg_days_held": 1.8,
+      "avg_mfe": 1.99,
+      "avg_mae": -4.92
+    },
+    "Technology": {
+      "n": 6,
+      "avg_return": -1.19,
+      "median_return": -0.23,
+      "win_rate": 0.0,
+      "avg_days_held": 0.2,
+      "avg_mfe": 0.76,
+      "avg_mae": -3.9
     },
     "Industrials": {
-      "n": 4,
-      "avg_return": -4.03,
-      "median_return": -1.02,
+      "n": 6,
+      "avg_return": -6.17,
+      "median_return": -5.73,
       "win_rate": 0.0,
-      "avg_days_held": 4.8,
-      "avg_mfe": 1.46,
-      "avg_mae": -6.43
+      "avg_days_held": 5.7,
+      "avg_mfe": 1.38,
+      "avg_mae": -8.07
     },
     "Financial": {
       "n": 3,
@@ -91,35 +100,26 @@
       "avg_days_held": 9.0,
       "avg_mfe": 3.1,
       "avg_mae": -12.21
-    },
-    "Healthcare": {
-      "n": 2,
-      "avg_return": -1.15,
-      "median_return": -1.15,
-      "win_rate": 0.0,
-      "avg_days_held": 0.5,
-      "avg_mfe": 1.61,
-      "avg_mae": -4.29
     }
   },
   "by_ema_bullish_alignment": {
     "aligned": {
-      "n": 12,
-      "avg_return": -3.59,
-      "median_return": -1.02,
-      "win_rate": 8.3,
-      "avg_days_held": 3.2,
-      "avg_mfe": 1.61,
-      "avg_mae": -5.47
+      "n": 13,
+      "avg_return": -3.96,
+      "median_return": -1.37,
+      "win_rate": 7.7,
+      "avg_days_held": 3.5,
+      "avg_mfe": 1.72,
+      "avg_mae": -5.96
     },
     "not_aligned": {
-      "n": 8,
-      "avg_return": -0.99,
-      "median_return": -0.18,
+      "n": 14,
+      "avg_return": -4.25,
+      "median_return": -2.26,
       "win_rate": 0.0,
-      "avg_days_held": 0.6,
-      "avg_mfe": 0.76,
-      "avg_mae": -4.01
+      "avg_days_held": 3.6,
+      "avg_mfe": 1.96,
+      "avg_mae": -6.74
     }
   },
   "by_rs_bucket": {
@@ -142,21 +142,21 @@
       "avg_mae": -5.17
     },
     "below_50": {
-      "n": 12,
-      "avg_return": -2.49,
-      "median_return": -0.18,
-      "win_rate": 8.3,
-      "avg_days_held": 1.2,
-      "avg_mfe": 1.23,
-      "avg_mae": -4.98
+      "n": 19,
+      "avg_return": -4.73,
+      "median_return": -4.15,
+      "win_rate": 5.3,
+      "avg_days_held": 3.5,
+      "avg_mfe": 2.07,
+      "avg_mae": -7.04
     }
   },
   "meta": {
-    "total_closed": 20,
+    "total_closed": 27,
     "date_range": {
       "earliest": "2026-04-13",
       "latest": "2026-04-22"
     },
-    "generated_at": "2026-04-22T17:29:57.962057"
+    "generated_at": "2026-04-24T09:48:08.245700"
   }
 }
