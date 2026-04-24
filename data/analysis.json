@@ -1,45 +1,344 @@
 {
-  "generated_at": "2026-04-24T17:48:08",
+  "generated_at": "2026-04-25T01:01:44",
   "min_samples": 20,
   "overall": {
-    "n": 27,
-    "win_rate": 3.7,
-    "avg_return": -4.11,
-    "median_return": -1.37,
-    "avg_mfe": 1.85,
-    "avg_mae": -6.36,
+    "n": 31,
+    "win_rate": 3.2,
+    "avg_return": -4.88,
+    "median_return": -2.04,
+    "avg_win": 0.02,
+    "avg_loss": -6.58,
+    "profit_factor": 0.0,
+    "avg_mfe": 1.91,
+    "avg_mae": -6.89,
     "avg_days": 3.6,
-    "closed_by_flip": 0,
-    "closed_by_timeout": 0
+    "closed_by_flip": 31,
+    "closed_by_timeout": 0,
+    "return_buckets": [
+      {
+        "range": "<-20%",
+        "count": 1,
+        "is_positive": false
+      },
+      {
+        "range": "-20~-10%",
+        "count": 6,
+        "is_positive": false
+      },
+      {
+        "range": "-10~-5%",
+        "count": 7,
+        "is_positive": false
+      },
+      {
+        "range": "-5~0%",
+        "count": 16,
+        "is_positive": false
+      },
+      {
+        "range": "0~5%",
+        "count": 1,
+        "is_positive": true
+      },
+      {
+        "range": "5~10%",
+        "count": 0,
+        "is_positive": true
+      },
+      {
+        "range": "10~20%",
+        "count": 0,
+        "is_positive": true
+      },
+      {
+        "range": ">20%",
+        "count": 0,
+        "is_positive": true
+      }
+    ],
+    "days_buckets": [
+      {
+        "range": "1-5",
+        "count": 7
+      },
+      {
+        "range": "6-10",
+        "count": 10
+      },
+      {
+        "range": "11-15",
+        "count": 1
+      },
+      {
+        "range": "16-20",
+        "count": 0
+      },
+      {
+        "range": "21-30",
+        "count": 0
+      },
+      {
+        "range": "31-45",
+        "count": 0
+      },
+      {
+        "range": "46-60",
+        "count": 0
+      },
+      {
+        "range": "60+",
+        "count": 0
+      }
+    ],
+    "equity_points": [
+      {
+        "date": "2026-04-19",
+        "equity": 100.0,
+        "ticker": "SHOP",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 100.0,
+        "ticker": "HAS",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 100.0,
+        "ticker": "LUV",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 100.0,
+        "ticker": "PHM",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 100.0,
+        "ticker": "TPR",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 98.63,
+        "ticker": "JCI",
+        "ret": -1.37,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 98.63,
+        "ticker": "AMT",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 90.77,
+        "ticker": "SCHW",
+        "ret": -7.97,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-21",
+        "equity": 90.77,
+        "ticker": "TEAM",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-21",
+        "equity": 90.16,
+        "ticker": "ITW",
+        "ret": -0.67,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 85.27,
+        "ticker": "WELL",
+        "ret": -5.42,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 85.18,
+        "ticker": "PLTR",
+        "ret": -0.11,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 84.87,
+        "ticker": "CRM",
+        "ret": -0.37,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 79.1,
+        "ticker": "PRU",
+        "ret": -6.79,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 67.97,
+        "ticker": "GE",
+        "ret": -14.07,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 60.12,
+        "ticker": "NRG",
+        "ret": -11.55,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 58.9,
+        "ticker": "DGX",
+        "ret": -2.04,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 58.74,
+        "ticker": "ISRG",
+        "ret": -0.26,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 58.75,
+        "ticker": "IVZ",
+        "ret": 0.02,
+        "cumulative_wr": 5.3
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 58.54,
+        "ticker": "NOW",
+        "ret": -0.36,
+        "cumulative_wr": 5.0
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 53.13,
+        "ticker": "TMO",
+        "ret": -9.24,
+        "cumulative_wr": 4.8
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 49.79,
+        "ticker": "ADSK",
+        "ret": -6.3,
+        "cumulative_wr": 4.5
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 47.72,
+        "ticker": "WAT",
+        "ret": -4.15,
+        "cumulative_wr": 4.3
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 42.47,
+        "ticker": "TECH",
+        "ret": -11.01,
+        "cumulative_wr": 4.2
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 38.18,
+        "ticker": "TDG",
+        "ret": -10.09,
+        "cumulative_wr": 4.0
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 34.04,
+        "ticker": "EFX",
+        "ret": -10.85,
+        "cumulative_wr": 3.8
+      },
+      {
+        "date": "2026-04-24",
+        "equity": 31.18,
+        "ticker": "LVS",
+        "ret": -8.39,
+        "cumulative_wr": 3.7
+      },
+      {
+        "date": "2026-04-25",
+        "equity": 29.45,
+        "ticker": "ZBH",
+        "ret": -5.57,
+        "cumulative_wr": 3.6
+      },
+      {
+        "date": "2026-04-25",
+        "equity": 26.41,
+        "ticker": "CMCSA",
+        "ret": -10.32,
+        "cumulative_wr": 3.4
+      },
+      {
+        "date": "2026-04-25",
+        "equity": 20.01,
+        "ticker": "CHTR",
+        "ret": -24.23,
+        "cumulative_wr": 3.3
+      },
+      {
+        "date": "2026-04-25",
+        "equity": 19.96,
+        "ticker": "PG",
+        "ret": -0.25,
+        "cumulative_wr": 3.2
+      }
+    ]
   },
   "analyses": [
     {
       "title": "整體表現 Overall",
-      "insight": "整體勝率 3.7%, 平均報酬 -4.11%。",
+      "insight": "整體勝率 3.2%, 平均報酬 -4.88%。",
+      "insight_zh": "",
       "stats": [
         {
           "metric": "Total closed signals",
-          "value": 27
+          "value": 31
         },
         {
           "metric": "Win rate",
-          "value": "3.7%"
+          "value": "3.2%"
         },
         {
           "metric": "Avg return",
-          "value": "-4.11%"
+          "value": "-4.88%"
         },
         {
           "metric": "Median return",
-          "value": "-1.37%"
+          "value": "-2.04%"
         },
         {
           "metric": "Avg MFE (max gain)",
-          "value": "+1.85%"
+          "value": "+1.91%"
         },
         {
           "metric": "Avg MAE (max drawdown)",
-          "value": "-6.36%"
+          "value": "-6.89%"
         },
         {
           "metric": "Avg days held",
@@ -47,7 +346,7 @@
         },
         {
           "metric": "Closed by flip",
-          "value": "27 (100%)"
+          "value": "31 (100%)"
         },
         {
           "metric": "Closed by timeout",
@@ -58,32 +357,33 @@
     },
     {
       "title": "MFI Grade 分級",
-      "insight": "MFI Grade: 最佳組 [Normal] 勝率 5.0% (n=20, 平均 -3.59%); 最差組 [Normal] 勝率 5.0% (n=20)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
+      "insight": "MFI Grade: 最佳組 [Normal] 勝率 4.3% (n=23, 平均 -4.64%); 最差組 [Normal] 勝率 4.3% (n=23)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
+      "insight_zh": "",
       "stats": [
         {
           "group": "Strong",
-          "n": 6,
+          "n": 7,
           "win_rate": 0.0,
-          "avg_return": -6.49,
-          "median_return": -6.1,
-          "avg_mfe": 3.31,
-          "avg_mae": -8.2,
-          "avg_days": 6.8,
-          "wr_edge": -3.7,
-          "ret_edge": -2.38,
+          "avg_return": -6.36,
+          "median_return": -5.57,
+          "avg_mfe": 3.21,
+          "avg_mae": -7.83,
+          "avg_days": 7.4,
+          "wr_edge": -3.2,
+          "ret_edge": -1.47,
           "insufficient": true
         },
         {
           "group": "Normal",
-          "n": 20,
-          "win_rate": 5.0,
-          "avg_return": -3.59,
-          "median_return": -0.52,
-          "avg_mfe": 1.45,
-          "avg_mae": -5.86,
-          "avg_days": 2.8,
-          "wr_edge": 1.3,
-          "ret_edge": 0.52,
+          "n": 23,
+          "win_rate": 4.3,
+          "avg_return": -4.64,
+          "median_return": -0.67,
+          "avg_mfe": 1.56,
+          "avg_mae": -6.67,
+          "avg_days": 2.6,
+          "wr_edge": 1.1,
+          "ret_edge": 0.25,
           "insufficient": false
         },
         {
@@ -95,8 +395,8 @@
           "avg_mfe": 0.91,
           "avg_mae": -5.49,
           "avg_days": 0.0,
-          "wr_edge": -3.7,
-          "ret_edge": 3.85,
+          "wr_edge": -3.2,
+          "ret_edge": 4.62,
           "insufficient": true
         }
       ],
@@ -105,50 +405,65 @@
     {
       "title": "MFI 五等分",
       "insight": "樣本不足,無法做 quintile 分析",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "RS Rank 分組 (IBD 式切法)",
-      "insight": "RS Rank: 所有分組樣本數 < 20,需更多資料",
+      "insight": "RS Rank: 最佳組 [<50 (弱)] 勝率 5.0% (n=20, 平均 -4.51%); 最差組 [<50 (弱)] 勝率 5.0% (n=20)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
+      "insight_zh": "",
       "stats": [
         {
           "group": "<50 (弱)",
-          "n": 19,
-          "win_rate": 5.3,
-          "avg_return": -4.73,
-          "median_return": -4.15,
-          "avg_mfe": 2.07,
-          "avg_mae": -7.04,
-          "avg_days": 3.5,
-          "wr_edge": 1.6,
-          "ret_edge": -0.62,
-          "insufficient": true
+          "n": 20,
+          "win_rate": 5.0,
+          "avg_return": -4.51,
+          "median_return": -2.26,
+          "avg_mfe": 2.04,
+          "avg_mae": -6.71,
+          "avg_days": 3.4,
+          "wr_edge": 1.8,
+          "ret_edge": 0.37,
+          "insufficient": false
         },
         {
           "group": "50-70",
-          "n": 3,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": -4.07,
-          "median_return": -0.67,
-          "avg_mfe": 1.18,
-          "avg_mae": -6.48,
-          "avg_days": 5.3,
-          "wr_edge": -3.7,
-          "ret_edge": 0.04,
+          "avg_return": -4.45,
+          "median_return": -3.12,
+          "avg_mfe": 1.53,
+          "avg_mae": -6.26,
+          "avg_days": 6.8,
+          "wr_edge": -3.2,
+          "ret_edge": 0.44,
           "insufficient": true
         },
         {
           "group": "70-80",
-          "n": 3,
+          "n": 4,
           "win_rate": 0.0,
-          "avg_return": -2.49,
-          "median_return": -2.04,
-          "avg_mfe": 1.7,
-          "avg_mae": -3.87,
-          "avg_days": 3.0,
-          "wr_edge": -3.7,
-          "ret_edge": 1.62,
+          "avg_return": -4.44,
+          "median_return": -3.73,
+          "avg_mfe": 1.62,
+          "avg_mae": -5.49,
+          "avg_days": 2.5,
+          "wr_edge": -3.2,
+          "ret_edge": 0.44,
+          "insufficient": true
+        },
+        {
+          "group": "90+ (極強)",
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_return": -12.8,
+          "median_return": -12.8,
+          "avg_mfe": 2.04,
+          "avg_mae": -15.42,
+          "avg_days": 4.0,
+          "wr_edge": -3.2,
+          "ret_edge": -7.92,
           "insufficient": true
         },
         {
@@ -160,21 +475,8 @@
           "avg_mfe": 1.74,
           "avg_mae": -1.64,
           "avg_days": 0.0,
-          "wr_edge": -3.7,
-          "ret_edge": 4.11,
-          "insufficient": true
-        },
-        {
-          "group": "90+ (極強)",
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_return": -1.37,
-          "median_return": -1.37,
-          "avg_mfe": 0.22,
-          "avg_mae": -5.41,
-          "avg_days": 4.0,
-          "wr_edge": -3.7,
-          "ret_edge": 2.74,
+          "wr_edge": -3.2,
+          "ret_edge": 4.88,
           "insufficient": true
         }
       ],
@@ -183,44 +485,45 @@
     {
       "title": "EMA 結構",
       "insight": "EMA 結構: 所有分組樣本數 < 20,需更多資料",
+      "insight_zh": "",
       "stats": [
         {
           "group": "full_bull",
-          "n": 13,
-          "win_rate": 7.7,
-          "avg_return": -3.96,
-          "median_return": -1.37,
-          "avg_mfe": 1.72,
-          "avg_mae": -5.96,
-          "avg_days": 3.5,
-          "wr_edge": 4.0,
-          "ret_edge": 0.15,
+          "n": 14,
+          "win_rate": 7.1,
+          "avg_return": -4.41,
+          "median_return": -1.7,
+          "avg_mfe": 1.7,
+          "avg_mae": -6.27,
+          "avg_days": 3.4,
+          "wr_edge": 3.9,
+          "ret_edge": 0.47,
           "insufficient": true
         },
         {
           "group": "above_50_only",
-          "n": 7,
+          "n": 9,
           "win_rate": 0.0,
-          "avg_return": -3.1,
+          "avg_return": -5.13,
           "median_return": -0.26,
-          "avg_mfe": 1.84,
-          "avg_mae": -5.63,
-          "avg_days": 2.4,
-          "wr_edge": -3.7,
-          "ret_edge": 1.02,
+          "avg_mfe": 2.04,
+          "avg_mae": -7.26,
+          "avg_days": 2.3,
+          "wr_edge": -3.2,
+          "ret_edge": -0.25,
           "insufficient": true
         },
         {
           "group": "above_both",
-          "n": 4,
+          "n": 5,
           "win_rate": 0.0,
-          "avg_return": -9.28,
-          "median_return": -9.66,
-          "avg_mfe": 3.22,
-          "avg_mae": -11.0,
-          "avg_days": 8.2,
-          "wr_edge": -3.7,
-          "ret_edge": -5.17,
+          "avg_return": -8.54,
+          "median_return": -9.24,
+          "avg_mfe": 3.09,
+          "avg_mae": -9.92,
+          "avg_days": 8.8,
+          "wr_edge": -3.2,
+          "ret_edge": -3.66,
           "insufficient": true
         },
         {
@@ -232,8 +535,8 @@
           "avg_mfe": 0.59,
           "avg_mae": -3.63,
           "avg_days": 0.0,
-          "wr_edge": -3.7,
-          "ret_edge": 3.87,
+          "wr_edge": -3.2,
+          "ret_edge": 4.64,
           "insufficient": true
         }
       ],
@@ -242,81 +545,86 @@
     {
       "title": "Sector 產業 (n≥20)",
       "insight": "各產業樣本不足",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "波動率 (ATR%)",
       "insight": "樣本不足",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "大盤環境 SPY 200MA",
       "insight": "樣本不足",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "VIX 水準",
       "insight": "樣本不足",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "多 flag 組合 (滿足幾個 bull 條件)",
       "insight": "同時滿足 4 個 flag (ema50_above_ema200, mfi_rising, st3d_bullish, rs_near_high) 的訊號表現。 通常滿足越多應該勝率越高,若不是則代表 flag 之間有冗餘。",
+      "insight_zh": "",
       "stats": [
         {
           "group": "0",
-          "n": 11,
+          "n": 12,
           "win_rate": 0.0,
-          "avg_return": -5.38,
-          "median_return": -6.3,
-          "avg_mfe": 2.2,
-          "avg_mae": -8.07,
-          "avg_days": 4.5,
-          "wr_edge": -3.7,
-          "ret_edge": -1.27,
+          "avg_return": -5.4,
+          "median_return": -5.94,
+          "avg_mfe": 2.23,
+          "avg_mae": -7.86,
+          "avg_days": 5.1,
+          "wr_edge": -3.2,
+          "ret_edge": -0.51,
           "insufficient": true
         },
         {
           "group": "1",
-          "n": 8,
-          "win_rate": 12.5,
-          "avg_return": -4.24,
-          "median_return": -0.18,
-          "avg_mfe": 1.66,
-          "avg_mae": -5.59,
-          "avg_days": 2.4,
-          "wr_edge": 8.8,
-          "ret_edge": -0.13,
+          "n": 9,
+          "win_rate": 11.1,
+          "avg_return": -3.8,
+          "median_return": -0.25,
+          "avg_mfe": 1.65,
+          "avg_mae": -5.02,
+          "avg_days": 2.1,
+          "wr_edge": 7.9,
+          "ret_edge": 1.08,
           "insufficient": true
         },
         {
           "group": "2",
-          "n": 6,
+          "n": 7,
           "win_rate": 0.0,
-          "avg_return": -2.75,
-          "median_return": -1.36,
-          "avg_mfe": 1.75,
-          "avg_mae": -5.21,
-          "avg_days": 3.8,
-          "wr_edge": -3.7,
-          "ret_edge": 1.36,
+          "avg_return": -5.82,
+          "median_return": -2.04,
+          "avg_mfe": 2.05,
+          "avg_mae": -8.1,
+          "avg_days": 3.9,
+          "wr_edge": -3.2,
+          "ret_edge": -0.94,
           "insufficient": true
         },
         {
           "group": "3",
-          "n": 2,
+          "n": 3,
           "win_rate": 0.0,
-          "avg_return": -0.68,
-          "median_return": -0.68,
-          "avg_mfe": 0.98,
-          "avg_mae": -3.52,
-          "avg_days": 2.0,
-          "wr_edge": -3.7,
-          "ret_edge": 3.43,
+          "avg_return": -3.9,
+          "median_return": -1.37,
+          "avg_mfe": 1.12,
+          "avg_mae": -5.81,
+          "avg_days": 1.7,
+          "wr_edge": -3.2,
+          "ret_edge": 0.99,
           "insufficient": true
         }
       ],
@@ -325,37 +633,39 @@
     {
       "title": "MFI × EMA 交叉",
       "insight": "樣本不足做雙維度分析",
+      "insight_zh": "",
       "stats": [],
       "spread": null
     },
     {
       "title": "持有天數分佈",
       "insight": "這張表是『結案時持有天數 vs 當時報酬』的分佈,不是『持有到第 N 天的平均績效』。",
+      "insight_zh": "",
       "stats": [
         {
           "group": "1-5",
-          "n": 5,
+          "n": 7,
           "win_rate": 0.0,
-          "avg_return": -4.89,
-          "median_return": -6.3,
-          "avg_mfe": 1.04,
-          "avg_mae": -7.06,
+          "avg_return": -8.43,
+          "median_return": -6.79,
+          "avg_mfe": 1.49,
+          "avg_mae": -10.16,
           "avg_days": 2.6,
-          "wr_edge": -3.7,
-          "ret_edge": -0.78,
+          "wr_edge": -3.2,
+          "ret_edge": -3.55,
           "insufficient": true
         },
         {
           "group": "11-15",
-          "n": 0,
-          "win_rate": null,
-          "avg_return": null,
-          "median_return": null,
-          "avg_mfe": null,
-          "avg_mae": null,
-          "avg_days": null,
-          "wr_edge": null,
-          "ret_edge": null,
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_return": -5.57,
+          "median_return": -5.57,
+          "avg_mfe": 2.59,
+          "avg_mae": -5.62,
+          "avg_days": 11.0,
+          "wr_edge": -3.2,
+          "ret_edge": -0.69,
           "insufficient": true
         },
         {
@@ -419,8 +729,8 @@
           "avg_mfe": 2.9,
           "avg_mae": -10.34,
           "avg_days": 8.3,
-          "wr_edge": -3.7,
-          "ret_edge": -4.43,
+          "wr_edge": -3.2,
+          "ret_edge": -3.66,
           "insufficient": true
         },
         {
@@ -438,6 +748,350 @@
         }
       ],
       "spread": null
+    },
+    {
+      "title": "報酬率分布",
+      "insight": "報酬率分布 | 勝率 3.2% | 平均獲利 +0.02% | 平均虧損 -6.58% | Profit Factor 0.00",
+      "insight_zh": "",
+      "stats": [],
+      "spread": null,
+      "_type": "return_dist",
+      "_buckets": [
+        {
+          "range": "<-20%",
+          "count": 1,
+          "is_positive": false
+        },
+        {
+          "range": "-20~-10%",
+          "count": 6,
+          "is_positive": false
+        },
+        {
+          "range": "-10~-5%",
+          "count": 7,
+          "is_positive": false
+        },
+        {
+          "range": "-5~0%",
+          "count": 16,
+          "is_positive": false
+        },
+        {
+          "range": "0~5%",
+          "count": 1,
+          "is_positive": true
+        },
+        {
+          "range": "5~10%",
+          "count": 0,
+          "is_positive": true
+        },
+        {
+          "range": "10~20%",
+          "count": 0,
+          "is_positive": true
+        },
+        {
+          "range": ">20%",
+          "count": 0,
+          "is_positive": true
+        }
+      ]
+    },
+    {
+      "title": "累積報酬曲線 (Equity Curve)",
+      "insight": "Equity curve | 起始 100 → 最終 20.0 | 峰值 100.0 | 峰谷回撤 80.0% | 共 31 筆結案訊號",
+      "insight_zh": "",
+      "stats": [],
+      "spread": null,
+      "_type": "equity_curve",
+      "_points": [
+        {
+          "date": "2026-04-19",
+          "equity": 100.0,
+          "ticker": "SHOP",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 100.0,
+          "ticker": "HAS",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 100.0,
+          "ticker": "LUV",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 100.0,
+          "ticker": "PHM",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 100.0,
+          "ticker": "TPR",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 98.63,
+          "ticker": "JCI",
+          "ret": -1.37,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 98.63,
+          "ticker": "AMT",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 90.77,
+          "ticker": "SCHW",
+          "ret": -7.97,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-21",
+          "equity": 90.77,
+          "ticker": "TEAM",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-21",
+          "equity": 90.16,
+          "ticker": "ITW",
+          "ret": -0.67,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 85.27,
+          "ticker": "WELL",
+          "ret": -5.42,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 85.18,
+          "ticker": "PLTR",
+          "ret": -0.11,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 84.87,
+          "ticker": "CRM",
+          "ret": -0.37,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 79.1,
+          "ticker": "PRU",
+          "ret": -6.79,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 67.97,
+          "ticker": "GE",
+          "ret": -14.07,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 60.12,
+          "ticker": "NRG",
+          "ret": -11.55,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 58.9,
+          "ticker": "DGX",
+          "ret": -2.04,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 58.74,
+          "ticker": "ISRG",
+          "ret": -0.26,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 58.75,
+          "ticker": "IVZ",
+          "ret": 0.02,
+          "cumulative_wr": 5.3
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 58.54,
+          "ticker": "NOW",
+          "ret": -0.36,
+          "cumulative_wr": 5.0
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 53.13,
+          "ticker": "TMO",
+          "ret": -9.24,
+          "cumulative_wr": 4.8
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 49.79,
+          "ticker": "ADSK",
+          "ret": -6.3,
+          "cumulative_wr": 4.5
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 47.72,
+          "ticker": "WAT",
+          "ret": -4.15,
+          "cumulative_wr": 4.3
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 42.47,
+          "ticker": "TECH",
+          "ret": -11.01,
+          "cumulative_wr": 4.2
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 38.18,
+          "ticker": "TDG",
+          "ret": -10.09,
+          "cumulative_wr": 4.0
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 34.04,
+          "ticker": "EFX",
+          "ret": -10.85,
+          "cumulative_wr": 3.8
+        },
+        {
+          "date": "2026-04-24",
+          "equity": 31.18,
+          "ticker": "LVS",
+          "ret": -8.39,
+          "cumulative_wr": 3.7
+        },
+        {
+          "date": "2026-04-25",
+          "equity": 29.45,
+          "ticker": "ZBH",
+          "ret": -5.57,
+          "cumulative_wr": 3.6
+        },
+        {
+          "date": "2026-04-25",
+          "equity": 26.41,
+          "ticker": "CMCSA",
+          "ret": -10.32,
+          "cumulative_wr": 3.4
+        },
+        {
+          "date": "2026-04-25",
+          "equity": 20.01,
+          "ticker": "CHTR",
+          "ret": -24.23,
+          "cumulative_wr": 3.3
+        },
+        {
+          "date": "2026-04-25",
+          "equity": 19.96,
+          "ticker": "PG",
+          "ret": -0.25,
+          "cumulative_wr": 3.2
+        }
+      ]
+    },
+    {
+      "title": "Profit Factor by MFI Grade",
+      "insight": "Profit Factor = (勝率 × 平均獲利) / (敗率 × |平均虧損|)，> 1.5 為合格，> 2.0 為優秀。 最佳: Normal PF=0.00 (n=23)。",
+      "insight_zh": "",
+      "stats": [
+        {
+          "group": "Strong",
+          "n": 7,
+          "win_rate": 0.0,
+          "avg_win": 0.0,
+          "avg_loss": -6.36,
+          "profit_factor": 0.0,
+          "insufficient": true
+        },
+        {
+          "group": "Normal",
+          "n": 23,
+          "win_rate": 4.3,
+          "avg_win": 0.02,
+          "avg_loss": -4.85,
+          "profit_factor": 0.0,
+          "insufficient": false
+        },
+        {
+          "group": "Weak",
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_win": 0.0,
+          "avg_loss": -0.26,
+          "profit_factor": 0.0,
+          "insufficient": true
+        }
+      ],
+      "spread": null
+    },
+    {
+      "title": "最佳雙條件組合 Top 15",
+      "insight": "Top 雙條件組合 | 最佳: [Normal × 0] 勝率 4.5% (n=22, avg -4.78%)",
+      "insight_zh": "",
+      "stats": [
+        {
+          "combo": "Normal × 0",
+          "n": 22,
+          "win_rate": 4.5,
+          "avg_return": -4.78,
+          "insufficient": false,
+          "group": "Normal × 0"
+        },
+        {
+          "combo": "0 × 1",
+          "n": 23,
+          "win_rate": 4.3,
+          "avg_return": -5.84,
+          "insufficient": false,
+          "group": "0 × 1"
+        },
+        {
+          "combo": "0 × 0",
+          "n": 25,
+          "win_rate": 4.0,
+          "avg_return": -4.32,
+          "insufficient": false,
+          "group": "0 × 0"
+        }
+      ],
+      "spread": 0.5
     }
   ]
 }
