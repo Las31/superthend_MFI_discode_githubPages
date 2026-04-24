@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Market News · SuperTrend × MFI</title>
+<!-- cspell:ignore scanlines finvizfinance -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -14,166 +15,186 @@
   --text:#dce3ef;--text2:#8a9ab8;--text3:#5a6a85;
   --up:#3ddc84;--down:#ff5c5c;
   --font:'IBM Plex Mono',monospace;
+  --display:'Syne',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{height:100%;scrollbar-width:none}
+html{scrollbar-width:none}
 html::-webkit-scrollbar{display:none}
 body{
   background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;
-  min-height:100vh;display:flex;flex-direction:column;
+  display:flex;flex-direction:column;min-height:100vh;
 }
 body::after{
-  content:'';position:fixed;inset:0;
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
   background:repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,229,160,.012) 3px,rgba(0,229,160,.012) 4px);
-  pointer-events:none;z-index:9000;
 }
 
 /* Header */
 header{
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
-  padding:14px 28px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:12px 24px;border-bottom:1px solid var(--border);flex-shrink:0;
   background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
-  flex-shrink:0;
 }
 .logo{
-  font-family:'Syne',sans-serif;font-size:22px;text-transform:uppercase;
-  color:#fff;letter-spacing:.5px;line-height:1.2;text-decoration:none;
-  text-shadow:0 0 6px #00e5a0,0 0 14px #00e5a0,0 0 32px #00e5a0,0 0 60px rgba(197,197,197,.4);
-  animation:neon-flicker 4s infinite;
+  font-family:var(--display);font-size:20px;text-transform:uppercase;
+  color:#fff;letter-spacing:.5px;line-height:1;text-decoration:none;
+  text-shadow:0 0 6px #00e5a0,0 0 14px #00e5a0,0 0 32px #00e5a0;
+  animation:nflicker 4s infinite;
 }
-.logo em.t{font-style:normal;color:#00e5a0;text-shadow:0 0 6px #00e5a0,0 0 18px #00e5a0,0 0 40px #00e5a0}
-.logo em.x{font-style:normal;color:#7b6cff;text-shadow:0 0 6px #7b6cff,0 0 18px #7b6cff,0 0 40px #7b6cff}
-@keyframes neon-flicker{0%,95%,100%{opacity:1}96%{opacity:.6}97%{opacity:1}98%{opacity:.4}99%{opacity:1}}
-.header-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo em.t{font-style:normal;color:#00e5a0}
+.logo em.x{font-style:normal;color:#7b6cff}
+@keyframes nflicker{0%,95%,100%{opacity:1}96%{opacity:.6}97%{opacity:1}98%{opacity:.4}99%{opacity:1}}
+.hdr-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .nav-link{
-  font-size:11px;color:var(--text2);padding:5px 10px;
+  font-size:11px;color:var(--text2);padding:4px 10px;
   border:1px solid var(--border2);text-decoration:none;
   letter-spacing:.5px;transition:all .15s;font-family:var(--font);
 }
-.nav-link:hover{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.05)}
-.nav-link.active{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.08)}
+.nav-link:hover,.nav-link.active{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.06)}
 .src-badge{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3)}
-.src-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:dot-pulse 2s infinite}
-@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.src-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:dpulse 2s infinite}
+@keyframes dpulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* Stats bar */
-#stats{
+#stats-bar{
   display:grid;grid-template-columns:repeat(4,1fr);
   gap:1px;background:var(--border);border-bottom:1px solid var(--border);
   flex-shrink:0;position:relative;overflow:hidden;
 }
-#stats-beam{
-  position:absolute;left:0;right:0;height:60px;
-  background:linear-gradient(180deg,transparent 0%,rgba(0,229,160,.015) 40%,rgba(0,229,160,.028) 50%,rgba(0,229,160,.015) 60%,transparent 100%);
-  animation:beam 6s linear infinite;pointer-events:none;z-index:20;
+.stat-beam{
+  position:absolute;left:0;right:0;height:60px;pointer-events:none;z-index:10;
+  background:linear-gradient(180deg,transparent,rgba(0,229,160,.025) 50%,transparent);
+  animation:beam 6s linear infinite;
 }
 @keyframes beam{0%{top:-60px}100%{top:100%}}
-#stats-scanlines{
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px);
-  pointer-events:none;z-index:19;
-}
-.stat{background:rgba(14,17,23,.92);padding:14px 16px 10px;text-align:center;position:relative;z-index:5}
-.stat-n{font-family:var(--font);font-size:24px;font-weight:600;letter-spacing:2px;display:block;line-height:1}
-.stat-l{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:6px;display:block}
+.stat-cell{background:var(--surface);padding:12px 16px 10px;text-align:center;position:relative;z-index:5}
+.stat-n{display:block;font-family:var(--font);font-weight:600;font-size:22px;letter-spacing:2px;line-height:1}
+.stat-l{display:block;font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:5px}
 
-/* Tab nav */
-#tab-nav{
-  display:flex;gap:0;border-bottom:1px solid var(--border);
-  background:var(--surface);flex-shrink:0;padding:0 28px;
+/* Tab bar — 圓角膠囊 */
+#tab-bar{
+  display:flex;align-items:center;gap:8px;padding:14px 24px;
+  border-bottom:1px solid var(--border);background:var(--surface);
+  flex-shrink:0;flex-wrap:wrap;
 }
-.tab-btn{
-  font-family:var(--font);font-size:11px;letter-spacing:.8px;text-transform:uppercase;
-  color:var(--text3);padding:11px 18px;border:none;background:transparent;
-  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;
-  position:relative;top:1px;
+.tab-pill{
+  padding:6px 18px;border-radius:20px;font-size:13px;font-weight:600;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--text2);cursor:pointer;font-family:var(--font);
+  letter-spacing:.3px;transition:all .15s;
 }
-.tab-btn:hover{color:var(--text2)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-pill:hover{color:var(--text);border-color:var(--text3)}
+.tab-pill.active{background:var(--text);color:var(--bg);border-color:transparent}
 
 /* Panel wrap */
-#panel-wrap{flex:1;overflow-y:auto;padding:20px 28px;scrollbar-width:none}
-#panel-wrap::-webkit-scrollbar{display:none}
+#panels{flex:1;overflow-y:auto;padding:20px 24px;scrollbar-width:none}
+#panels::-webkit-scrollbar{display:none}
 .panel{display:none}.panel.active{display:block}
 
 /* Section label */
-.sec-label{
-  font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;
-  margin-bottom:10px;margin-top:20px;
+.slabel{
+  font-size:12px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:12px;margin-top:20px;font-weight:600;
 }
-.sec-label:first-child{margin-top:0}
+.slabel:first-child{margin-top:0}
 
 /* Card */
-.card{background:var(--surface);border:1px solid var(--border);padding:14px 16px;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:16px 18px;margin-bottom:14px}
 
-/* Cloud */
-.cloud{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0}
-.kw{border-radius:2px;font-weight:600;cursor:default;transition:opacity .15s;line-height:1}
-.kw:hover{opacity:.7}
+/* Keyword cloud */
+.cloud{display:flex;flex-wrap:wrap;gap:10px;padding:4px 0}
+.kw-pill{
+  border-radius:20px;font-weight:700;cursor:default;line-height:1.3;
+  transition:opacity .15s;letter-spacing:.2px;
+}
+.kw-pill:hover{opacity:.75}
 
-/* Heatmap */
-.heat-days{display:flex;gap:3px;padding-left:84px;margin-bottom:5px}
-.heat-day{width:32px;font-size:10px;color:var(--text3);text-align:center}
-.heat-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.heat-lbl{font-size:11px;color:var(--text2);width:78px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.heat-cells{display:flex;gap:3px}
-.heat-cell{width:32px;height:22px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px;cursor:default;color:transparent;transition:color .15s}
-.heat-cell:hover{color:var(--text)}
+/* Heatmap — 橫條圖，天數標籤與橫條完全對齊 */
+.hm-row{display:flex;align-items:center;margin-bottom:8px}
+.hm-lbl{
+  font-size:14px;color:var(--text);font-weight:500;
+  flex-shrink:0;padding-right:10px;
+  /* 寬度由 JS 動態設定，與 spacer 一致 */
+}
+.hm-bars{display:flex;gap:4px;flex:1;min-width:0}
+.hm-bar-wrap{flex:1;height:30px;background:var(--surface2);border-radius:3px;overflow:hidden;min-width:0}
+.hm-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;transition:width .4s ease}
+.hm-bar-val{font-size:12px;font-weight:700;white-space:nowrap}
+/* 天數標籤列 */
+.hm-day-row{display:flex;margin-top:4px;margin-bottom:14px}
+.hm-day-spacer{flex-shrink:0;padding-right:10px} /* 同 .hm-lbl */
+.hm-day-labels{display:flex;gap:4px;flex:1;min-width:0}
+.hm-day-label{flex:1;font-size:12px;color:var(--text3);text-align:center;min-width:0}
 
 /* Topic grid */
-.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.topic-card{border:1px solid rgba(255,255,255,.06);padding:12px 14px}
-.topic-title{font-size:13px;font-weight:600;margin-bottom:4px}
-.topic-count{font-size:10px;margin-bottom:8px;opacity:.6;letter-spacing:.05em}
-.topic-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
-.topic-tag{font-size:10px;padding:2px 7px;border-radius:2px;font-weight:600;letter-spacing:.03em}
-.topic-news{font-size:11px;color:var(--text2);border-top:1px solid rgba(255,255,255,.06);padding-top:8px;line-height:1.65}
-.topic-news-item{margin-bottom:3px;padding-left:10px;position:relative}
-.topic-news-item::before{content:'·';position:absolute;left:0;color:var(--text3)}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.topic-card{border-radius:4px;padding:14px 16px;border:1px solid rgba(255,255,255,.08)}
+.topic-title{font-size:16px;font-weight:700;margin-bottom:5px}
+.topic-cnt{font-size:14px;margin-bottom:10px;opacity:.7;font-weight:500}
+.topic-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.topic-tag{font-size:12px;padding:3px 10px;border-radius:12px;font-weight:600}
+.topic-news{font-size:13px;color:var(--text2);line-height:1.7;border-top:1px solid rgba(255,255,255,.08);padding-top:9px}
+.topic-news-item{margin-bottom:5px;padding-left:12px;position:relative}
+.topic-news-item::before{content:'·';position:absolute;left:0;color:var(--text3);font-weight:700}
 
 /* Timeline */
-.tl-row{display:grid;grid-template-columns:56px 1fr;gap:12px;margin-bottom:14px;align-items:start}
-.tl-time{font-size:11px;color:var(--text3);padding-top:2px;text-align:right;letter-spacing:.05em}
-.tl-body{border-left:1px solid var(--border2);padding-left:12px}
-.tl-badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;letter-spacing:.05em;margin-bottom:4px}
-.tl-hl{font-size:12px;color:var(--text);line-height:1.5}
-.tl-meta{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.03em}
+.tl-row{display:grid;grid-template-columns:64px 1fr;gap:14px;margin-bottom:16px;align-items:start}
+.tl-time{font-size:14px;color:var(--text3);text-align:right;padding-top:3px;font-weight:500}
+.tl-body{border-left:2px solid var(--border2);padding-left:14px}
+.tl-badge{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:12px;margin-bottom:6px}
+.tl-hl{font-size:14px;color:var(--text);line-height:1.55;font-weight:500}
+.tl-meta{font-size:12px;color:var(--text3);margin-top:4px}
 
-/* Screener table */
-.scr-wrap{overflow-x:auto}
-.scr-tbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
-.scr-tbl th{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:0 10px 8px;border-bottom:1px solid var(--border);font-weight:400}
-.scr-tbl td{padding:8px 10px;border-bottom:1px solid rgba(28,33,48,.6);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Screener */
+.scr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.scr-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.scr-tbl th{font-size:12px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:0 10px 10px;border-bottom:1px solid var(--border);font-weight:500}
+.scr-tbl td{padding:9px 10px;border-bottom:1px solid rgba(28,33,48,.6)}
 .scr-tbl tr:last-child td{border-bottom:none}
-.scr-tbl tr:hover td{background:rgba(0,229,160,.03)}
-.c-ticker{width:64px}.c-price{width:80px}.c-chg{width:72px}.c-vol{width:72px}
-.t-ticker{color:var(--accent);font-weight:600;letter-spacing:.5px}
-.t-company{color:var(--text2)}
-.t-price{color:var(--text);text-align:right}
-.t-up{color:var(--up);font-weight:600;text-align:right}
-.t-dn{color:var(--down);font-weight:600;text-align:right}
-.t-vol{color:var(--text3);text-align:right}
+.scr-tbl tr:hover td{background:rgba(0,229,160,.04)}
+.td-ticker{color:var(--accent);font-weight:700;letter-spacing:.5px;width:62px}
+.td-co{color:var(--text2);font-size:13px}
+.td-price{color:var(--text);text-align:right;width:84px;font-weight:500}
+.td-chg{font-weight:700;text-align:right;width:72px}
+.td-vol{color:var(--text3);text-align:right;width:64px;font-size:12px}
+.chg-up{color:var(--up)}.chg-dn{color:var(--down)}
+
+/* Lang toggle */
+.lang-toggle-btn{
+  display:inline-flex;align-items:center;gap:0;
+  background:transparent;border:none;cursor:pointer;
+  padding:0 4px;vertical-align:middle;margin-left:8px;
+}
+.lang-zh,.lang-en{
+  font-size:12px;letter-spacing:.3px;font-family:var(--font);
+  transition:all .15s;
+}
+.lang-zh.active{font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:1px}
+.lang-zh.inactive{color:#3a4a72}
+.lang-en.active{font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:1px}
+.lang-en.inactive{color:#3a4a72}
+.lang-sep{font-size:11px;color:#2a3448;margin:0 3px}
 
 /* Loading / error */
-#loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:14px}
-.spinner{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+#loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px}
+.spinner{width:22px;height:22px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:12px;color:var(--text3);letter-spacing:.08em}
-#error-msg{display:none;text-align:center;padding:40px 20px;font-size:12px;color:var(--down);letter-spacing:.05em}
-.retry-btn{margin-top:12px;font-family:var(--font);font-size:11px;padding:6px 14px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;transition:all .15s;display:inline-block}
+.loading-txt{font-size:11px;color:var(--text3);letter-spacing:.1em}
+#error-state{display:none;padding:40px;text-align:center}
+.err-msg{font-size:12px;color:var(--down);margin-bottom:14px}
+.retry-btn{font-family:var(--font);font-size:11px;padding:5px 14px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;letter-spacing:.5px;transition:all .15s}
 .retry-btn:hover{color:var(--accent);border-color:var(--accent)}
 
 /* Mobile */
-@media(max-width:600px){
+@media(max-width:640px){
   header{padding:10px 14px}
-  .logo{font-size:15px}
-  #tab-nav{padding:0 14px;overflow-x:auto;scrollbar-width:none}
-  #tab-nav::-webkit-scrollbar{display:none}
-  .tab-btn{padding:10px 12px;font-size:10px}
-  #panel-wrap{padding:14px}
-  .topic-grid{grid-template-columns:1fr}
-  #stats{grid-template-columns:repeat(2,1fr)}
-  #scr-grid{grid-template-columns:1fr}
+  .logo{font-size:16px}
+  #tab-bar{padding:10px 14px;gap:6px}
+  .tab-pill{font-size:12px;padding:5px 13px}
+  #panels{padding:14px}
+  .topic-grid,.scr-grid{grid-template-columns:1fr}
+  #stats-bar{grid-template-columns:repeat(2,1fr)}
+  .stat-n{font-size:18px}
 }
 </style>
 </head>
@@ -181,7 +202,7 @@ header{
 
 <header>
   <a href="index.html" class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</a>
-  <div class="header-right">
+  <div class="hdr-right">
     <a href="index.html"    class="nav-link">選股 →</a>
     <a href="news.html"     class="nav-link active">新聞 →</a>
     <a href="analysis.html" class="nav-link">分析 →</a>
@@ -192,114 +213,126 @@ header{
   </div>
 </header>
 
-<div id="stats">
-  <div id="stats-beam"></div>
-  <div id="stats-scanlines"></div>
-  <div class="stat">
-    <span class="stat-n" id="st-news" style="color:var(--accent)">—</span>
-    <span class="stat-l">NEWS TODAY</span>
-  </div>
-  <div class="stat">
-    <span class="stat-n" id="st-topic" style="color:var(--text);font-size:15px;letter-spacing:.5px">—</span>
-    <span class="stat-l">TOP TOPIC</span>
-  </div>
-  <div class="stat">
-    <span class="stat-n" id="st-gainer" style="color:var(--up);font-size:18px">—</span>
-    <span class="stat-l">TOP GAINER</span>
-  </div>
-  <div class="stat">
-    <span class="stat-n" id="st-loser" style="color:var(--down);font-size:18px">—</span>
-    <span class="stat-l">TOP LOSER</span>
-  </div>
+<div id="stats-bar">
+  <div class="stat-beam"></div>
+  <div class="stat-cell"><span class="stat-n" id="st-news" style="color:var(--accent)">—</span><span class="stat-l">NEWS TODAY</span></div>
+  <div class="stat-cell"><span class="stat-n" id="st-topic" style="color:var(--text);font-size:15px;letter-spacing:.5px">—</span><span class="stat-l">TOP TOPIC</span></div>
+  <div class="stat-cell"><span class="stat-n" id="st-gainer" style="color:var(--up);font-size:18px">—</span><span class="stat-l">TOP GAINER</span></div>
+  <div class="stat-cell"><span class="stat-n" id="st-loser" style="color:var(--down);font-size:18px">—</span><span class="stat-l">TOP LOSER</span></div>
 </div>
 
-<div id="tab-nav">
-  <button class="tab-btn active" data-tab="keywords">熱門關鍵字</button>
-  <button class="tab-btn" data-tab="topics">話題分群</button>
-  <button class="tab-btn" data-tab="timeline">趨勢時間軸</button>
-  <button class="tab-btn" data-tab="screener">Screener 排行</button>
+<div id="tab-bar">
+  <button class="tab-pill active" data-tab="keywords">熱門關鍵字</button>
+  <button class="tab-pill"        data-tab="topics">話題分群</button>
+  <button class="tab-pill"        data-tab="timeline">趨勢時間軸</button>
 </div>
 
-<div id="panel-wrap">
+<div id="panels">
 
-  <div id="loading">
+  <div id="loading-state">
     <div class="spinner"></div>
-    <div class="loading-text">LOADING MARKET DATA...</div>
+    <div class="loading-txt">LOADING MARKET DATA...</div>
   </div>
-  <div id="error-msg">
-    <div id="error-text">載入失敗</div>
+  <div id="error-state">
+    <div class="err-msg" id="err-txt">載入失敗</div>
     <button class="retry-btn" onclick="loadData()">RETRY</button>
   </div>
 
-  <!-- Panel: Keywords -->
+  <!-- 熱門關鍵字 + Screener 排行 -->
   <div class="panel" id="panel-keywords">
-    <p class="sec-label">今日關鍵字詞雲（字體大小 = 出現頻率）</p>
+    <p class="slabel">今日美股 — 關鍵字詞雲（字體大小 = 出現頻率）</p>
     <div class="card"><div class="cloud" id="cloud"></div></div>
-    <p class="sec-label">各話題熱度（近 5 日）</p>
+
+    <p class="slabel">各話題熱度（過去 5 日）</p>
     <div class="card">
-      <div class="heat-days" id="heat-days"></div>
       <div id="heatmap"></div>
+    </div>
+
+    <div class="scr-grid" style="margin-top:6px">
+      <div>
+        <p class="slabel">S&amp;P 500 — 今日最大漲幅</p>
+        <div class="card"><table class="scr-tbl" id="tbl-gainers"></table></div>
+      </div>
+      <div>
+        <p class="slabel">S&amp;P 500 — 今日最大跌幅</p>
+        <div class="card"><table class="scr-tbl" id="tbl-losers"></table></div>
+      </div>
     </div>
   </div>
 
-  <!-- Panel: Topics -->
+  <!-- 話題分群 -->
   <div class="panel" id="panel-topics">
-    <p class="sec-label">今日新聞話題分群</p>
+    <p class="slabel" style="display:flex;align-items:center">
+      今日新聞話題分群
+      <button class="lang-toggle-btn" onclick="toggleLang()" title="切換中英文">
+        <span class="lang-zh active">中文</span>
+        <span class="lang-sep">/</span>
+        <span class="lang-en inactive">EN</span>
+      </button>
+    </p>
     <div class="topic-grid" id="topic-grid"></div>
   </div>
 
-  <!-- Panel: Timeline -->
+  <!-- 趨勢時間軸 -->
   <div class="panel" id="panel-timeline">
-    <p class="sec-label">今日市場事件時間軸</p>
+    <p class="slabel" style="display:flex;align-items:center">
+      今日重要事件時間軸
+      <button class="lang-toggle-btn" onclick="toggleLang()" title="切換中英文">
+        <span class="lang-zh active">中文</span>
+        <span class="lang-sep">/</span>
+        <span class="lang-en inactive">EN</span>
+      </button>
+    </p>
     <div id="timeline"></div>
-  </div>
-
-  <!-- Panel: Screener -->
-  <div class="panel" id="panel-screener">
-    <div id="scr-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <p class="sec-label">S&amp;P 500 — 今日最大漲幅</p>
-        <div class="card scr-wrap">
-          <table class="scr-tbl" id="tbl-gainers"></table>
-        </div>
-      </div>
-      <div>
-        <p class="sec-label">S&amp;P 500 — 今日最大跌幅</p>
-        <div class="card scr-wrap">
-          <table class="scr-tbl" id="tbl-losers"></table>
-        </div>
-      </div>
-    </div>
   </div>
 
 </div>
 
 <script>
-// ── 話題顏色 ──────────────────────────────────────────────────
 const TC={
-  '地緣政治':    {bg:'rgba(255,107,53,.1)', tc:'#ff6b35',tag:'rgba(255,107,53,.2)'},
-  'AI & 半導體': {bg:'rgba(0,229,160,.08)',tc:'#00e5a0',tag:'rgba(0,229,160,.15)'},
-  '聯準會 & 總經':{bg:'rgba(61,220,132,.08)',tc:'#3ddc84',tag:'rgba(61,220,132,.15)'},
-  '外匯 & 債券': {bg:'rgba(123,108,255,.1)',tc:'#7b6cff',tag:'rgba(123,108,255,.18)'},
-  '關稅 & 貿易戰':{bg:'rgba(255,92,92,.08)',tc:'#ff5c5c',tag:'rgba(255,92,92,.15)'},
-  '企業財報':    {bg:'rgba(160,140,255,.08)',tc:'#a08cff',tag:'rgba(160,140,255,.15)'},
-  '能源 & ESG':  {bg:'rgba(29,158,117,.08)',tc:'#1d9e75',tag:'rgba(29,158,117,.15)'},
-  '監管 & 法律': {bg:'rgba(245,166,35,.08)',tc:'#f5a623',tag:'rgba(245,166,35,.15)'},
-  '市場綜合':    {bg:'rgba(90,106,133,.08)',tc:'#8a9ab8',tag:'rgba(90,106,133,.15)'},
+  '地緣政治':     {bg:'#1f0e06', tc:'#ff8a5b', tag:'#3d1a0c', border:'#ff6b3560'},
+  'AI & 半導體':  {bg:'#051a12', tc:'#00e5a0', tag:'#0a3324', border:'#00e5a060'},
+  '聯準會 & 總經':{bg:'#071a0f', tc:'#3ddc84', tag:'#0d3320', border:'#3ddc8460'},
+  '外匯 & 債券':  {bg:'#100e1f', tc:'#9d92ff', tag:'#1e1b3d', border:'#7b6cff60'},
+  '關稅 & 貿易戰':{bg:'#1a0808', tc:'#ff7070', tag:'#331414', border:'#ff5c5c60'},
+  '企業財報':     {bg:'#110e1f', tc:'#c0b0ff', tag:'#221b3a', border:'#a08cff60'},
+  '能源 & ESG':   {bg:'#061510', tc:'#25c490', tag:'#0d2a1f', border:'#1d9e7560'},
+  '監管 & 法律':  {bg:'#191208', tc:'#f5c060', tag:'#302310', border:'#f5a62360'},
+  '市場綜合':     {bg:'#0e1117', tc:'#8a9ab8', tag:'#1c2130', border:'#5a6a8560'},
 };
 function gc(t){return TC[t]||TC['市場綜合']}
 
-// ── Tab 切換 ──────────────────────────────────────────────────
-document.querySelectorAll('.tab-btn').forEach(btn=>{
+/* ── 語言切換 ───────────────────────────────────────────── */
+let _langZh = true;       // 預設顯示中文
+let _dashCache = null;    // 快取已載入的資料
+
+function _updateLangBtns(){
+  document.querySelectorAll('.lang-zh').forEach(el=>{
+    el.className = _langZh ? 'lang-zh active' : 'lang-zh inactive';
+  });
+  document.querySelectorAll('.lang-en').forEach(el=>{
+    el.className = _langZh ? 'lang-en inactive' : 'lang-en active';
+  });
+}
+
+function toggleLang(){
+  _langZh = !_langZh;
+  _updateLangBtns();
+  if (!_dashCache) return;
+  // 重新渲染有翻譯的區塊
+  buildTopics(_dashCache.topics||[]);
+  buildTimeline(_dashCache.timeline||[]);
+}
+
+document.querySelectorAll('.tab-pill').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pill').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
   });
 });
 
-// ── 工具函式 ──────────────────────────────────────────────────
 function fmtVol(v){
   if(!v) return '—';
   if(v>=1e9) return (v/1e9).toFixed(1)+'B';
@@ -307,50 +340,77 @@ function fmtVol(v){
   if(v>=1e3) return (v/1e3).toFixed(0)+'K';
   return String(v);
 }
-function fmtPct(v){
-  const s=(v*100).toFixed(1);
-  return v>=0?'+'+s+'%':s+'%';
-}
+function fmtPct(v){const s=(v*100).toFixed(2);return v>=0?'+'+s+'%':s+'%'}
 
-// ── 各區塊建構 ────────────────────────────────────────────────
 function buildCloud(kws){
-  if(!kws||!kws.length){document.getElementById('cloud').innerHTML='';return}
-  const max=kws[0].f,min=kws[kws.length-1].f;
+  if(!kws||!kws.length) return;
+  const max=kws[0].f,min=kws[kws.length-1].f,rng=max-min||1;
   document.getElementById('cloud').innerHTML=kws.map(k=>{
-    const r=(k.f-min)/(max-min+1);
-    const sz=Math.round(11+r*14);
+    const r=(k.f-min)/rng;
+    const sz=Math.round(14+r*18);   // 14–32px
     const c=gc(k.category);
-    const pad=`${Math.round(3+r*4)}px ${Math.round(8+r*6)}px`;
-    return `<span class="kw" style="font-size:${sz}px;background:${c.bg};color:${c.tc};padding:${pad}">${k.w} <span style="font-size:9px;opacity:.5">${k.f}</span></span>`;
+    const py=Math.round(5+r*5),px=Math.round(12+r*8);
+    // 用實色背景 + 高對比文字
+    return `<span class="kw-pill" style="font-size:${sz}px;background:${c.tag};color:${c.tc};padding:${py}px ${px}px;border:1px solid ${c.border}">${k.w}<span style="font-size:10px;opacity:.7;margin-left:4px">${k.f}</span></span>`;
   }).join('');
 }
 
 function buildHeatmap(hm){
   if(!hm||!hm.length) return;
   const DAYS=['週一','週二','週三','週四','今日'];
-  document.getElementById('heat-days').innerHTML=DAYS.map(d=>`<span class="heat-day">${d}</span>`).join('');
   const mx=Math.max(...hm.flatMap(r=>r.vals))||1;
-  document.getElementById('heatmap').innerHTML=hm.map(r=>{
+
+  // 先算最長標籤寬度（用 canvas 量，fallback 用字元數估算）
+  const LBL_W = 100; // px，固定寬度讓天數列 spacer 完全一致
+
+  const rows = hm.map(r=>{
     const c=gc(r.label);
-    return `<div class="heat-row">
-      <span class="heat-lbl" title="${r.label}">${r.label}</span>
-      <div class="heat-cells">${r.vals.map(v=>{
-        const a=(v/mx)*0.75+0.08;
-        return `<div class="heat-cell" style="background:${c.tc};opacity:${a.toFixed(2)}" title="${v}則">${v}</div>`;
-      }).join('')}</div>
+    const bars=r.vals.map((v,i)=>{
+      const pct=Math.max(Math.round((v/mx)*100), 10);
+      const isToday=i===4;
+      const fillColor=isToday?c.tc:'#253048';
+      const valColor=isToday?'#000':c.tc;
+      return `<div class="hm-bar-wrap" title="${DAYS[i]}: ${v}則">
+        <div class="hm-bar-fill" style="width:${pct}%;background:${fillColor}">
+          <span class="hm-bar-val" style="color:${valColor}">${v}</span>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="hm-row">
+      <span class="hm-lbl" style="color:${c.tc};width:${LBL_W}px">${r.label}</span>
+      <div class="hm-bars">${bars}</div>
     </div>`;
   }).join('');
+
+  // 天數標籤列：spacer 用同樣寬度，bars 用同樣 flex 結構
+  const dayRow=`<div class="hm-day-row">
+    <span class="hm-day-spacer" style="width:${LBL_W}px"></span>
+    <div class="hm-day-labels">
+      ${DAYS.map(d=>`<span class="hm-day-label">${d}</span>`).join('')}
+    </div>
+  </div>`;
+
+  document.getElementById('heatmap').innerHTML = dayRow + rows;
 }
 
 function buildTopics(topics){
   if(!topics||!topics.length) return;
   document.getElementById('topic-grid').innerHTML=topics.map(t=>{
     const c=gc(t.title);
-    return `<div class="topic-card" style="background:${c.bg}">
+    // 新聞標題：有 news_zh 且語言是中文時顯示翻譯
+    const newsItems=(t.news||[]).map((n,i)=>{
+      const zh=_langZh && t.news_zh && t.news_zh[i];
+      const display=zh||n;
+      const original=zh?n:'';
+      return `<div class="topic-news-item" title="${original}">${display}</div>`;
+    }).join('');
+    return `<div class="topic-card" style="background:${c.bg};border-color:${c.border}">
       <div class="topic-title" style="color:${c.tc}">${t.title}</div>
-      <div class="topic-count" style="color:${c.tc}">${t.count} 則新聞</div>
-      <div class="topic-tags">${(t.tags||[]).map(g=>`<span class="topic-tag" style="background:${c.tag};color:${c.tc}">${g}</span>`).join('')}</div>
-      <div class="topic-news">${(t.news||[]).map(n=>`<div class="topic-news-item">${n}</div>`).join('')}</div>
+      <div class="topic-cnt"   style="color:${c.tc}">${t.count} 則新聞</div>
+      <div class="topic-tags">${(t.tags||[]).map(g=>
+        `<span class="topic-tag" style="background:${c.tag};color:${c.tc};border:1px solid ${c.border}">${g}</span>`
+      ).join('')}</div>
+      <div class="topic-news" style="border-color:${c.border}">${newsItems}</div>
     </div>`;
   }).join('');
 }
@@ -359,11 +419,13 @@ function buildTimeline(tl){
   if(!tl||!tl.length) return;
   document.getElementById('timeline').innerHTML=tl.map(e=>{
     const c=gc(e.topic);
+    const display=(_langZh && e.title_zh) ? e.title_zh : e.hl;
+    const original=(_langZh && e.title_zh) ? e.hl : '';
     return `<div class="tl-row">
       <div class="tl-time">${e.time}</div>
       <div class="tl-body">
         <span class="tl-badge" style="background:${c.bg};color:${c.tc}">${e.topic}</span>
-        <div class="tl-hl">${e.hl}</div>
+        <div class="tl-hl" title="${original}">${display}</div>
         <div class="tl-meta">${e.meta}</div>
       </div>
     </div>`;
@@ -373,29 +435,28 @@ function buildTimeline(tl){
 function buildScr(id,rows){
   const el=document.getElementById(id);
   if(!rows||!rows.length){el.innerHTML='';return}
-  el.innerHTML=`<colgroup><col class="c-ticker"><col class="c-company"><col class="c-price"><col class="c-chg"><col class="c-vol"></colgroup>
-  <thead><tr>
+  el.innerHTML=`<thead><tr>
     <th>Ticker</th><th>Company</th>
     <th style="text-align:right">Price</th>
     <th style="text-align:right">Chg%</th>
     <th style="text-align:right">Vol</th>
   </tr></thead><tbody>`+
   rows.map(r=>{
-    const cls=r.Change>=0?'t-up':'t-dn';
+    const cls=r.Change>=0?'chg-up':'chg-dn';
     return `<tr>
-      <td class="t-ticker">${r.Ticker}</td>
-      <td class="t-company">${r.Company}</td>
-      <td class="t-price">${'$'+r.Price.toFixed(2)}</td>
-      <td class="${cls}">${fmtPct(r.Change)}</td>
-      <td class="t-vol">${fmtVol(r.Volume)}</td>
+      <td class="td-ticker">${r.Ticker}</td>
+      <td class="td-co">${r.Company}</td>
+      <td class="td-price">$${r.Price.toFixed(2)}</td>
+      <td class="td-chg ${cls}">${fmtPct(r.Change)}</td>
+      <td class="td-vol">${fmtVol(r.Volume)}</td>
     </tr>`;
   }).join('')+'</tbody>';
 }
 
 function updateStats(d){
   document.getElementById('st-news').textContent=d.news_count||'—';
-  const topics=(d.topics||[]).filter(t=>t.title!=='市場綜合');
-  document.getElementById('st-topic').textContent=topics.length?topics[0].title:'—';
+  const top=(d.topics||[]).filter(t=>t.title!=='市場綜合');
+  document.getElementById('st-topic').textContent=top.length?top[0].title:'—';
   const gns=(d.screener||{}).top_gainers||[];
   const los=(d.screener||{}).top_losers ||[];
   if(gns.length) document.getElementById('st-gainer').textContent=`${gns[0].Ticker} ${fmtPct(gns[0].Change)}`;
@@ -405,21 +466,19 @@ function updateStats(d){
     `finvizfinance · ${ts.slice(0,10)} ${ts.slice(11,16)} UTC · ${d.news_count||0} articles`;
 }
 
-// ── 主載入 ────────────────────────────────────────────────────
 async function loadData(){
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('error-msg').style.display='none';
+  document.getElementById('loading-state').style.display='flex';
+  document.getElementById('error-state').style.display='none';
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-
   try{
     const res=await fetch('data/dashboard_data.json?_='+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const d=await res.json();
-
-    document.getElementById('loading').style.display='none';
-    document.querySelector('.tab-btn[data-tab="keywords"]').classList.add('active');
+    document.getElementById('loading-state').style.display='none';
+    _dashCache = d;
+    document.querySelector('.tab-pill[data-tab="keywords"]').classList.add('active');
     document.getElementById('panel-keywords').classList.add('active');
-
+    _updateLangBtns();
     updateStats(d);
     buildCloud(d.keywords||[]);
     buildHeatmap(d.heatmap||[]);
@@ -427,12 +486,10 @@ async function loadData(){
     buildTimeline(d.timeline||[]);
     buildScr('tbl-gainers',(d.screener||{}).top_gainers||[]);
     buildScr('tbl-losers', (d.screener||{}).top_losers ||[]);
-
   }catch(err){
-    document.getElementById('loading').style.display='none';
-    document.getElementById('error-msg').style.display='block';
-    document.getElementById('error-text').textContent=`載入失敗：${err.message}`;
-    console.error('[news.html]',err);
+    document.getElementById('loading-state').style.display='none';
+    document.getElementById('error-state').style.display='block';
+    document.getElementById('err-txt').textContent=`載入失敗：${err.message}`;
   }
 }
 
