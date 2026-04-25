@@ -84,7 +84,7 @@ header{
   letter-spacing:.3px;transition:all .15s;
 }
 .tab-pill:hover{color:var(--text);border-color:var(--text3)}
-.tab-pill.active{background:var(--text);color:var(--bg);border-color:transparent}
+.tab-pill.active{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.08)}
 
 /* Panel wrap */
 #panels{flex:1;overflow-y:auto;padding:20px 24px;scrollbar-width:none}
@@ -367,9 +367,9 @@ function buildHeatmap(hm){
     const c=gc(r.label);
     const bars=r.vals.map((v,i)=>{
       const pct=Math.max(Math.round((v/mx)*100), 10);
-      const isToday=i===4;
-      const fillColor=isToday?c.tc:'#253048';
-      const valColor=isToday?'#000':c.tc;
+      const isToday = i === 4;
+      const fillColor = isToday ? 'var(--accent)' : '#253048';
+      const valColor  = isToday ? '#000' : c.tc;
       return `<div class="hm-bar-wrap" title="${DAYS[i]}: ${v}則">
         <div class="hm-bar-fill" style="width:${pct}%;background:${fillColor}">
           <span class="hm-bar-val" style="color:${valColor}">${v}</span>
