@@ -93,7 +93,13 @@ header{
   98%{opacity:.4}
   99%{opacity:1}
 }
-.header-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.nav-link{
+  font-size:11px;color:var(--text2);padding:5px 10px;
+  border:1px solid var(--border2);text-decoration:none;
+  letter-spacing:.5px;transition:all .15s;font-family:var(--font);
+}
+.nav-link:hover{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.05)}
 #analysis-link{
   font-size:11px;color:var(--text2);padding:5px 10px;
   border:1px solid var(--border2);text-decoration:none;
@@ -444,6 +450,12 @@ header{
 }
 #chart-pin-btn:hover{color:var(--text2)}
 #chart-pin-btn.pinned{color:var(--accent)}
+#chart-news-btn{
+  background:transparent;border:1px solid var(--border2);cursor:pointer;
+  padding:3px 10px;font-size:10px;color:var(--text2);font-family:var(--font);
+  letter-spacing:.8px;transition:all .15s;flex-shrink:0;
+}
+#chart-news-btn:hover{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.06)}
 
 #chart-legend{
   display:flex;gap:12px;flex-wrap:wrap;
@@ -1077,7 +1089,8 @@ footer a:hover{color:var(--accent)}
 <header>
   <div class="logo">Super<em class="t">Trend</em> <em class="x">×</em> MFI</div>
   <div class="header-right">
-    <a href="analysis.html" id="analysis-link" title="訊號分析">分析 →</a>
+    <a href="news.html" class="nav-link">新聞 →</a>
+    <a href="Analysis.html" class="nav-link">分析 →</a>
     <span class="param-pill" id="param-pills">Loading params...</span>
     <span id="scan-time">—</span>
   </div>
@@ -1174,6 +1187,7 @@ footer a:hover{color:var(--accent)}
         <span id="chart-grade" style="display:none"></span>
         <div id="chart-tags" style="display:none;align-items:center;gap:6px;flex-wrap:wrap"></div>
         <button id="chart-pin-btn" style="display:none" onclick="togglePinFromChart()" title="釘選">☐</button>
+        <button id="chart-news-btn" style="display:none" onclick="openNewsModal(_selectedTicker)" title="個股新聞">NEWS</button>
       </div>
       <div id="chart-sub" style="display:none;font-size:12px;color:var(--text);letter-spacing:.3px;margin-bottom:8px"></div>
       <div id="chart-meta-cards" style="display:none;flex-wrap:wrap;gap:6px"></div>
@@ -1484,6 +1498,7 @@ function toggleLang() {
   }
 
   _updateLangBtn(zh);
+  if (typeof _nmSyncLang === 'function') _nmSyncLang();
 }
 
 function togglePin(ticker) {
@@ -2315,6 +2330,9 @@ function loadChartPanel(r) {
   const pinBtn=document.getElementById('chart-pin-btn');
   pinBtn.style.display=''; updateChartPinBtn(r.ticker);
 
+  /* News btn */
+  document.getElementById('chart-news-btn').style.display='';
+
   /* 板塊標籤 → ticker-row 旁邊 */
   const info=r.info||{};
 
@@ -2371,16 +2389,37 @@ document.getElementById('sub-panel').style.display='flex';
    量測主圖右側價格軸的實際像素寬度，強制副圖對齊，
    確保兩圖繪圖區左緣一致，crosshair 垂直線才能對齊
    ════════════════════════════════════════════ */
+/* 量測 LW 圖表的右側 y 軸實際像素寬度
+   LW v4 DOM 結構：chartElement() > table > tr > td*3
+   最後一個 td = right price axis，直接量 clientWidth */
+function _getLWAxisWidth(chart) {
+  try {
+    const el   = chart.chartElement();
+    const tds  = el.querySelectorAll('tr > td');
+    if (tds.length >= 2) {
+      /* 最後一個 td = right price axis */
+      return tds[tds.length - 1].clientWidth;
+    }
+    /* fallback：找最後一個含 canvas 的直接子元素 */
+    const children = Array.from(el.children[0]?.children[0]?.children || []);
+    if (children.length >= 2) return children[children.length - 1].clientWidth;
+  } catch(e) {}
+  return 0;
+}
+
 function _syncPriceScaleWidth(mainChart, subChart) {
   if (!mainChart || !subChart) return;
   try {
-    const mainTotal = mainChart.chartElement().clientWidth;
-    const mainPane  = mainChart.paneSize().width;
-    const axisW     = mainTotal - mainPane;
-    if (axisW > 0) {
-      subChart.applyOptions({ rightPriceScale: { minimumWidth: axisW } });
+    const mainAxisW = _getLWAxisWidth(mainChart);
+    if (mainAxisW <= 0) return;
+    const subAxisW  = _getLWAxisWidth(subChart);
+    /* 副圖軸比主圖窄時，把副圖的 minimumWidth 拉到主圖寬度 */
+    if (subAxisW < mainAxisW) {
+      subChart.applyOptions({
+        rightPriceScale: { minimumWidth: mainAxisW },
+      });
     }
-  } catch(e) { /* 圖表尚未完全初始化時忽略 */ }
+  } catch(e) {}
 }
 
 /* ════════════════════════════════════════════
@@ -2734,10 +2773,29 @@ function _buildCharts(c, flipDate) {
           return (p >= 0 ? '+' : '') + p + '%';
         },
       },
+      /* autoscaleInfoProvider 讓 LW 預先知道 y 軸範圍，
+         即使在 visible:false 時也能計算正確的軸寬 */
+      autoscaleInfoProvider: original => {
+        const res = original();
+        if (!res) return { priceRange: { minValue: 0.8, maxValue: 1.2 } };
+        return res;
+      },
     });
     rsS.setData(dates.map((d,i)=>({time:d,value:c.rs_line[i]})).filter(p=>p.value!=null));
-    const base = subChart.addLineSeries({color:'rgba(0,229,160,0.35)',lineWidth:1,
-      lineStyle:LC.LineStyle.Dashed,priceLineVisible:false,lastValueVisible:false,
+    const base = subChart.addLineSeries({
+      color:'rgba(0,229,160,0.35)', lineWidth:1,
+      lineStyle:LC.LineStyle.Dashed,
+      priceLineVisible:false, lastValueVisible:false,
+      /* 必須與 rsS 用相同的 priceFormat，
+         否則 LW 以 base 的預設格式計算 y 軸寬度，導致主副圖右緣對不齊 */
+      priceFormat:{
+        type:'custom',
+        minMove:0.0001,
+        formatter: v => {
+          const p = ((v - 1) * 100).toFixed(2);
+          return (p >= 0 ? '+' : '') + p + '%';
+        },
+      },
     });
     base.setData(dates.map(d=>({time:d,value:1})));
     _subRsSeries = [rsS, base];
@@ -2783,11 +2841,9 @@ function _buildCharts(c, flipDate) {
 
   function _doSync() {
     try {
-      const mainTotal = mainChart.chartElement().clientWidth;
-      const mainPane  = mainChart.paneSize().width;
-      const axisW     = mainTotal - mainPane;
-      if (axisW <= 0) return; // 還沒準備好，不更新
-      subChart.applyOptions({ rightPriceScale: { minimumWidth: axisW } });
+      const mainAxisW = _getLWAxisWidth(mainChart);
+      if (mainAxisW <= 0) return; // 還沒準備好
+      _syncPriceScaleWidth(mainChart, subChart);
       _priceSyncDone = true;
     } catch(e) {}
   }
@@ -2875,8 +2931,23 @@ function subTabSwitch(mode, btn) {
       },
     });
     subChartInst.timeScale().fitContent();
-    /* 切換模式後 y 軸刻度格式改變，寬度可能改變，重新對齊 */
-    requestAnimationFrame(() => _syncPriceScaleWidth(lwChartInst, subChartInst));
+    /* RS 模式的 y 軸格式（+14.15%）比 MFI（72.3）字串更窄，
+       LW 算出的副圖 y 軸寬度會比主圖小，導致左緣縮進。
+       用輪詢方式確認對齊，最多重試 5 次（每次間隔 80ms）。 */
+    let _rsRetry = 0;
+    const _rsAlign = () => {
+      _syncPriceScaleWidth(lwChartInst, subChartInst);
+      /* 驗證是否已對齊 */
+      try {
+        const mW = _getLWAxisWidth(lwChartInst);
+        const sW = _getLWAxisWidth(subChartInst);
+        if (Math.abs(mW - sW) > 1 && _rsRetry < 5) {
+          _rsRetry++;
+          setTimeout(_rsAlign, 80);
+        }
+      } catch(e) {}
+    };
+    requestAnimationFrame(() => requestAnimationFrame(_rsAlign));
   }
 }
 
@@ -3601,6 +3672,176 @@ function _mtbUpdateBadges(){
   /* 頁面載入完成時更新一次 */
   setTimeout(_mtbUpdateBadges, 500);
 })();
+</script>
+
+<!-- ── 個股新聞 Modal ── -->
+<div id="news-modal-backdrop" style="display:none;position:fixed;inset:0;background:rgba(7,9,13,.88);z-index:10000;align-items:center;justify-content:center;padding:20px">
+  <div id="news-modal" style="background:var(--surface);border:1px solid var(--border2);width:100%;max-width:580px;max-height:88vh;display:flex;flex-direction:column;font-family:var(--font);position:relative;overflow:hidden">
+    <!-- CRT scanline inside modal -->
+    <div style="position:absolute;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,229,160,.008) 3px,rgba(0,229,160,.008) 4px)"></div>
+    <div style="position:relative;z-index:2;display:flex;flex-direction:column;max-height:88vh;flex:1;min-height:0">
+
+      <!-- Head -->
+      <div id="nm-head" style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
+        <span id="nm-ticker" style="font-family:var(--display);font-size:18px;font-weight:800;color:var(--text);letter-spacing:.3px"></span>
+        <span id="nm-badge" style="font-size:9px;font-weight:600;padding:2px 7px;letter-spacing:.05em"></span>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <span id="nm-count" style="font-size:10px;color:var(--text3);letter-spacing:.05em"></span>
+          <button onclick="closeNewsModal()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:16px;padding:2px 6px;font-family:var(--font);transition:color .15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text3)'">✕</button>
+        </span>
+      </div>
+
+      <!-- Body -->
+      <div id="nm-body" style="flex:1;overflow-y:auto;padding:0;scrollbar-width:none">
+        <div id="nm-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;gap:10px">
+          <div style="width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite"></div>
+          <div style="font-size:11px;color:var(--text3);letter-spacing:.08em">LOADING NEWS...</div>
+        </div>
+        <div id="nm-list" style="display:none"></div>
+        <div id="nm-empty" style="display:none;padding:40px;text-align:center;font-size:11px;color:var(--text3);letter-spacing:.08em">本次掃描無此股新聞資料</div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:8px 16px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);letter-spacing:.05em;flex-shrink:0;display:flex;align-items:center;gap:8px">
+        <span id="nm-source">finvizfinance</span>
+        <span style="margin-left:auto"><a href="news.html" style="color:var(--accent);text-decoration:none;letter-spacing:.05em">全市場新聞 →</a></span>
+      </div>
+
+    </div><!-- /inner wrapper -->
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   個股新聞 Modal
+   ════════════════════════════════════════════ */
+
+const _NM_TC = {
+  '地緣政治':    'color:#ff6b35;background:rgba(255,107,53,.12)',
+  'AI & 半導體': 'color:#00e5a0;background:rgba(0,229,160,.1)',
+  '聯準會 & 總經':'color:#3ddc84;background:rgba(61,220,132,.1)',
+  '外匯 & 債券': 'color:#7b6cff;background:rgba(123,108,255,.1)',
+  '關稅 & 貿易戰':'color:#ff5c5c;background:rgba(255,92,92,.1)',
+  '企業財報':    'color:#a08cff;background:rgba(160,140,255,.1)',
+  '能源 & ESG':  'color:#1d9e75;background:rgba(29,158,117,.1)',
+  '監管 & 法律': 'color:#f5a623;background:rgba(245,166,35,.1)',
+  '市場綜合':    'color:#8a9ab8;background:rgba(90,106,133,.1)',
+};
+function _nmTopicStyle(t){ return _NM_TC[t]||_NM_TC['市場綜合']; }
+
+let _nmCurrentList = [];
+
+function _nmRenderList(newsList) {
+  _nmCurrentList = newsList;
+  if (!newsList.length) return;
+  document.getElementById('nm-list').innerHTML = newsList.map(n => {
+    const topicStyle = _nmTopicStyle(n.topic || '');
+    const hasLink = n.link && n.link.startsWith('http');
+    const hasZh  = !!n.title_zh;
+    const display = (_langZh && hasZh) ? n.title_zh : n.title;
+    const origAttr = (_langZh && hasZh) ? `title="${n.title}"` : '';
+    const titleInner = hasLink
+      ? `<a href="${n.link}" target="_blank" rel="noopener" ${origAttr} style="color:var(--text);text-decoration:none" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text)'">${display}</a>`
+      : `<span ${origAttr}>${display}</span>`;
+    return `<div style="padding:10px 16px;border-bottom:1px solid var(--border);transition:background .1s" onmouseover="this.style.background='rgba(255,255,255,.02)'" onmouseout="this.style.background='transparent'">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+        <span style="font-size:9px;padding:1px 6px;${topicStyle};font-weight:600;letter-spacing:.04em">${n.topic||'市場綜合'}</span>
+        <span style="font-size:10px;color:var(--text3);margin-left:auto">${n.source||''}</span>
+        <span style="font-size:10px;color:var(--text3)">${n.date?n.date.slice(0,16):''}</span>
+      </div>
+      <div style="font-size:12px;line-height:1.55;color:var(--text)">${titleInner}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('nm-list').style.display = 'block';
+}
+
+function _nmSyncLang() {
+  const modal = document.getElementById('news-modal-backdrop');
+  if (modal && modal.style.display !== 'none' && _nmCurrentList.length) {
+    _nmRenderList(_nmCurrentList);
+  }
+}
+
+let _dashData = null;
+let _dashLoading = false;
+let _dashCallbacks = [];
+
+function _loadDashData(cb) {
+  if (_dashData) { cb(_dashData); return; }
+  _dashCallbacks.push(cb);
+  if (_dashLoading) return;
+  _dashLoading = true;
+  fetch('data/dashboard_data.json?_=' + Date.now())
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(d => {
+      _dashData = d;
+      _dashCallbacks.forEach(fn => fn(d));
+      _dashCallbacks = [];
+    })
+    .catch(e => {
+      console.warn('[news modal] dashboard_data.json load failed:', e.message);
+      _dashCallbacks.forEach(fn => fn(null));
+      _dashCallbacks = [];
+      _dashLoading = false;
+    });
+}
+
+function openNewsModal(ticker) {
+  if (!ticker) return;
+  const backdrop = document.getElementById('news-modal-backdrop');
+  backdrop.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const tbody = document.getElementById('tbody');
+  const rowData = (tbody._rows||[]).find(r=>r.ticker===ticker);
+  const grade = rowData ? rowData.mfi_grade : '';
+  const GRADE_COLOR = {Strong:'#00e5a0',Normal:'#f5a623',Weak:'#4a5878'};
+  const GRADE_BG    = {Strong:'rgba(0,229,160,.15)',Normal:'rgba(245,166,35,.15)',Weak:'rgba(74,88,120,.15)'};
+  document.getElementById('nm-ticker').textContent = ticker;
+  const badge = document.getElementById('nm-badge');
+  if (grade) {
+    badge.textContent = grade;
+    badge.style.cssText = `font-size:9px;font-weight:600;padding:2px 7px;letter-spacing:.05em;color:${GRADE_COLOR[grade]||'var(--text2)'};background:${GRADE_BG[grade]||'transparent'}`;
+  } else { badge.textContent=''; badge.style.cssText=''; }
+
+  _nmCurrentList = [];
+  document.getElementById('nm-loading').style.display = 'flex';
+  document.getElementById('nm-list').style.display    = 'none';
+  document.getElementById('nm-empty').style.display   = 'none';
+  document.getElementById('nm-count').textContent     = '';
+
+  _loadDashData(d => {
+    const tickerData = d && d.tickers && d.tickers[ticker];
+    const newsList   = tickerData ? (tickerData.news||[]) : [];
+    const ts = d ? (d.generated_at||'') : '';
+    document.getElementById('nm-source').textContent =
+      ts ? `finvizfinance · ${ts.slice(0,10)} ${ts.slice(11,16)} UTC` : 'finvizfinance';
+    document.getElementById('nm-loading').style.display = 'none';
+    if (!newsList.length) {
+      document.getElementById('nm-empty').style.display = 'block';
+      document.getElementById('nm-count').textContent = '0 篇';
+      return;
+    }
+    document.getElementById('nm-count').textContent = `${newsList.length} 篇`;
+    _nmRenderList(newsList);
+  });
+}
+
+function closeNewsModal() {
+  document.getElementById('news-modal-backdrop').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('news-modal-backdrop').addEventListener('click', function(e) {
+  if (e.target === this) closeNewsModal();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key==='Escape' && document.getElementById('news-modal-backdrop').style.display!=='none') {
+    closeNewsModal();
+  }
+});
+
+setTimeout(() => _loadDashData(()=>{}), 2000);
 </script>
 
 </body>
