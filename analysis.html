@@ -6,7 +6,7 @@
 <title>Feature Analysis — SuperTrend × MFI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
 :root{
@@ -26,78 +26,122 @@
   --up:#3ddc84;
   --down:#ff5c5c;
   --font:'IBM Plex Mono',ui-monospace,monospace;
-  --display:'IBM Plex Mono',ui-monospace,monospace;
+  --display:'Syne',sans-serif;
   --sans:'Inter',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   background:var(--bg);color:var(--text);font-family:var(--font);
-  font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
   overflow-y:auto;
+}
+/* CRT scanline — 與 index.html / news.html 一致 */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;
+  background:repeating-linear-gradient(
+    180deg,transparent 0,transparent 3px,
+    rgba(0,229,160,.012) 3px,rgba(0,229,160,.012) 4px
+  );
 }
 a{color:inherit;text-decoration:none}
 
 /* ── Header ── */
 header{
-  padding:12px 20px;border-bottom:1px solid var(--border);
-  background:var(--surface);display:flex;align-items:center;gap:14px;
-  flex-wrap:wrap;
+  padding:12px 24px;border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(0,229,160,.04) 0%,transparent 100%);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
 }
-.logo{font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--text)}
-.logo em.t{color:var(--normal);font-style:normal}
-.logo em.x{color:var(--purple);font-style:normal;margin:0 2px}
-.logo em.a{color:var(--accent);font-style:normal}
+.logo{
+  font-family:var(--display);font-size:20px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.5px;color:#fff;line-height:1;
+  text-shadow:0 0 6px #00e5a0,0 0 14px #00e5a0,0 0 32px #00e5a0,0 0 60px rgba(197,197,197,.4);
+  animation:neon-flicker 4s infinite;
+}
+@keyframes neon-flicker{
+  0%,95%,100%{opacity:1}96%{opacity:.6}97%{opacity:1}98%{opacity:.4}99%{opacity:1}
+}
+.logo em.t{color:var(--normal);font-style:normal;text-shadow:none}
+.logo em.x{color:var(--purple);font-style:normal;margin:0 2px;text-shadow:none}
+.logo em.a{color:var(--accent);font-style:normal;text-shadow:none}
 .page-tag{
-  font-size:10px;letter-spacing:1.5px;color:var(--text3);
+  font-size:14px;letter-spacing:1px;color:var(--text3);
   padding:2px 8px;border:1px solid var(--border2);border-radius:2px;
 }
 .header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 .back-btn{
-  font-size:11px;color:var(--text2);padding:5px 10px;
+  font-size:14px;color:var(--text2);padding:5px 10px;
   border:1px solid var(--border2);letter-spacing:.5px;
   transition:all .15s;cursor:pointer;background:transparent;
   font-family:var(--font);
 }
 .back-btn:hover{color:var(--accent);border-color:var(--accent)}
 .back-btn.active-page{color:var(--accent);border-color:var(--accent);background:rgba(0,229,160,.08)}
-#gen-time{font-size:10px;color:var(--text3);letter-spacing:.5px}
+#gen-time{font-size:14px;color:var(--text3);letter-spacing:.5px}
 
 /* ── Summary stats ── */
 #summary{
-  background:var(--surface2);padding:14px 20px;
-  border-bottom:1px solid var(--border);
-  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  padding:0;border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
   background-color:var(--border);
+  position:relative;overflow:hidden;
 }
+/* stats-beam 掃描動畫 — 與 index.html / news.html 一致 */
+#summary-beam{
+  position:absolute;left:0;right:0;height:60px;pointer-events:none;z-index:10;
+  background:linear-gradient(180deg,transparent,rgba(0,229,160,.025) 50%,transparent);
+  animation:beam 6s linear infinite;
+}
+@keyframes beam{0%{top:-60px}100%{top:100%}}
 .summary-card{
-  background:var(--surface);padding:12px 16px;
+  background:var(--surface);padding:12px 16px;position:relative;z-index:5;
 }
 .summary-card .lbl{
-  font-size:9px;letter-spacing:1.2px;color:var(--text3);
+  font-size:14px;letter-spacing:.6px;color:var(--text3);
   text-transform:uppercase;margin-bottom:3px;
 }
 .summary-card .val{
-  font-family:var(--display);font-size:24px;font-weight:700;
+  font-family:var(--display);font-size:22px;font-weight:700;
   color:var(--text);letter-spacing:-.3px;
 }
 .summary-card .val.up{color:var(--up)}
 .summary-card .val.down{color:var(--down)}
 .summary-card .sub{
-  font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px;
+  font-size:14px;color:var(--text3);margin-top:2px;letter-spacing:.3px;
+}
+
+/* ── Dist section (Return / Hold Days / Equity Curve) ── */
+#dist-section{
+  display:none;padding:14px 20px 0;gap:14px;
+  grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid var(--border);padding-bottom:14px;
+}
+#dist-section.visible{display:grid}
+.dist-chart-box{
+  background:var(--surface);border:1px solid var(--border);
+  padding:10px 12px;
+  height:162px;max-height:162px;overflow:hidden;
+}
+.dist-chart-box .dist-title{
+  font-size:14px;color:var(--text3);letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:6px;font-weight:600;
+}
+.dist-chart-box canvas{
+  display:block;width:100%!important;
+  height:128px!important;max-height:128px!important;
 }
 
 /* ── Filter bar ── */
 #filter-bar{
-  padding:10px 20px;background:var(--surface2);
+  padding:10px 24px;background:var(--surface2);
   border-bottom:1px solid var(--border);
-  display:flex;gap:6px;align-items:center;font-size:11px;flex-wrap:wrap;
+  display:flex;gap:6px;align-items:center;font-size:14px;flex-wrap:wrap;
 }
-#filter-bar .lbl{color:var(--text3);letter-spacing:.8px;margin-right:6px}
+#filter-bar .lbl{color:var(--text3);letter-spacing:.6px;margin-right:4px}
 .f-chip{
   background:transparent;border:1px solid var(--border2);
-  color:var(--text2);padding:4px 10px;cursor:pointer;
-  font-family:var(--font);font-size:11px;letter-spacing:.3px;
+  color:var(--text2);padding:4px 12px;cursor:pointer;
+  font-family:var(--font);font-size:14px;letter-spacing:.3px;
   transition:all .15s;
 }
 .f-chip:hover{color:var(--text);border-color:var(--text2)}
@@ -106,12 +150,12 @@ header{
 .sort-wrap select{
   background:var(--bg);border:1px solid var(--border2);
   color:var(--text);padding:4px 8px;font-family:var(--font);
-  font-size:11px;cursor:pointer;letter-spacing:.3px;
+  font-size:14px;cursor:pointer;letter-spacing:.3px;
 }
 
 /* ── Main content ── */
 main{padding:16px 20px;max-width:1200px;margin:0 auto}
-.empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:13px}
+.empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px}
 .empty code{color:var(--accent);background:var(--surface);padding:2px 6px;border-radius:2px}
 
 /* ── Analysis card ── */
@@ -133,15 +177,15 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   font-size:14px;font-weight:700;color:var(--text);letter-spacing:.2px;
 }
 .a-tier{
-  font-size:9px;letter-spacing:1.5px;color:var(--text3);
-  text-transform:uppercase;margin-bottom:2px;
+  font-size:14px;letter-spacing:.8px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:2px;font-weight:600;
 }
 .a-tier.strong{color:var(--strong)}
 .a-tier.medium{color:var(--normal)}
 .a-tier.weak   {color:var(--text3)}
 .a-tier.insufficient{color:var(--text3)}
 .a-spread{
-  font-family:var(--display);font-size:13px;font-weight:600;
+  font-family:var(--display);font-size:14px;font-weight:700;
   color:var(--text);letter-spacing:-.2px;
 }
 .a-spread.strong{color:var(--strong)}
@@ -159,9 +203,9 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 }
 .g-cell.insufficient{opacity:.55}
 .g-cell .g-name{
-  font-size:9px;color:var(--text3);letter-spacing:.5px;
+  font-size:14px;color:var(--text3);letter-spacing:.3px;
   text-transform:uppercase;margin-bottom:2px;white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis;
+  overflow:hidden;text-overflow:ellipsis;font-weight:600;
 }
 .g-cell .g-name .warn{color:var(--normal);margin-left:4px}
 .g-cell .g-wr{
@@ -171,23 +215,23 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 .g-cell .g-wr.up{color:var(--up)}
 .g-cell .g-wr.down{color:var(--down)}
 .g-cell .g-sub{
-  font-size:10px;color:var(--text2);margin-top:1px;
+  font-size:14px;color:var(--text2);margin-top:2px;
 }
 .g-cell .g-wr-bar{
   height:2px;background:var(--border2);margin-top:4px;
 }
 .g-cell .g-wr-fill{height:100%;transition:width .5s}
-.g-cell .g-mfemae{font-size:10px;margin-top:3px;display:flex;gap:8px;opacity:.8}
+.g-cell .g-mfemae{font-size:14px;margin-top:3px;display:flex;gap:8px;opacity:.85}
 
 /* ── Insight box ── */
 .a-insight{
-  padding:7px 10px;margin-top:8px;
+  padding:8px 12px;margin-top:8px;
   background:rgba(0,229,160,.05);
   border-left:2px solid rgba(0,229,160,.35);
-  font-size:11px;color:var(--text);line-height:1.6;
+  font-size:14px;color:var(--text);line-height:1.6;
 }
 .a-insight .tag{
-  color:var(--accent);font-weight:700;letter-spacing:.8px;
+  color:var(--accent);font-weight:700;letter-spacing:.6px;
   margin-right:6px;
 }
 .tier-medium .a-insight{
@@ -201,24 +245,35 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 }
 .tier-weak .a-insight .tag,.insufficient .a-insight .tag{color:var(--text3)}
 
-/* ── Chart row(展開時顯示) ── */
+/* ── Chart row（展開時顯示）── */
 .a-charts{
   display:none;margin-top:10px;padding-top:10px;
   border-top:1px solid var(--border);
   grid-template-columns:1fr 1fr;gap:12px;
 }
 .a-card.expanded .a-charts{display:grid}
+/* 展開狀態加 accent glow */
+.a-card.expanded{
+  border-left-width:4px;
+  box-shadow:-3px 0 10px rgba(0,229,160,.15);
+}
 .chart-box{
-  background:var(--surface2);padding:8px 10px;min-height:160px;
+  background:var(--surface2);padding:8px 10px;
+  height:172px;max-height:172px;overflow:hidden;
 }
 .chart-box .cb-title{
-  font-size:10px;color:var(--text3);letter-spacing:1px;
-  text-transform:uppercase;margin-bottom:4px;
+  font-size:14px;color:var(--text3);letter-spacing:.6px;
+  text-transform:uppercase;margin-bottom:6px;font-weight:600;
 }
-.chart-box canvas{max-width:100%;height:140px!important}
+.chart-box canvas{
+  display:block;
+  width:100%!important;
+  height:134px!important;
+  max-height:134px!important;
+}
 
 .expand-btn{
-  font-size:10px;color:var(--text3);letter-spacing:.5px;
+  font-size:14px;color:var(--text3);letter-spacing:.3px;
   cursor:pointer;padding:2px 6px;user-select:none;
 }
 .expand-btn:hover{color:var(--text2)}
@@ -227,15 +282,14 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 
 /* ── Mobile ── */
 @media(max-width:760px){
-  #summary{grid-template-columns:repeat(2,1fr)}
-  .summary-card:last-child{grid-column:span 2}
+  #summary{grid-template-columns:repeat(3,1fr)}
   .g-grid{grid-template-columns:repeat(2,1fr)}
   .a-charts{grid-template-columns:1fr}
+  #dist-section{grid-template-columns:1fr}
   main{padding:10px 12px}
   header{padding:10px 14px}
   #filter-bar{padding:8px 14px}
   .sort-wrap{width:100%;margin-left:0;margin-top:4px}
-  #summary{padding:10px 14px}
   .summary-card{padding:8px 10px}
   .summary-card .val{font-size:18px}
 }
@@ -255,6 +309,7 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 </header>
 
 <div id="summary">
+  <div id="summary-beam"></div>
   <div class="summary-card"><div class="lbl">Closed Signals</div><div class="val" id="s-total">—</div><div class="sub" id="s-flip-timeout">—</div></div>
   <div class="summary-card"><div class="lbl">Win Rate</div><div class="val" id="s-wr">—</div><div class="sub" id="s-wr-sub">overall baseline</div></div>
   <div class="summary-card"><div class="lbl">Avg Return</div><div class="val" id="s-ret">—</div><div class="sub" id="s-median">median —</div></div>
@@ -264,18 +319,18 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 </div>
 
 <!-- 全域分布圖 -->
-<div id="dist-section" style="display:none;padding:14px 20px 0;gap:14px;display:grid;grid-template-columns:1fr 1fr 1fr">
-  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
-    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">RETURN DISTRIBUTION</div>
-    <canvas id="ch-ret-dist" style="max-width:100%;height:130px"></canvas>
+<div id="dist-section">
+  <div class="dist-chart-box">
+    <div class="dist-title">RETURN DISTRIBUTION</div>
+    <canvas id="ch-ret-dist"></canvas>
   </div>
-  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
-    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">HOLD DAYS DISTRIBUTION</div>
-    <canvas id="ch-days-dist" style="max-width:100%;height:130px"></canvas>
+  <div class="dist-chart-box">
+    <div class="dist-title">HOLD DAYS DISTRIBUTION</div>
+    <canvas id="ch-days-dist"></canvas>
   </div>
-  <div style="background:var(--surface);border:1px solid var(--border);padding:12px 14px">
-    <div style="font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px">EQUITY CURVE</div>
-    <canvas id="ch-equity" style="max-width:100%;height:130px"></canvas>
+  <div class="dist-chart-box">
+    <div class="dist-title">EQUITY CURVE</div>
+    <canvas id="ch-equity"></canvas>
   </div>
 </div>
 
@@ -298,9 +353,9 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   </div>
   <button id="lang-toggle-btn" onclick="toggleInsightLang()"
     style="margin-left:auto;display:flex;align-items:center;gap:0;background:transparent;border:none;cursor:pointer;padding:0 4px;opacity:.9">
-    <span id="lang-zh" style="font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)">中文</span>
-    <span style="font-size:11px;color:#2a3448;margin:0 3px">/</span>
-    <span id="lang-en" style="font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)">EN</span>
+    <span id="lang-zh" style="font-size:14px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)">中文</span>
+    <span style="font-size:14px;color:#2a3448;margin:0 3px">/</span>
+    <span id="lang-en" style="font-size:14px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)">EN</span>
   </button>
 </div>
 
@@ -325,11 +380,11 @@ function _updateLangBtn(){
   const en = document.getElementById('lang-en');
   if (!zh||!en) return;
   if (_insightZh){
-    zh.style.cssText='font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
-    en.style.cssText='font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
+    zh.style.cssText='font-size:14px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
+    en.style.cssText='font-size:14px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
   } else {
-    zh.style.cssText='font-size:12px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
-    en.style.cssText='font-size:12px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
+    zh.style.cssText='font-size:14px;color:#3a4a72;letter-spacing:.3px;font-family:var(--font)';
+    en.style.cssText='font-size:14px;font-weight:700;color:#00e5a0;border-bottom:2px solid #00e5a0;padding-bottom:1px;letter-spacing:.3px;font-family:var(--font)';
   }
 }
 
@@ -407,7 +462,7 @@ function renderSummary(overall){
 
   // 分布圖
   if ((overall.return_buckets||[]).length) {
-    document.getElementById('dist-section').style.display = 'grid';
+    document.getElementById('dist-section').classList.add('visible');
     buildReturnDistChart(overall.return_buckets);
   }
   if ((overall.days_buckets||[]).length) {
@@ -439,8 +494,8 @@ function buildReturnDistChart(buckets){
         callbacks:{label:ctx=>`${ctx.raw} signals`}
       }},
       scales:{
-        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},
-        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{display:false}},
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#151b28'}}
       }
     }
   });
@@ -467,8 +522,8 @@ function buildDaysDistChart(buckets){
         callbacks:{label:ctx=>`${ctx.raw} signals`}
       }},
       scales:{
-        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{display:false}},
-        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+        x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{display:false}},
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#151b28'}}
       }
     }
   });
@@ -507,7 +562,7 @@ function buildEquityChart(points){
       }},
       scales:{
         x:{display:false},
-        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:9}},grid:{color:'#151b28'}}
+        y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{color:'#151b28'}}
       }
     }
   });
@@ -695,8 +750,8 @@ function buildCharts(a, idx){
           callbacks:{label:ctx=>`${ctx.raw.toFixed(1)}% (n=${rows[ctx.dataIndex].n})`}
         }},
         scales:{
-          x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'},max:100},
-          y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10}},grid:{display:false}}
+          x:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12},callback:v=>v+'%'},grid:{color:'#151b28'},max:100},
+          y:{ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12}},grid:{display:false}}
         }
       }
     });
@@ -737,10 +792,10 @@ function buildCharts(a, idx){
           }
         }},
         scales:{
-          x:{title:{display:true,text:'MAE (drawdown)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:9}},
-             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'}},
-          y:{title:{display:true,text:'MFE (gain)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:9}},
-             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'},grid:{color:'#151b28'}}
+          x:{title:{display:true,text:'MAE (drawdown)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:12}},
+             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12},callback:v=>v+'%'},grid:{color:'#151b28'}},
+          y:{title:{display:true,text:'MFE (gain)',color:'#5a6a85',font:{family:'IBM Plex Mono',size:12}},
+             ticks:{color:'#8a9ab8',font:{family:'IBM Plex Mono',size:12},callback:v=>v+'%'},grid:{color:'#151b28'}}
         }
       }
     });
