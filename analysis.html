@@ -8,7 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-wasm.js"></script>
 <style>
+@font-face{
+  font-family:'neonavy';
+  src:url('fonts/neonavy.ttf') format('truetype');
+}
 :root{
   --bg:#07090d;
   --surface:#0e1117;
@@ -53,17 +58,42 @@ header{
   display:flex;align-items:center;gap:14px;flex-wrap:wrap;
 }
 .logo{
-  font-family:var(--display);font-size:20px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.5px;color:#fff;line-height:1;
-  text-shadow:0 0 6px #00e5a0,0 0 14px #00e5a0,0 0 32px #00e5a0,0 0 60px rgba(197,197,197,.4);
+  font-family:'neonavy',var(--display),sans-serif;
+  font-size:22px;
+  text-transform:uppercase;
+  color:#ffffff;
+  letter-spacing:.5px;
+  text-shadow:
+    0 0 6px  #00e5a0,
+    0 0 14px #00e5a0,
+    0 0 32px #00e5a0,
+    0 0 60px rgba(197,197,197,0.4);
   animation:neon-flicker 4s infinite;
+  line-height:1.2;
 }
 @keyframes neon-flicker{
   0%,95%,100%{opacity:1}96%{opacity:.6}97%{opacity:1}98%{opacity:.4}99%{opacity:1}
 }
-.logo em.t{color:var(--normal);font-style:normal;text-shadow:none}
-.logo em.x{color:var(--purple);font-style:normal;margin:0 2px;text-shadow:none}
-.logo em.a{color:var(--accent);font-style:normal;text-shadow:none}
+.logo em.t{
+  font-style:normal;
+  color:#00e5a0;
+  text-shadow:
+    0 0 6px  #00e5a0,
+    0 0 18px #00e5a0,
+    0 0 40px #00e5a0,
+    0 0 80px rgba(148,136,177,0.5);
+}
+.logo em.x{
+  font-style:normal;
+  color:#7b6cff;
+  text-shadow:
+    0 0 6px  #7b6cff,
+    0 0 18px #7b6cff,
+    0 0 40px #7b6cff,
+    0 0 80px rgba(87,82,126,0.5);
+  margin:0 2px;
+}
+.logo em.a{color:var(--accent);font-style:normal}
 .page-tag{
   font-size:14px;letter-spacing:1px;color:var(--text3);
   padding:2px 8px;border:1px solid var(--border2);border-radius:2px;
@@ -293,6 +323,298 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   .summary-card{padding:8px 10px}
   .summary-card .val{font-size:18px}
 }
+
+/* ── Page tabs ── */
+#page-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  background:var(--surface2);padding:0 24px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 1px 0 var(--border),0 4px 16px rgba(0,0,0,.4);
+}
+.p-tab{
+  font-family:var(--font);font-size:12px;letter-spacing:1.2px;
+  color:var(--text3);padding:12px 20px;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  background:transparent;border-top:none;border-left:none;border-right:none;
+  text-transform:uppercase;transition:color .15s,border-color .15s;
+  position:relative;
+}
+.p-tab:hover{color:var(--text2)}
+.p-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.p-tab.active::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,229,160,.4),transparent);
+}
+
+/* ── Watchlist panel ── */
+#watchlist-panel{display:none;padding:20px 24px 40px;max-width:1400px;margin:0 auto}
+#watchlist-panel.visible{display:block}
+#analysis-panel{display:block}
+#analysis-panel.hidden{display:none}
+
+/* ── Watchlist controls row ── */
+#wl-controls{
+  display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;
+}
+#wl-load-btn{
+  font-family:var(--font);font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--accent);
+  color:var(--accent);padding:7px 14px;cursor:pointer;
+  transition:background .15s;white-space:nowrap;
+}
+#wl-load-btn:hover{background:rgba(0,229,160,.08)}
+#wl-upload-btn{
+  font-family:var(--font);font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text3);padding:7px 14px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+#wl-upload-btn:hover{border-color:var(--text2);color:var(--text2)}
+#wl-file-input{display:none}
+#wl-status{
+  font-size:12px;color:var(--text3);letter-spacing:.3px;
+  padding:4px 10px;border-left:2px solid var(--border2);
+}
+/* divider */
+#wl-controls-divider{flex:1}
+/* search */
+#wl-search{
+  background:var(--surface);border:1px solid var(--border2);color:var(--text);
+  padding:7px 12px;font-family:var(--font);font-size:13px;width:160px;
+  outline:none;letter-spacing:.3px;transition:border-color .15s;
+}
+#wl-search:focus{border-color:var(--accent);box-shadow:0 0 0 1px rgba(0,229,160,.15)}
+#wl-search::placeholder{color:var(--text3)}
+/* filter btn */
+#wl-filter-btn{
+  font-family:var(--font);font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border2);
+  color:var(--text2);padding:7px 14px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+#wl-filter-btn:hover{border-color:var(--text2);color:var(--text)}
+#wl-filter-btn.has-active{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.06)}
+#wl-filter-badge{
+  background:var(--accent);color:#000;font-size:10px;font-weight:800;
+  border-radius:10px;padding:1px 6px;min-width:16px;text-align:center;display:none;
+  letter-spacing:.3px;
+}
+/* sort */
+#wl-sort-sel{
+  background:var(--surface);border:1px solid var(--border2);
+  color:var(--text2);padding:7px 10px;font-family:var(--font);
+  font-size:12px;cursor:pointer;letter-spacing:.4px;
+  transition:border-color .15s;outline:none;
+}
+#wl-sort-sel:focus{border-color:var(--accent)}
+/* count */
+#wl-filter-count{font-size:12px;color:var(--text3);letter-spacing:.4px;white-space:nowrap}
+
+/* ── Filter panel ── */
+#wl-filter-panel{
+  display:none;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-left:2px solid var(--accent);
+  padding:0;margin-bottom:16px;
+  overflow:hidden;
+}
+#wl-filter-panel.open{display:block}
+#wl-fp-inner{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:0;
+}
+.wl-fp-col{
+  padding:16px 18px;border-right:1px solid var(--border);
+}
+.wl-fp-col:last-child{border-right:none}
+.wl-fp-col.full{
+  grid-column:1/-1;border-right:none;border-top:1px solid var(--border);
+  padding:14px 18px;
+}
+.wl-fg-label{
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent);margin-bottom:10px;font-weight:700;
+  display:flex;align-items:center;gap:6px;
+}
+.wl-fg-label::after{content:'';flex:1;height:1px;background:rgba(0,229,160,.2)}
+.wl-fi{display:flex;align-items:center;gap:8px;padding:4px 0;cursor:pointer}
+.wl-fi input[type=checkbox]{
+  accent-color:var(--accent);width:13px;height:13px;
+  cursor:pointer;flex-shrink:0;
+}
+.wl-fi label{
+  font-size:13px;color:var(--text2);cursor:pointer;
+  letter-spacing:.2px;line-height:1.4;transition:color .12s;
+}
+.wl-fi:hover label{color:var(--text)}
+
+/* grade chips */
+.wl-grade-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.wl-g-chip{
+  font-family:var(--font);font-size:12px;padding:4px 12px;cursor:pointer;
+  border:1px solid var(--border2);color:var(--text3);letter-spacing:.5px;
+  transition:all .12s;text-transform:uppercase;
+}
+.wl-g-chip:hover{border-color:var(--text2);color:var(--text2)}
+.wl-g-chip.checked{background:rgba(0,229,160,.08)}
+.wl-g-chip.grade-Strong.checked{border-color:var(--strong);color:var(--strong)}
+.wl-g-chip.grade-Normal.checked{border-color:var(--normal);color:var(--normal)}
+.wl-g-chip.grade-Weak.checked  {border-color:#7a8ba8;color:#7a8ba8}
+
+/* sector chips */
+.wl-sector-chips{
+  display:flex;gap:4px;flex-wrap:wrap;max-height:72px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+.wl-s-chip{
+  font-family:var(--font);font-size:11px;padding:3px 9px;cursor:pointer;
+  border:1px solid var(--border2);color:var(--text3);letter-spacing:.3px;
+  transition:all .12s;white-space:nowrap;
+}
+.wl-s-chip:hover{border-color:var(--text2);color:var(--text2)}
+.wl-s-chip.checked{border-color:var(--accent);color:var(--accent);background:rgba(0,229,160,.06)}
+
+/* range inputs */
+.wl-range-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.wl-range-row .wl-rl{font-size:12px;color:var(--text3);letter-spacing:.3px;width:28px}
+.wl-num{
+  background:var(--bg);border:1px solid var(--border2);color:var(--text);
+  padding:5px 8px;font-family:var(--font);font-size:13px;width:72px;
+  outline:none;transition:border-color .15s;
+}
+.wl-num:focus{border-color:var(--accent)}
+.wl-range-unit{font-size:12px;color:var(--text3)}
+
+/* filter actions */
+.wl-filter-actions{
+  display:flex;gap:8px;align-items:center;
+  border-top:1px solid var(--border);padding:12px 18px;
+  background:rgba(0,0,0,.2);
+}
+#wl-apply-btn{
+  font-family:var(--font);font-size:12px;letter-spacing:.8px;text-transform:uppercase;
+  background:var(--accent);color:#000;border:none;
+  padding:7px 20px;cursor:pointer;font-weight:700;transition:opacity .15s;
+}
+#wl-apply-btn:hover{opacity:.85}
+#wl-clear-btn{
+  font-family:var(--font);font-size:12px;letter-spacing:.6px;text-transform:uppercase;
+  background:transparent;border:1px solid var(--border2);color:var(--text3);
+  padding:7px 14px;cursor:pointer;transition:all .15s;
+}
+#wl-clear-btn:hover{border-color:var(--text2);color:var(--text2)}
+
+/* ── Watchlist summary bar ── */
+#wl-summary{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:0;background:var(--border);
+  border:1px solid var(--border2);margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+#wl-summary::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:.5;
+}
+.wl-stat{
+  background:var(--surface);padding:14px 18px;
+  border-right:1px solid var(--border);position:relative;
+}
+.wl-stat:last-child{border-right:none}
+.wl-stat .wl-lbl{
+  font-size:10px;letter-spacing:1.8px;color:var(--text3);
+  text-transform:uppercase;margin-bottom:6px;font-weight:600;
+}
+.wl-stat .wl-val{
+  font-family:var(--display);font-size:24px;font-weight:700;
+  color:var(--text);line-height:1;
+}
+.wl-stat .wl-val.up{color:var(--up)}
+.wl-stat .wl-val.down{color:var(--down)}
+
+/* ── Watchlist table ── */
+#wl-table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--border2);
+  scrollbar-width:thin;scrollbar-color:var(--border2) transparent;
+}
+#wl-table{
+  width:100%;border-collapse:collapse;font-size:13px;
+}
+#wl-table thead{position:sticky;top:0;z-index:10}
+#wl-table th{
+  font-size:10px;color:var(--text3);letter-spacing:1.4px;text-transform:uppercase;
+  padding:10px 12px;border-bottom:1px solid var(--border2);
+  text-align:left;font-weight:700;white-space:nowrap;
+  background:var(--surface2);cursor:pointer;user-select:none;
+  transition:color .12s;
+}
+#wl-table th:hover{color:var(--text)}
+#wl-table th.sorted{color:var(--accent)}
+#wl-table th .sort-ico{margin-left:4px;opacity:.5}
+#wl-table th.sorted .sort-ico{opacity:1;color:var(--accent)}
+#wl-table td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;vertical-align:middle;
+}
+#wl-table tbody tr{transition:background .1s}
+#wl-table tbody tr:hover td{background:rgba(0,229,160,.025)}
+#wl-table tbody tr:last-child td{border-bottom:none}
+
+/* table cell styles */
+.wl-ticker{
+  font-weight:700;font-size:14px;color:var(--text);
+  letter-spacing:.5px;font-family:var(--font);
+}
+.wl-date{color:var(--text3);font-size:12px;letter-spacing:.3px}
+.wl-price{color:var(--text2);font-variant-numeric:tabular-nums}
+.wl-curr-price{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.wl-snap{font-size:11px;color:var(--text3);margin-left:4px;letter-spacing:.2px}
+.wl-grade{
+  font-size:11px;letter-spacing:.8px;font-weight:700;padding:3px 8px;
+  text-transform:uppercase;
+}
+.wl-grade.STR{
+  color:var(--strong);background:rgba(0,229,160,.08);
+  border-left:2px solid var(--strong);
+}
+.wl-grade.NRM{
+  color:var(--normal);background:rgba(245,166,35,.08);
+  border-left:2px solid var(--normal);
+}
+.wl-grade.WEK{
+  color:var(--text3);background:rgba(90,106,133,.08);
+  border-left:2px solid var(--text3);
+}
+.wl-ret{font-weight:600;font-variant-numeric:tabular-nums}
+.wl-ret.up{color:var(--up)}
+.wl-ret.down{color:var(--down)}
+.wl-days{
+  color:var(--text2);font-size:12px;
+  background:var(--surface2);padding:2px 6px;
+  border:1px solid var(--border2);
+}
+.wl-mfe{color:var(--up);font-size:13px}
+.wl-mae{color:var(--down);font-size:13px}
+.wl-rs{color:var(--purple);font-size:13px;font-variant-numeric:tabular-nums}
+.wl-ema{font-size:11px;color:var(--text3);letter-spacing:.2px}
+.wl-no-price{color:var(--text3);font-style:italic;font-size:12px}
+#wl-empty{
+  text-align:center;padding:60px 20px;color:var(--text3);
+  font-size:13px;letter-spacing:.3px;border:1px solid var(--border2);
+}
+
+@media(max-width:760px){
+  #wl-summary{grid-template-columns:repeat(3,1fr)}
+  #wl-table td,#wl-table th{padding:8px 8px}
+  #watchlist-panel{padding:12px 14px 30px}
+  #wl-controls{gap:6px}
+  #wl-fp-inner{grid-template-columns:1fr 1fr}
+  .wl-fp-col{border-right:none;border-bottom:1px solid var(--border)}
+}
 </style>
 </head>
 <body>
@@ -308,6 +630,134 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
   </div>
 </header>
 
+<!-- Page tabs -->
+<div id="page-tabs">
+  <button class="p-tab active" onclick="switchTab('analysis')">特徵分析</button>
+  <button class="p-tab" onclick="switchTab('watchlist')">觀察清單</button>
+</div>
+
+<!-- ── WATCHLIST PANEL ── -->
+<div id="watchlist-panel">
+
+  <!-- Controls row -->
+  <div id="wl-controls">
+    <button id="wl-load-btn" onclick="loadDbFromPath()">⬇ 自動載入 DB</button>
+    <button id="wl-upload-btn" onclick="document.getElementById('wl-file-input').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+            ondragleave="this.style.borderColor=''"
+            ondrop="this.style.borderColor='';handleDbDrop(event)">
+      ↑ 上傳 .db
+    </button>
+    <input type="file" id="wl-file-input" accept=".db" onchange="handleDbFile(this.files[0])">
+    <span id="wl-status"></span>
+    <div id="wl-controls-divider"></div>
+    <input id="wl-search" type="text" placeholder="TICKER..." oninput="renderWatchlist()">
+    <button id="wl-filter-btn" onclick="toggleWlFilter()">
+      篩選 <span id="wl-filter-badge">0</span> ▾
+    </button>
+    <select id="wl-sort-sel" onchange="_wlSort=this.value;renderWatchlist()">
+      <option value="days-desc">Days ▼</option>
+      <option value="days-asc">Days ▲</option>
+      <option value="ret-desc">Return ▼</option>
+      <option value="ret-asc">Return ▲</option>
+      <option value="flip-desc">Flip Date ▼</option>
+      <option value="grade">Grade</option>
+    </select>
+    <span id="wl-filter-count"></span>
+  </div>
+
+  <!-- Filter panel -->
+  <div id="wl-filter-panel">
+    <div id="wl-fp-inner">
+      <div class="wl-fp-col">
+        <div class="wl-fg-label">MFI 評級</div>
+        <div class="wl-grade-chips">
+          <div class="wl-g-chip grade-Strong" onclick="this.classList.toggle('checked');_wlUpdateBadge()">Strong</div>
+          <div class="wl-g-chip grade-Normal" onclick="this.classList.toggle('checked');_wlUpdateBadge()">Normal</div>
+          <div class="wl-g-chip grade-Weak"   onclick="this.classList.toggle('checked');_wlUpdateBadge()">Weak</div>
+        </div>
+        <div class="wl-fg-label" style="margin-top:14px">量能 & 動能</div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-mfirising" onchange="_wlUpdateBadge()"><label for="wlf-mfirising">MFI 持續上升</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-rsnear"    onchange="_wlUpdateBadge()"><label for="wlf-rsnear">RS 接近高點</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-retpos"    onchange="_wlUpdateBadge()"><label for="wlf-retpos">浮動報酬 &gt; 0%</label></div>
+      </div>
+      <div class="wl-fp-col">
+        <div class="wl-fg-label">趨勢條件</div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-ema50"  onchange="_wlUpdateBadge()"><label for="wlf-ema50">現價 &gt; EMA 50</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-ema200" onchange="_wlUpdateBadge()"><label for="wlf-ema200">現價 &gt; EMA 200</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-golden" onchange="_wlUpdateBadge()"><label for="wlf-golden">EMA 50 &gt; EMA 200</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-st1d"   onchange="_wlUpdateBadge()"><label for="wlf-st1d">1D SuperTrend 看多</label></div>
+        <div class="wl-fi"><input type="checkbox" id="wlf-st3d"   onchange="_wlUpdateBadge()"><label for="wlf-st3d">3D SuperTrend 看多</label></div>
+      </div>
+      <div class="wl-fp-col">
+        <div class="wl-fg-label">浮動報酬 %</div>
+        <div class="wl-range-row">
+          <span class="wl-rl">Min</span>
+          <input class="wl-num" type="number" id="wlf-ret-min" placeholder="—" onchange="_wlUpdateBadge()">
+          <span class="wl-range-unit">%</span>
+        </div>
+        <div class="wl-range-row">
+          <span class="wl-rl">Max</span>
+          <input class="wl-num" type="number" id="wlf-ret-max" placeholder="—" onchange="_wlUpdateBadge()">
+          <span class="wl-range-unit">%</span>
+        </div>
+        <div class="wl-fg-label" style="margin-top:14px">持倉天數</div>
+        <div class="wl-range-row">
+          <span class="wl-rl">Min</span>
+          <input class="wl-num" type="number" id="wlf-days-min" placeholder="—" onchange="_wlUpdateBadge()">
+        </div>
+        <div class="wl-range-row">
+          <span class="wl-rl">Max</span>
+          <input class="wl-num" type="number" id="wlf-days-max" placeholder="—" onchange="_wlUpdateBadge()">
+        </div>
+      </div>
+      <div class="wl-fp-col" style="border-right:none">
+        <div class="wl-fg-label">Sector</div>
+        <div class="wl-sector-chips" id="wl-sector-chips">
+          <span style="color:var(--text3);font-size:12px">載入資料後顯示</span>
+        </div>
+      </div>
+    </div>
+    <div class="wl-filter-actions">
+      <button id="wl-apply-btn" onclick="applyWlFilter()">套用篩選</button>
+      <button id="wl-clear-btn" onclick="clearWlFilter()">清除全部</button>
+    </div>
+  </div>
+
+  <!-- Summary bar -->
+  <div id="wl-summary" style="display:none">
+    <div class="wl-stat"><div class="wl-lbl">Active</div><div class="wl-val" id="wl-s-count">—</div></div>
+    <div class="wl-stat"><div class="wl-lbl">Avg Days</div><div class="wl-val" id="wl-s-days">—</div></div>
+    <div class="wl-stat"><div class="wl-lbl">Avg Float P&L</div><div class="wl-val" id="wl-s-pnl">—</div></div>
+    <div class="wl-stat"><div class="wl-lbl">Winners</div><div class="wl-val up" id="wl-s-win">—</div></div>
+    <div class="wl-stat"><div class="wl-lbl">Losers</div><div class="wl-val down" id="wl-s-lose">—</div></div>
+  </div>
+
+  <!-- Table -->
+  <div id="wl-table-wrap">
+    <div id="wl-empty" style="display:none">目前無 active 訊號</div>
+    <table id="wl-table" style="display:none">
+      <thead>
+        <tr>
+          <th data-col="ticker">TICKER <span class="sort-ico"></span></th>
+          <th data-col="flip">FLIP DATE <span class="sort-ico"></span></th>
+          <th data-col="flip-price">FLIP PRICE <span class="sort-ico"></span></th>
+          <th data-col="curr-price">CURR PRICE <span class="sort-ico"></span></th>
+          <th data-col="ret">FLOAT RTN <span class="sort-ico"></span></th>
+          <th data-col="days">DAYS <span class="sort-ico"></span></th>
+          <th data-col="mfe">MFE <span class="sort-ico"></span></th>
+          <th data-col="mae">MAE <span class="sort-ico"></span></th>
+          <th data-col="grade">GRADE <span class="sort-ico"></span></th>
+          <th data-col="rs">RS <span class="sort-ico"></span></th>
+          <th>EMA</th>
+        </tr>
+      </thead>
+      <tbody id="wl-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="analysis-panel">
 <div id="summary">
   <div id="summary-beam"></div>
   <div class="summary-card"><div class="lbl">Closed Signals</div><div class="val" id="s-total">—</div><div class="sub" id="s-flip-timeout">—</div></div>
@@ -362,6 +812,7 @@ main{padding:16px 20px;max-width:1200px;margin:0 auto}
 <main id="app">
   <div class="empty" id="loading">載入中...</div>
 </main>
+</div><!-- /#analysis-panel -->
 
 <script>
 const STRONG_THRESHOLD  = 15;
@@ -835,6 +1286,462 @@ fetch('data/analysis.json?_=' + Date.now())
        請先執行 <code>python feature_analyzer.py</code> 產生資料。<br>
        <small style="color:#5a6a85">${escapeHtml(err.message)}</small></div>`;
   });
+
+/* ══════════════════════════════════════════════
+   WATCHLIST — sql.js + data.json 即時損益
+   ══════════════════════════════════════════════ */
+let _wlSignals = [];   // open signals from DB
+let _priceMap  = {};   // ticker → close price from data.json
+let _wlSort    = 'days-desc';
+let _sqlDB     = null;
+
+function switchTab(tab){
+  const tabs = document.querySelectorAll('.p-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const ap = document.getElementById('analysis-panel');
+  const wp = document.getElementById('watchlist-panel');
+  if (tab === 'watchlist'){
+    ap.classList.add('hidden'); wp.classList.add('visible');
+    // pre-load data.json price map if not yet done
+    if (!Object.keys(_priceMap).length) loadPriceMap();
+  } else {
+    wp.classList.remove('visible'); ap.classList.remove('hidden');
+  }
+}
+
+function loadPriceMap(){
+  fetch('data/data.json?_=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d) return;
+      // data.json structure: array of signal objects with ticker + close / current_price
+      const list = Array.isArray(d) ? d : (d.signals || d.data || []);
+      list.forEach(s => {
+        const ticker = s.ticker || s.symbol;
+        // try various field names for current close
+        const price = s.close || s.current_price || s.price || s.last_close;
+        if (ticker && price != null) _priceMap[ticker] = +price;
+      });
+      if (_wlSignals.length) renderWatchlist();
+    })
+    .catch(() => {}); // silent fail — price column will show "—"
+}
+
+let _SQL = null;
+async function getSqlJs(){
+  if (_SQL) return _SQL;
+  _SQL = await window.initSqlJs({
+    locateFile: f => `https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/${f}`
+  });
+  return _SQL;
+}
+
+async function openDb(arrayBuffer){
+  const SQL = await getSqlJs();
+  _sqlDB = new SQL.Database(new Uint8Array(arrayBuffer));
+  return _sqlDB;
+}
+
+function queryOpenSignals(db){
+  try {
+    // JOIN with signal_tracking to get latest price, return, days from actual tracking data
+    const res = db.exec(`
+      SELECT s.ticker, s.flip_date, s.flip_price,
+             s.mfi_grade, s.rs_score, s.rs_rank,
+             s.max_favorable_pct, s.max_adverse_pct,
+             s.sector, s.industry, s.indices,
+             s.price_above_ema50, s.price_above_ema200, s.ema50_above_ema200,
+             s.mfi_rising, s.st1d_bullish, s.st3d_bullish, s.rs_near_high,
+             t.snapshot_date, t.current_price, t.return_pct,
+             t.days_since_flip, t.current_mfi, t.current_st_dir
+      FROM signals s
+      LEFT JOIN (
+        SELECT signal_id, snapshot_date, current_price, return_pct,
+               days_since_flip, current_mfi, current_st_dir
+        FROM signal_tracking
+        WHERE id IN (
+          SELECT MAX(id) FROM signal_tracking GROUP BY signal_id
+        )
+      ) t ON s.signal_id = t.signal_id
+      WHERE s.status = 'active'
+      ORDER BY s.flip_date DESC
+    `);
+    if (!res.length) return [];
+    const cols = res[0].columns;
+    return res[0].values.map(row => {
+      const obj = {};
+      cols.forEach((c, i) => obj[c] = row[i]);
+      return obj;
+    });
+  } catch(e){
+    setWlStatus('查詢失敗：' + e.message, true);
+    return [];
+  }
+}
+
+function handleDbFile(file){
+  if (!file) return;
+  setWlStatus('讀取中…');
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      const db = await openDb(e.target.result);
+      _wlSignals = queryOpenSignals(db);
+      setWlStatus(`已載入 ${file.name} · ${_wlSignals.length} 筆 active 訊號`);
+      _wlBuildSectorChips();
+      _wlInitHeaders();
+      _wlUpdateSortIcons();
+      renderWatchlist();
+    } catch(err){
+      setWlStatus('解析失敗：' + err.message, true);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function handleDbDrop(e){
+  e.preventDefault();
+  document.getElementById('wl-drop-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleDbFile(file);
+}
+
+async function loadDbFromPath(){
+  setWlStatus('從 data/ 載入中…');
+  try {
+    const r = await fetch('data/signal_history.db?_=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status + '（若在本地開啟 HTML 需用 http-server）');
+    const buf = await r.arrayBuffer();
+    const db = await openDb(buf);
+    _wlSignals = queryOpenSignals(db);
+    setWlStatus(`已載入 data/signal_history.db · ${_wlSignals.length} 筆 active 訊號`);
+    _wlBuildSectorChips();
+    _wlInitHeaders();
+    _wlUpdateSortIcons();
+    renderWatchlist();
+  } catch(err){
+    setWlStatus('自動載入失敗：' + err.message + ' — 請改用上傳按鈕', true);
+  }
+}
+
+function setWlStatus(msg, isErr=false){
+  const el = document.getElementById('wl-status');
+  el.textContent = msg;
+  el.style.color = isErr ? 'var(--down)' : 'var(--text3)';
+}
+
+// ── Column sort state ──
+let _wlSortCol = 'days';
+let _wlSortDir = -1; // -1 = desc, 1 = asc
+
+function _wlInitHeaders(){
+  document.querySelectorAll('#wl-table th[data-col]').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (_wlSortCol === col) {
+        _wlSortDir *= -1; // toggle
+      } else {
+        _wlSortCol = col;
+        _wlSortDir = -1; // new col → start desc
+      }
+      // sync dropdown
+      const sel = document.getElementById('wl-sort-sel');
+      if (sel) sel.value = '';
+      _wlUpdateSortIcons();
+      renderWatchlist();
+    });
+  });
+}
+
+function _wlUpdateSortIcons(){
+  document.querySelectorAll('#wl-table th[data-col]').forEach(th => {
+    const ico = th.querySelector('.sort-ico');
+    th.classList.remove('sorted');
+    if (ico) ico.textContent = '';
+    if (th.dataset.col === _wlSortCol) {
+      th.classList.add('sorted');
+      if (ico) ico.textContent = _wlSortDir === -1 ? ' ▼' : ' ▲';
+    }
+  });
+}
+
+function setWlSort(val){
+  // called from dropdown
+  const map = {
+    'days-desc':  {col:'days',  dir:-1},
+    'days-asc':   {col:'days',  dir:1},
+    'ret-desc':   {col:'ret',   dir:-1},
+    'ret-asc':    {col:'ret',   dir:1},
+    'flip-desc':  {col:'flip',  dir:-1},
+    'grade':      {col:'grade', dir:-1},
+  };
+  const s = map[val];
+  if (s){ _wlSortCol = s.col; _wlSortDir = s.dir; }
+  _wlUpdateSortIcons();
+  renderWatchlist();
+}
+
+function _wlApplySort(arr){
+  const d = _wlSortDir;
+  switch(_wlSortCol){
+    case 'ticker':
+      return arr.sort((a,b) => d * a.ticker.localeCompare(b.ticker));
+    case 'flip':
+      return arr.sort((a,b) => d * ((a.flip_date||'') < (b.flip_date||'') ? -1 : 1));
+    case 'flip-price':
+      return arr.sort((a,b) => d * ((+a.flip_price||0) - (+b.flip_price||0)));
+    case 'curr-price':
+      return arr.sort((a,b) => d * ((a.currPrice??-Infinity) - (b.currPrice??-Infinity)));
+    case 'ret':
+      return arr.sort((a,b) => d * ((a.floatRet??-Infinity) - (b.floatRet??-Infinity)));
+    case 'days':
+      return arr.sort((a,b) => d * ((a.days??-1) - (b.days??-1)));
+    case 'mfe':
+      return arr.sort((a,b) => d * ((+a.max_favorable_pct||0) - (+b.max_favorable_pct||0)));
+    case 'mae':
+      return arr.sort((a,b) => d * ((Math.abs(+a.max_adverse_pct||0)) - (Math.abs(+b.max_adverse_pct||0))));
+    case 'grade': {
+      const order = {Strong:0,Normal:1,Weak:2,STR:0,NRM:1,WEK:2};
+      return arr.sort((a,b) => d * ((order[a.mfi_grade]??3) - (order[b.mfi_grade]??3)));
+    }
+    case 'rs':
+      return arr.sort((a,b) => d * ((+a.rs_score||0) - (+b.rs_score||0)));
+    default:
+      return arr;
+  }
+}
+
+function calcDaysHeld(flipDate){
+  if (!flipDate) return null;
+  const flip = new Date(flipDate);
+  const now  = new Date();
+  const diff = Math.floor((now - flip) / 86400000);
+  return diff >= 0 ? diff : null;
+}
+
+function renderWatchlist(){
+  const tbody  = document.getElementById('wl-tbody');
+  const tbl    = document.getElementById('wl-table');
+  const empty  = document.getElementById('wl-empty');
+  const sumDiv = document.getElementById('wl-summary');
+
+  if (!_wlSignals.length){
+    tbl.style.display = 'none';
+    sumDiv.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  // enrich — prefer signal_tracking data, fallback to data.json priceMap
+  const enriched = _wlSignals.map(s => {
+    const currPrice = s.current_price ?? _priceMap[s.ticker] ?? null;
+    const flipPrice = +s.flip_price || null;
+    // return_pct from tracking is already ((curr-flip)/flip)*100
+    const floatRet = s.return_pct != null
+      ? +s.return_pct
+      : (currPrice && flipPrice ? (currPrice - flipPrice) / flipPrice * 100 : null);
+    const days = s.days_since_flip != null ? +s.days_since_flip : calcDaysHeld(s.flip_date);
+    // EMA label derived from flags
+    let emaLabel = '—';
+    if (s.price_above_ema200 && s.ema50_above_ema200) emaLabel = 'Above EMA50/200';
+    else if (s.price_above_ema200) emaLabel = 'Above EMA200';
+    else if (s.price_above_ema50)  emaLabel = 'Above EMA50';
+    else emaLabel = 'Below EMA50/200';
+    return { ...s, currPrice, floatRet, days, emaLabel };
+  });
+
+  // search + filter
+  const searchQ = (document.getElementById('wl-search')?.value || '').trim().toUpperCase();
+  const filtered = enriched.filter(s => {
+    if (searchQ && !s.ticker.includes(searchQ)) return false;
+    return _wlPassFilter(s);
+  });
+
+  // sort
+  const sorted = _wlApplySort([...filtered]);
+
+  // summary stats
+  const withRet = sorted.filter(s => s.floatRet != null);
+  const avgRet  = withRet.length ? withRet.reduce((a,s)=>a+s.floatRet,0)/withRet.length : null;
+  const winners = sorted.filter(s => (s.floatRet??0) > 0).length;
+  const losers  = sorted.filter(s => (s.floatRet??0) < 0).length;
+  const avgDays = sorted.reduce((a,s)=>a+(s.days??0),0)/(sorted.length||1);
+
+  document.getElementById('wl-s-count').textContent = sorted.length;
+  document.getElementById('wl-s-days').textContent  = avgDays.toFixed(1);
+  const pnlEl = document.getElementById('wl-s-pnl');
+  if (avgRet != null){
+    pnlEl.textContent = (avgRet>0?'+':'') + avgRet.toFixed(2)+'%';
+    pnlEl.className = 'wl-val ' + (avgRet>=0?'up':'down');
+  } else { pnlEl.textContent='—'; pnlEl.className='wl-val'; }
+  document.getElementById('wl-s-win').textContent  = winners;
+  document.getElementById('wl-s-lose').textContent = losers;
+  sumDiv.style.display = 'grid';
+
+  // update count label
+  const countEl = document.getElementById('wl-filter-count');
+  if (countEl){
+    const total = enriched.length;
+    countEl.textContent = filtered.length < total
+      ? `顯示 ${filtered.length} / ${total}`
+      : `共 ${total} 筆`;
+  }
+
+  // grade normalisation (DB stores 'Normal'/'Strong'/'Weak', CSS expects STR/NRM/WEK)
+  const gradeMap = {Strong:'STR', Normal:'NRM', Weak:'WEK', STR:'STR', NRM:'NRM', WEK:'WEK'};
+
+  // rows
+  tbody.innerHTML = sorted.map(s => {
+    const rawGrade = s.mfi_grade || '—';
+    const gradeCls = gradeMap[rawGrade] || '';
+    const gradeLabel = gradeCls || rawGrade;
+    const retCls = s.floatRet==null ? '' : (s.floatRet>=0 ? 'up' : 'down');
+    const retStr = s.floatRet==null
+      ? '<span class="wl-no-price">n/a</span>'
+      : `<span class="wl-ret ${retCls}">${s.floatRet>0?'+':''}${s.floatRet.toFixed(2)}%</span>`;
+    const currStr = s.currPrice != null
+      ? s.currPrice.toFixed(2)
+      : '<span class="wl-no-price">—</span>';
+    const mfe = s.max_favorable_pct != null ? `<span class="wl-mfe">↑${(+s.max_favorable_pct).toFixed(1)}%</span>` : '—';
+    const mae = s.max_adverse_pct  != null ? `<span class="wl-mae">↓${Math.abs(+s.max_adverse_pct).toFixed(1)}%</span>`  : '—';
+    const rs  = s.rs_score != null ? `<span class="wl-rs">${(+s.rs_score).toFixed(1)}</span>` : '—';
+    const days = s.days != null ? `<span class="wl-days">${s.days}d</span>` : '—';
+    const flipPrice = s.flip_price != null ? (+s.flip_price).toFixed(2) : '—';
+    const snapshotBadge = s.snapshot_date
+      ? `<span style="font-size:14px;color:var(--text3);margin-left:4px">${s.snapshot_date}</span>` : '';
+
+    return `<tr>
+      <td><span class="wl-ticker">${s.ticker}</span></td>
+      <td><span class="wl-date">${(s.flip_date||'').slice(0,10)}</span></td>
+      <td><span class="wl-price">${flipPrice}</span></td>
+      <td><span class="wl-curr-price">${currStr}</span>${snapshotBadge}</td>
+      <td>${retStr}</td>
+      <td>${days}</td>
+      <td>${mfe}</td>
+      <td>${mae}</td>
+      <td><span class="wl-grade ${gradeCls}">${gradeLabel}</span></td>
+      <td>${rs}</td>
+      <td><span class="wl-ema">${s.emaLabel}</span></td>
+    </tr>`;
+  }).join('');
+
+  tbl.style.display = 'table';
+  empty.style.display = 'none';
+}
+
+/* ══════════════════════════════════════════════
+   WATCHLIST FILTER
+   ══════════════════════════════════════════════ */
+let _wlActiveFilter = {};
+
+function toggleWlFilter(){
+  document.getElementById('wl-filter-panel').classList.toggle('open');
+}
+
+function _wlUpdateBadge(){
+  const f = _wlReadFilter();
+  let count = 0;
+  if (f.grades?.length)   count++;
+  if (f.sectors?.length)  count++;
+  if (f.ema50)     count++;
+  if (f.ema200)    count++;
+  if (f.golden)    count++;
+  if (f.st1d)      count++;
+  if (f.st3d)      count++;
+  if (f.mfiRising) count++;
+  if (f.rsNear)    count++;
+  if (f.retPos)    count++;
+  if (f.retMin !== null) count++;
+  if (f.retMax !== null) count++;
+  if (f.daysMin !== null) count++;
+  if (f.daysMax !== null) count++;
+  const badge = document.getElementById('wl-filter-badge');
+  const btn   = document.getElementById('wl-filter-btn');
+  if (count > 0){
+    badge.textContent = count; badge.style.display = '';
+    btn.classList.add('has-active');
+  } else {
+    badge.style.display = 'none';
+    btn.classList.remove('has-active');
+  }
+}
+
+function _wlReadFilter(){
+  const num = id => { const el = document.getElementById(id); return el&&el.value!==''?parseFloat(el.value):null; };
+  const cb  = id => document.getElementById(id)?.checked || false;
+  return {
+    grades   : [...document.querySelectorAll('.wl-g-chip.checked')].map(el => el.textContent.trim()),
+    sectors  : [...document.querySelectorAll('#wl-sector-chips .wl-s-chip.checked')].map(el => el.dataset.value),
+    ema50    : cb('wlf-ema50'),
+    ema200   : cb('wlf-ema200'),
+    golden   : cb('wlf-golden'),
+    st1d     : cb('wlf-st1d'),
+    st3d     : cb('wlf-st3d'),
+    mfiRising: cb('wlf-mfirising'),
+    rsNear   : cb('wlf-rsnear'),
+    retPos   : cb('wlf-retpos'),
+    retMin   : num('wlf-ret-min'),
+    retMax   : num('wlf-ret-max'),
+    daysMin  : num('wlf-days-min'),
+    daysMax  : num('wlf-days-max'),
+  };
+}
+
+function applyWlFilter(){
+  _wlActiveFilter = _wlReadFilter();
+  document.getElementById('wl-filter-panel').classList.remove('open');
+  renderWatchlist();
+}
+
+function clearWlFilter(){
+  document.querySelectorAll('#wl-filter-panel input[type=checkbox]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.wl-g-chip, .wl-s-chip').forEach(c => c.classList.remove('checked'));
+  ['wlf-ret-min','wlf-ret-max','wlf-days-min','wlf-days-max']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  _wlActiveFilter = {};
+  _wlUpdateBadge();
+  renderWatchlist();
+}
+
+function _wlPassFilter(s){
+  const f = _wlActiveFilter;
+  if (!f || !Object.keys(f).length) return true;
+  if (f.grades?.length  && !f.grades.includes(s.mfi_grade||''))   return false;
+  if (f.sectors?.length && !f.sectors.includes(s.sector||''))     return false;
+  if (f.ema50    && !s.price_above_ema50)   return false;
+  if (f.ema200   && !s.price_above_ema200)  return false;
+  if (f.golden   && !s.ema50_above_ema200)  return false;
+  if (f.st1d     && !s.st1d_bullish)        return false;
+  if (f.st3d     && !s.st3d_bullish)        return false;
+  if (f.mfiRising && !s.mfi_rising)         return false;
+  if (f.rsNear   && !s.rs_near_high)        return false;
+  if (f.retPos   && (s.floatRet == null || s.floatRet <= 0)) return false;
+  if (f.retMin !== null && s.floatRet != null && s.floatRet < f.retMin) return false;
+  if (f.retMax !== null && s.floatRet != null && s.floatRet > f.retMax) return false;
+  if (f.daysMin !== null && s.days != null && s.days < f.daysMin) return false;
+  if (f.daysMax !== null && s.days != null && s.days > f.daysMax) return false;
+  return true;
+}
+
+function _wlBuildSectorChips(){
+  const sectors = [...new Set(_wlSignals.map(s => s.sector).filter(Boolean))].sort();
+  const wrap = document.getElementById('wl-sector-chips');
+  if (!sectors.length){ wrap.innerHTML='<span style="color:var(--text3);font-size:14px">無 Sector 資料</span>'; return; }
+  wrap.innerHTML = sectors.map(s =>
+    `<div class="wl-s-chip" onclick="this.classList.toggle('checked');_wlUpdateBadge()" data-value="${s}">${s}</div>`
+  ).join('');
+}
+
+document.addEventListener('click', e => {
+  const panel = document.getElementById('wl-filter-panel');
+  const btn   = document.getElementById('wl-filter-btn');
+  if (!panel || !btn) return;
+  if (panel.contains(e.target) || btn.contains(e.target)) return;
+  panel.classList.remove('open');
+});
 </script>
 
 </body>
