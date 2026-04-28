@@ -1,12 +1,12 @@
 {
   "overall": {
-    "n": 33,
-    "avg_return": -4.8,
-    "median_return": -2.04,
-    "win_rate": 3.0,
-    "avg_days_held": 3.6,
-    "avg_mfe": 1.93,
-    "avg_mae": -6.95
+    "n": 34,
+    "avg_return": -4.66,
+    "median_return": -1.71,
+    "win_rate": 2.9,
+    "avg_days_held": 3.5,
+    "avg_mfe": 1.9,
+    "avg_mae": -6.76
   },
   "by_mfi_grade": {
     "Strong": {
@@ -19,13 +19,13 @@
       "avg_mae": -7.74
     },
     "Normal": {
-      "n": 24,
-      "avg_return": -4.74,
-      "median_return": -1.02,
-      "win_rate": 4.2,
-      "avg_days_held": 2.8,
-      "avg_mfe": 1.67,
-      "avg_mae": -6.74
+      "n": 25,
+      "avg_return": -4.55,
+      "median_return": -0.67,
+      "win_rate": 4.0,
+      "avg_days_held": 2.7,
+      "avg_mfe": 1.64,
+      "avg_mae": -6.5
     },
     "Weak": {
       "n": 1,
@@ -111,13 +111,13 @@
       "avg_mae": -17.91
     },
     "Consumer Defensive": {
-      "n": 1,
-      "avg_return": -0.25,
-      "median_return": -0.25,
+      "n": 2,
+      "avg_return": -0.12,
+      "median_return": -0.12,
       "win_rate": 0.0,
       "avg_days_held": 0.0,
-      "avg_mfe": 1.61,
-      "avg_mae": -0.43
+      "avg_mfe": 1.25,
+      "avg_mae": -0.55
     }
   },
   "by_ema_bullish_alignment": {
@@ -131,13 +131,13 @@
       "avg_mae": -6.27
     },
     "not_aligned": {
-      "n": 19,
-      "avg_return": -5.09,
-      "median_return": -4.15,
+      "n": 20,
+      "avg_return": -4.83,
+      "median_return": -2.26,
       "win_rate": 0.0,
-      "avg_days_held": 3.8,
-      "avg_mfe": 2.1,
-      "avg_mae": -7.44
+      "avg_days_held": 3.6,
+      "avg_mfe": 2.04,
+      "avg_mae": -7.1
     }
   },
   "by_rs_bucket": {
@@ -151,13 +151,13 @@
       "avg_mae": -10.83
     },
     "50_80": {
-      "n": 9,
-      "avg_return": -3.95,
-      "median_return": -2.04,
+      "n": 10,
+      "avg_return": -3.56,
+      "median_return": -1.35,
       "win_rate": 0.0,
-      "avg_days_held": 4.1,
-      "avg_mfe": 1.42,
-      "avg_mae": -6.02
+      "avg_days_held": 3.7,
+      "avg_mfe": 1.37,
+      "avg_mae": -5.48
     },
     "below_50": {
       "n": 21,
@@ -170,11 +170,11 @@
     }
   },
   "meta": {
-    "total_closed": 33,
+    "total_closed": 34,
     "date_range": {
       "earliest": "2026-04-13",
-      "latest": "2026-04-24"
+      "latest": "2026-04-27"
     },
-    "generated_at": "2026-04-27T12:15:46.036601"
+    "generated_at": "2026-04-28T12:59:34.718703"
   }
 }
