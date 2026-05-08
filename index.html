@@ -1402,6 +1402,52 @@ footer a:hover{color:var(--accent)}
       </div>
     </div>
 
+    <!-- Price Range -->
+    <div class="cf-section">
+      <div class="cf-section-label">股價 Price ($)</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-price-min" placeholder="—" step="0.01" min="0">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-price-max" placeholder="—" step="0.01" min="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Avg Volume Range -->
+    <div class="cf-section">
+      <div class="cf-section-label">日均成交量 Avg Vol (萬股)</div>
+      <div class="cf-range-row">
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最小</span>
+          <input class="cf-input" type="number" id="cf-vol-min" placeholder="—" step="1" min="0">
+        </div>
+        <span class="cf-range-sep">—</span>
+        <div class="cf-range-field">
+          <span class="cf-range-lbl">最大</span>
+          <input class="cf-input" type="number" id="cf-vol-max" placeholder="—" step="1" min="0">
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">單位：萬（如輸入 50 = 500,000 股）</div>
+    </div>
+
+    <!-- Market Cap -->
+    <div class="cf-section">
+      <div class="cf-section-label">市值 Market Cap</div>
+      <div class="cf-chips" id="cf-mktcap-chips">
+        <div class="cf-chip" data-value="nano"  onclick="cfChipToggle(this)">Nano &lt;$50M</div>
+        <div class="cf-chip" data-value="micro" onclick="cfChipToggle(this)">Micro $50M–$300M</div>
+        <div class="cf-chip" data-value="small" onclick="cfChipToggle(this)">Small $300M–$2B</div>
+        <div class="cf-chip" data-value="mid"   onclick="cfChipToggle(this)">Mid $2B–$10B</div>
+        <div class="cf-chip" data-value="large" onclick="cfChipToggle(this)">Large $10B–$200B</div>
+        <div class="cf-chip" data-value="mega"  onclick="cfChipToggle(this)">Mega &gt;$200B</div>
+      </div>
+    </div>
+
     <!-- Sector -->
     <div class="cf-section">
       <div class="cf-section-label">Sector <span id="cf-sector-count" style="color:var(--text3);font-size:10px"></span></div>
@@ -1786,18 +1832,25 @@ function _cfRead() {
     .map(el => el.textContent.trim());
   const sectors = [...document.querySelectorAll('#cf-sector-chips .cf-chip.checked')]
     .map(el => el.dataset.value);
+  const mktcaps = [...document.querySelectorAll('#cf-mktcap-chips .cf-chip.checked')]
+    .map(el => el.dataset.value);
   const v = id => { const el=document.getElementById(id); return el&&el.value!==''?parseFloat(el.value):null; };
   return {
     grades,
     sectors,
-    mfiMin  : v('cf-mfi-min'),
-    mfiMax  : v('cf-mfi-max'),
-    chgMin  : v('cf-chg-min'),
-    chgMax  : v('cf-chg-max'),
-    daysMin : v('cf-days-min'),
-    daysMax : v('cf-days-max'),
-    atrMin  : v('cf-atr-min'),
-    atrMax  : v('cf-atr-max'),
+    mktcaps,
+    mfiMin   : v('cf-mfi-min'),
+    mfiMax   : v('cf-mfi-max'),
+    chgMin   : v('cf-chg-min'),
+    chgMax   : v('cf-chg-max'),
+    daysMin  : v('cf-days-min'),
+    daysMax  : v('cf-days-max'),
+    atrMin   : v('cf-atr-min'),
+    atrMax   : v('cf-atr-max'),
+    priceMin : v('cf-price-min'),
+    priceMax : v('cf-price-max'),
+    volMin   : v('cf-vol-min'),   // 單位：萬股
+    volMax   : v('cf-vol-max'),
   };
 }
 
@@ -1812,6 +1865,32 @@ function _cfFlipDays(flipDate) {
   base.setHours(0,0,0,0);
   const flip = new Date(flipDate + 'T00:00:00');
   return Math.round((base - flip) / 86400000);
+}
+
+/* 解析 Finviz 成交量字串 → 數字（股數），例如 "1.23M" → 1230000 */
+function _parseFvzVolume(s) {
+  if (!s || typeof s !== 'string') return null;
+  const m = s.trim().match(/^([\d.]+)([KMB]?)$/i);
+  if (!m) return null;
+  const num = parseFloat(m[1]);
+  const mul = {K:1e3, M:1e6, B:1e9}[m[2].toUpperCase()] ?? 1;
+  return num * mul;
+}
+
+/* 解析 Finviz 市值字串 → tier 標籤 */
+function _mktCapTier(s) {
+  if (!s || typeof s !== 'string') return null;
+  const m = s.trim().match(/^([\d.]+)([KMB]?)$/i);
+  if (!m) return null;
+  const num = parseFloat(m[1]);
+  const mul = {K:1e3, M:1e6, B:1e9}[m[2].toUpperCase()] ?? 1;
+  const v = num * mul;          // 單位：美元
+  if (v <  50e6)   return 'nano';
+  if (v <  300e6)  return 'micro';
+  if (v <  2e9)    return 'small';
+  if (v <  10e9)   return 'mid';
+  if (v <  200e9)  return 'large';
+  return 'mega';
 }
 
 /* 套用自訂篩選到單一 row（null 欄位視為通過） */
@@ -1835,6 +1914,18 @@ function applyCustomFilters(r) {
   /* ATR range */
   if (f.atrMin !== null && (r.atr??null) !== null && r.atr < f.atrMin) return false;
   if (f.atrMax !== null && (r.atr??null) !== null && r.atr > f.atrMax) return false;
+  /* Price range */
+  if (f.priceMin !== null && (r.last_price??null) !== null && r.last_price < f.priceMin) return false;
+  if (f.priceMax !== null && (r.last_price??null) !== null && r.last_price > f.priceMax) return false;
+  /* Avg Volume range（輸入單位：萬股，內部換算成股數比較） */
+  const rawVol = _parseFvzVolume(r.info?.avg_volume);
+  if (f.volMin !== null && rawVol !== null && rawVol < f.volMin * 10000) return false;
+  if (f.volMax !== null && rawVol !== null && rawVol > f.volMax * 10000) return false;
+  /* Market Cap tier */
+  if (f.mktcaps?.length) {
+    const tier = _mktCapTier(r.info?.market_cap);
+    if (tier && !f.mktcaps.includes(tier)) return false;
+  }
   return true;
 }
 
@@ -1842,8 +1933,9 @@ function applyCustomFilters(r) {
 function _cfCount(f) {
   if (!f) return 0;
   let n = 0;
-  if (f.grades?.length)  n++;
-  if (f.sectors?.length) n++;
+  if (f.grades?.length)   n++;
+  if (f.sectors?.length)  n++;
+  if (f.mktcaps?.length)  n++;
   if (f.mfiMin  !== null) n++;
   if (f.mfiMax  !== null) n++;
   if (f.chgMin  !== null) n++;
@@ -1852,6 +1944,10 @@ function _cfCount(f) {
   if (f.daysMax !== null) n++;
   if (f.atrMin  !== null) n++;
   if (f.atrMax  !== null) n++;
+  if (f.priceMin !== null) n++;
+  if (f.priceMax !== null) n++;
+  if (f.volMin   !== null) n++;
+  if (f.volMax   !== null) n++;
   return n;
 }
 
