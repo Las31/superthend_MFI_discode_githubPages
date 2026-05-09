@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-05-08T18:40:24",
+  "generated_at": "2026-05-09T13:06:09",
   "min_samples": 20,
   "overall": {
-    "n": 86,
-    "win_rate": 3.5,
-    "avg_return": -6.03,
-    "median_return": -5.89,
-    "avg_win": 1.87,
-    "avg_loss": -7.49,
+    "n": 90,
+    "win_rate": 4.4,
+    "avg_return": -5.81,
+    "median_return": -5.7,
+    "avg_win": 1.52,
+    "avg_loss": -7.45,
     "profit_factor": 0.01,
-    "avg_mfe": 3.31,
-    "avg_mae": -7.91,
+    "avg_mfe": 3.41,
+    "avg_mae": -7.71,
     "avg_days": 8.7,
-    "closed_by_flip": 86,
+    "closed_by_flip": 90,
     "closed_by_timeout": 0,
     "return_buckets": [
       {
@@ -27,17 +27,17 @@
       },
       {
         "range": "-10~-5%",
-        "count": 31,
+        "count": 32,
         "is_positive": false
       },
       {
         "range": "-5~0%",
-        "count": 33,
+        "count": 35,
         "is_positive": false
       },
       {
         "range": "0~5%",
-        "count": 2,
+        "count": 3,
         "is_positive": true
       },
       {
@@ -63,7 +63,7 @@
       },
       {
         "range": "6-10",
-        "count": 17
+        "count": 18
       },
       {
         "range": "11-15",
@@ -75,7 +75,7 @@
       },
       {
         "range": "21-30",
-        "count": 5
+        "count": 6
       },
       {
         "range": "31-45",
@@ -93,49 +93,28 @@
     "equity_points": [
       {
         "date": "2026-04-19",
-        "equity": 100.0,
-        "ticker": "PHM",
-        "ret": 0.0,
+        "equity": 92.03,
+        "ticker": "SCHW",
+        "ret": -7.97,
         "cumulative_wr": 0.0
       },
       {
         "date": "2026-04-19",
-        "equity": 100.0,
-        "ticker": "LUV",
-        "ret": 0.0,
-        "cumulative_wr": 0.0
-      },
-      {
-        "date": "2026-04-19",
-        "equity": 98.63,
-        "ticker": "JCI",
-        "ret": -1.37,
-        "cumulative_wr": 0.0
-      },
-      {
-        "date": "2026-04-19",
-        "equity": 98.63,
-        "ticker": "HAS",
-        "ret": 0.0,
-        "cumulative_wr": 0.0
-      },
-      {
-        "date": "2026-04-19",
-        "equity": 98.63,
-        "ticker": "SHOP",
-        "ret": 0.0,
-        "cumulative_wr": 0.0
-      },
-      {
-        "date": "2026-04-19",
-        "equity": 98.63,
+        "equity": 92.03,
         "ticker": "AMT",
         "ret": 0.0,
         "cumulative_wr": 0.0
       },
       {
         "date": "2026-04-19",
-        "equity": 98.63,
+        "equity": 90.77,
+        "ticker": "JCI",
+        "ret": -1.37,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 90.77,
         "ticker": "TPR",
         "ret": 0.0,
         "cumulative_wr": 0.0
@@ -143,8 +122,29 @@
       {
         "date": "2026-04-19",
         "equity": 90.77,
-        "ticker": "SCHW",
-        "ret": -7.97,
+        "ticker": "PHM",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 90.77,
+        "ticker": "LUV",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 90.77,
+        "ticker": "SHOP",
+        "ret": 0.0,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-19",
+        "equity": 90.77,
+        "ticker": "HAS",
+        "ret": 0.0,
         "cumulative_wr": 0.0
       },
       {
@@ -163,163 +163,163 @@
       },
       {
         "date": "2026-04-23",
-        "equity": 90.06,
+        "equity": 88.32,
+        "ticker": "DGX",
+        "ret": -2.04,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 75.89,
+        "ticker": "GE",
+        "ret": -14.07,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 70.74,
+        "ticker": "PRU",
+        "ret": -6.79,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 66.91,
+        "ticker": "WELL",
+        "ret": -5.42,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 66.73,
+        "ticker": "ISRG",
+        "ret": -0.26,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 66.66,
         "ticker": "PLTR",
         "ret": -0.11,
         "cumulative_wr": 0.0
       },
       {
         "date": "2026-04-23",
-        "equity": 79.66,
+        "equity": 58.96,
         "ticker": "NRG",
         "ret": -11.55,
         "cumulative_wr": 0.0
       },
       {
         "date": "2026-04-23",
-        "equity": 79.68,
-        "ticker": "IVZ",
-        "ret": 0.02,
-        "cumulative_wr": 7.7
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 75.36,
-        "ticker": "WELL",
-        "ret": -5.42,
-        "cumulative_wr": 7.1
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 75.09,
-        "ticker": "NOW",
-        "ret": -0.36,
-        "cumulative_wr": 6.7
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 73.55,
-        "ticker": "DGX",
-        "ret": -2.04,
-        "cumulative_wr": 6.2
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 73.36,
-        "ticker": "ISRG",
-        "ret": -0.26,
-        "cumulative_wr": 5.9
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 63.04,
-        "ticker": "GE",
-        "ret": -14.07,
-        "cumulative_wr": 5.6
-      },
-      {
-        "date": "2026-04-23",
-        "equity": 62.81,
+        "equity": 58.74,
         "ticker": "CRM",
         "ret": -0.37,
+        "cumulative_wr": 0.0
+      },
+      {
+        "date": "2026-04-23",
+        "equity": 58.75,
+        "ticker": "IVZ",
+        "ret": 0.02,
         "cumulative_wr": 5.3
       },
       {
         "date": "2026-04-23",
         "equity": 58.54,
-        "ticker": "PRU",
-        "ret": -6.79,
+        "ticker": "NOW",
+        "ret": -0.36,
         "cumulative_wr": 5.0
       },
       {
         "date": "2026-04-24",
-        "equity": 54.85,
-        "ticker": "ADSK",
-        "ret": -6.3,
+        "equity": 53.13,
+        "ticker": "TMO",
+        "ret": -9.24,
         "cumulative_wr": 4.8
       },
       {
         "date": "2026-04-24",
-        "equity": 52.58,
-        "ticker": "WAT",
-        "ret": -4.15,
+        "equity": 47.77,
+        "ticker": "TDG",
+        "ret": -10.09,
         "cumulative_wr": 4.5
       },
       {
         "date": "2026-04-24",
-        "equity": 46.87,
-        "ticker": "EFX",
-        "ret": -10.85,
+        "equity": 43.76,
+        "ticker": "LVS",
+        "ret": -8.39,
         "cumulative_wr": 4.3
       },
       {
         "date": "2026-04-24",
-        "equity": 41.71,
-        "ticker": "TECH",
-        "ret": -11.01,
+        "equity": 41.01,
+        "ticker": "ADSK",
+        "ret": -6.3,
         "cumulative_wr": 4.2
       },
       {
         "date": "2026-04-24",
-        "equity": 38.21,
-        "ticker": "LVS",
-        "ret": -8.39,
+        "equity": 36.49,
+        "ticker": "TECH",
+        "ret": -11.01,
         "cumulative_wr": 4.0
       },
       {
         "date": "2026-04-24",
-        "equity": 34.68,
-        "ticker": "TMO",
-        "ret": -9.24,
+        "equity": 34.98,
+        "ticker": "WAT",
+        "ret": -4.15,
         "cumulative_wr": 3.8
       },
       {
         "date": "2026-04-24",
         "equity": 31.18,
-        "ticker": "TDG",
-        "ret": -10.09,
+        "ticker": "EFX",
+        "ret": -10.85,
         "cumulative_wr": 3.7
       },
       {
         "date": "2026-04-25",
-        "equity": 29.45,
-        "ticker": "ZBH",
-        "ret": -5.57,
+        "equity": 31.18,
+        "ticker": "CEG",
+        "ret": 0.0,
         "cumulative_wr": 3.6
       },
       {
         "date": "2026-04-25",
-        "equity": 27.36,
+        "equity": 28.97,
         "ticker": "NVR",
         "ret": -7.1,
         "cumulative_wr": 3.4
       },
       {
         "date": "2026-04-25",
-        "equity": 24.53,
-        "ticker": "CMCSA",
-        "ret": -10.32,
+        "equity": 28.9,
+        "ticker": "PG",
+        "ret": -0.25,
         "cumulative_wr": 3.3
       },
       {
         "date": "2026-04-25",
-        "equity": 24.47,
-        "ticker": "PG",
-        "ret": -0.25,
+        "equity": 27.29,
+        "ticker": "ZBH",
+        "ret": -5.57,
         "cumulative_wr": 3.2
+      },
+      {
+        "date": "2026-04-25",
+        "equity": 24.47,
+        "ticker": "CMCSA",
+        "ret": -10.32,
+        "cumulative_wr": 3.1
       },
       {
         "date": "2026-04-25",
         "equity": 18.54,
         "ticker": "CHTR",
         "ret": -24.23,
-        "cumulative_wr": 3.1
-      },
-      {
-        "date": "2026-04-25",
-        "equity": 18.54,
-        "ticker": "CEG",
-        "ret": 0.0,
         "cumulative_wr": 3.0
       },
       {
@@ -338,112 +338,112 @@
       },
       {
         "date": "2026-04-29",
-        "equity": 16.4,
-        "ticker": "VLTO",
-        "ret": -7.35,
+        "equity": 17.0,
+        "ticker": "GPC",
+        "ret": -3.99,
         "cumulative_wr": 2.8
       },
       {
         "date": "2026-04-29",
-        "equity": 13.63,
-        "ticker": "ARE",
-        "ret": -16.9,
+        "equity": 15.13,
+        "ticker": "ALNY",
+        "ret": -10.99,
         "cumulative_wr": 2.7
       },
       {
         "date": "2026-04-29",
-        "equity": 13.01,
+        "equity": 14.44,
         "ticker": "POOL",
         "ret": -4.55,
         "cumulative_wr": 2.6
       },
       {
         "date": "2026-04-29",
-        "equity": 11.58,
-        "ticker": "ALNY",
-        "ret": -10.99,
+        "equity": 13.59,
+        "ticker": "CMG",
+        "ret": -5.87,
         "cumulative_wr": 2.6
       },
       {
         "date": "2026-04-29",
-        "equity": 11.12,
-        "ticker": "GPC",
-        "ret": -3.99,
+        "equity": 11.29,
+        "ticker": "ARE",
+        "ret": -16.9,
         "cumulative_wr": 2.5
       },
       {
         "date": "2026-04-29",
-        "equity": 11.12,
-        "ticker": "KO",
-        "ret": 0.0,
+        "equity": 10.46,
+        "ticker": "VLTO",
+        "ret": -7.35,
         "cumulative_wr": 2.4
       },
       {
         "date": "2026-04-29",
         "equity": 10.46,
-        "ticker": "CMG",
-        "ret": -5.87,
+        "ticker": "KO",
+        "ret": 0.0,
         "cumulative_wr": 2.4
       },
       {
         "date": "2026-04-30",
-        "equity": 10.11,
-        "ticker": "COF",
-        "ret": -3.4,
-        "cumulative_wr": 2.3
-      },
-      {
-        "date": "2026-04-30",
-        "equity": 10.11,
+        "equity": 10.46,
         "ticker": "MPC",
         "ret": 0.0,
         "cumulative_wr": 2.3
       },
       {
         "date": "2026-04-30",
-        "equity": 9.23,
+        "equity": 9.56,
         "ticker": "A",
         "ret": -8.67,
-        "cumulative_wr": 2.2
+        "cumulative_wr": 2.3
       },
       {
         "date": "2026-04-30",
-        "equity": 8.59,
-        "ticker": "MMM",
-        "ret": -6.91,
-        "cumulative_wr": 2.2
-      },
-      {
-        "date": "2026-04-30",
-        "equity": 7.71,
+        "equity": 8.57,
         "ticker": "WSM",
         "ret": -10.32,
+        "cumulative_wr": 2.2
+      },
+      {
+        "date": "2026-04-30",
+        "equity": 7.72,
+        "ticker": "HOOD",
+        "ret": -9.98,
+        "cumulative_wr": 2.2
+      },
+      {
+        "date": "2026-04-30",
+        "equity": 7.45,
+        "ticker": "COF",
+        "ret": -3.4,
         "cumulative_wr": 2.1
       },
       {
         "date": "2026-04-30",
-        "equity": 7.08,
-        "ticker": "CRL",
-        "ret": -8.13,
+        "equity": 6.98,
+        "ticker": "HSIC",
+        "ret": -6.38,
         "cumulative_wr": 2.1
       },
       {
         "date": "2026-04-30",
-        "equity": 6.25,
+        "equity": 6.5,
+        "ticker": "MMM",
+        "ret": -6.91,
+        "cumulative_wr": 2.0
+      },
+      {
+        "date": "2026-04-30",
+        "equity": 5.74,
         "ticker": "IR",
         "ret": -11.67,
         "cumulative_wr": 2.0
       },
       {
         "date": "2026-04-30",
-        "equity": 5.86,
-        "ticker": "HSIC",
-        "ret": -6.38,
-        "cumulative_wr": 2.0
-      },
-      {
-        "date": "2026-04-30",
-        "equity": 5.55,
+        "equity": 5.44,
         "ticker": "CPAY",
         "ret": -5.24,
         "cumulative_wr": 2.0
@@ -451,155 +451,155 @@
       {
         "date": "2026-04-30",
         "equity": 4.99,
-        "ticker": "HOOD",
-        "ret": -9.98,
+        "ticker": "CRL",
+        "ret": -8.13,
         "cumulative_wr": 1.9
       },
       {
         "date": "2026-05-04",
-        "equity": 4.61,
-        "ticker": "SW",
-        "ret": -7.66,
-        "cumulative_wr": 1.9
-      },
-      {
-        "date": "2026-05-04",
-        "equity": 4.62,
-        "ticker": "VZ",
-        "ret": 0.17,
-        "cumulative_wr": 3.7
-      },
-      {
-        "date": "2026-05-04",
-        "equity": 4.62,
+        "equity": 4.99,
         "ticker": "AIG",
         "ret": 0.0,
-        "cumulative_wr": 3.6
+        "cumulative_wr": 1.9
       },
       {
         "date": "2026-05-04",
-        "equity": 4.57,
-        "ticker": "REG",
-        "ret": -1.16,
-        "cumulative_wr": 3.6
+        "equity": 4.67,
+        "ticker": "F",
+        "ret": -6.53,
+        "cumulative_wr": 1.9
       },
       {
         "date": "2026-05-04",
-        "equity": 4.81,
+        "equity": 4.92,
         "ticker": "ORCL",
         "ret": 5.42,
+        "cumulative_wr": 3.6
+      },
+      {
+        "date": "2026-05-04",
+        "equity": 4.54,
+        "ticker": "SW",
+        "ret": -7.66,
+        "cumulative_wr": 3.6
+      },
+      {
+        "date": "2026-05-04",
+        "equity": 4.55,
+        "ticker": "VZ",
+        "ret": 0.17,
         "cumulative_wr": 5.3
       },
       {
         "date": "2026-05-04",
-        "equity": 4.38,
-        "ticker": "MRSH",
-        "ret": -8.98,
+        "equity": 4.16,
+        "ticker": "BKNG",
+        "ret": -8.65,
         "cumulative_wr": 5.2
       },
       {
         "date": "2026-05-04",
-        "equity": 4.0,
-        "ticker": "BKNG",
-        "ret": -8.65,
+        "equity": 3.79,
+        "ticker": "MRSH",
+        "ret": -8.98,
         "cumulative_wr": 5.1
       },
       {
         "date": "2026-05-04",
         "equity": 3.74,
-        "ticker": "F",
-        "ret": -6.53,
+        "ticker": "REG",
+        "ret": -1.16,
         "cumulative_wr": 5.0
       },
       {
         "date": "2026-05-06",
-        "equity": 3.53,
-        "ticker": "L",
-        "ret": -5.54,
+        "equity": 3.72,
+        "ticker": "DIS",
+        "ret": -0.69,
         "cumulative_wr": 4.9
       },
       {
         "date": "2026-05-06",
-        "equity": 3.33,
+        "equity": 3.47,
+        "ticker": "FISV",
+        "ret": -6.54,
+        "cumulative_wr": 4.8
+      },
+      {
+        "date": "2026-05-06",
+        "equity": 3.27,
         "ticker": "APH",
         "ret": -5.91,
         "cumulative_wr": 4.8
       },
       {
         "date": "2026-05-06",
-        "equity": 3.3,
-        "ticker": "DIS",
-        "ret": -0.69,
-        "cumulative_wr": 4.8
-      },
-      {
-        "date": "2026-05-06",
-        "equity": 2.98,
-        "ticker": "HD",
-        "ret": -9.73,
+        "equity": 3.09,
+        "ticker": "L",
+        "ret": -5.54,
         "cumulative_wr": 4.7
       },
       {
         "date": "2026-05-06",
-        "equity": 2.83,
-        "ticker": "UPS",
-        "ret": -4.99,
+        "equity": 2.92,
+        "ticker": "CCEP",
+        "ret": -5.32,
         "cumulative_wr": 4.6
       },
       {
         "date": "2026-05-06",
-        "equity": 2.61,
+        "equity": 2.69,
         "ticker": "CHRW",
         "ret": -7.97,
         "cumulative_wr": 4.5
       },
       {
         "date": "2026-05-06",
-        "equity": 2.44,
-        "ticker": "FISV",
-        "ret": -6.54,
+        "equity": 2.39,
+        "ticker": "ALGN",
+        "ret": -11.24,
         "cumulative_wr": 4.5
       },
       {
         "date": "2026-05-06",
-        "equity": 2.31,
-        "ticker": "CCEP",
-        "ret": -5.32,
+        "equity": 2.14,
+        "ticker": "BAX",
+        "ret": -10.48,
         "cumulative_wr": 4.4
       },
       {
         "date": "2026-05-06",
-        "equity": 2.05,
-        "ticker": "ALGN",
-        "ret": -11.24,
-        "cumulative_wr": 4.3
-      },
-      {
-        "date": "2026-05-06",
-        "equity": 1.83,
-        "ticker": "BAX",
-        "ret": -10.48,
-        "cumulative_wr": 4.3
-      },
-      {
-        "date": "2026-05-06",
-        "equity": 1.79,
+        "equity": 2.09,
         "ticker": "DHI",
         "ret": -2.23,
+        "cumulative_wr": 4.3
+      },
+      {
+        "date": "2026-05-06",
+        "equity": 1.87,
+        "ticker": "LOW",
+        "ret": -10.52,
+        "cumulative_wr": 4.3
+      },
+      {
+        "date": "2026-05-06",
+        "equity": 1.69,
+        "ticker": "HD",
+        "ret": -9.73,
         "cumulative_wr": 4.2
       },
       {
         "date": "2026-05-06",
-        "equity": 1.6,
-        "ticker": "LOW",
-        "ret": -10.52,
+        "equity": 1.64,
+        "ticker": "CBRE",
+        "ret": -3.06,
         "cumulative_wr": 4.2
       },
       {
         "date": "2026-05-06",
         "equity": 1.55,
-        "ticker": "CBRE",
-        "ret": -3.06,
+        "ticker": "UPS",
+        "ret": -4.99,
         "cumulative_wr": 4.1
       },
       {
@@ -611,21 +611,21 @@
       },
       {
         "date": "2026-05-07",
-        "equity": 1.21,
-        "ticker": "CDW",
-        "ret": -17.36,
+        "equity": 1.37,
+        "ticker": "MA",
+        "ret": -6.35,
         "cumulative_wr": 4.0
       },
       {
         "date": "2026-05-07",
         "equity": 1.13,
-        "ticker": "CTRA",
-        "ret": -5.98,
+        "ticker": "CDW",
+        "ret": -17.36,
         "cumulative_wr": 3.9
       },
       {
         "date": "2026-05-07",
-        "equity": 1.07,
+        "equity": 1.06,
         "ticker": "DVN",
         "ret": -5.82,
         "cumulative_wr": 3.9
@@ -633,97 +633,125 @@
       {
         "date": "2026-05-07",
         "equity": 1.0,
-        "ticker": "MA",
-        "ret": -6.35,
+        "ticker": "CTRA",
+        "ret": -5.98,
         "cumulative_wr": 3.8
       },
       {
         "date": "2026-05-08",
-        "equity": 0.95,
-        "ticker": "FANG",
-        "ret": -4.8,
-        "cumulative_wr": 3.8
-      },
-      {
-        "date": "2026-05-08",
-        "equity": 0.73,
-        "ticker": "NICE",
-        "ret": -22.99,
-        "cumulative_wr": 3.8
-      },
-      {
-        "date": "2026-05-08",
-        "equity": 0.66,
+        "equity": 0.9,
         "ticker": "J",
         "ret": -10.1,
-        "cumulative_wr": 3.7
+        "cumulative_wr": 3.8
       },
       {
         "date": "2026-05-08",
-        "equity": 0.57,
+        "equity": 0.78,
         "ticker": "APA",
         "ret": -13.76,
+        "cumulative_wr": 3.8
+      },
+      {
+        "date": "2026-05-08",
+        "equity": 0.72,
+        "ticker": "EOG",
+        "ret": -7.57,
         "cumulative_wr": 3.7
       },
       {
         "date": "2026-05-08",
-        "equity": 0.53,
-        "ticker": "EOG",
-        "ret": -7.57,
-        "cumulative_wr": 3.6
-      },
-      {
-        "date": "2026-05-08",
-        "equity": 0.53,
+        "equity": 0.72,
         "ticker": "GLWG",
         "ret": 0.0,
+        "cumulative_wr": 3.7
+      },
+      {
+        "date": "2026-05-08",
+        "equity": 0.69,
+        "ticker": "CGEM",
+        "ret": -4.04,
         "cumulative_wr": 3.6
       },
       {
         "date": "2026-05-08",
-        "equity": 0.5,
-        "ticker": "CGEM",
-        "ret": -4.04,
+        "equity": 0.53,
+        "ticker": "NICE",
+        "ret": -22.99,
+        "cumulative_wr": 3.6
+      },
+      {
+        "date": "2026-05-08",
+        "equity": 0.43,
+        "ticker": "ERII",
+        "ret": -18.78,
         "cumulative_wr": 3.5
       },
       {
         "date": "2026-05-08",
         "equity": 0.41,
-        "ticker": "ERII",
-        "ret": -18.78,
+        "ticker": "FANG",
+        "ret": -4.8,
         "cumulative_wr": 3.5
+      },
+      {
+        "date": "2026-05-09",
+        "equity": 0.41,
+        "ticker": "MO",
+        "ret": 0.47,
+        "cumulative_wr": 4.6
+      },
+      {
+        "date": "2026-05-09",
+        "equity": 0.41,
+        "ticker": "PTCT",
+        "ret": 0.0,
+        "cumulative_wr": 4.5
+      },
+      {
+        "date": "2026-05-09",
+        "equity": 0.39,
+        "ticker": "SPGI",
+        "ret": -5.07,
+        "cumulative_wr": 4.5
+      },
+      {
+        "date": "2026-05-09",
+        "equity": 0.39,
+        "ticker": "SBRA",
+        "ret": 0.0,
+        "cumulative_wr": 4.4
       }
     ]
   },
   "analyses": [
     {
       "title": "整體表現 Overall",
-      "insight": "整體勝率 3.5%, 平均報酬 -6.03%。",
+      "insight": "整體勝率 4.4%, 平均報酬 -5.81%。",
       "insight_zh": "",
       "stats": [
         {
           "metric": "Total closed signals",
-          "value": 86
+          "value": 90
         },
         {
           "metric": "Win rate",
-          "value": "3.5%"
+          "value": "4.4%"
         },
         {
           "metric": "Avg return",
-          "value": "-6.03%"
+          "value": "-5.81%"
         },
         {
           "metric": "Median return",
-          "value": "-5.89%"
+          "value": "-5.70%"
         },
         {
           "metric": "Avg MFE (max gain)",
-          "value": "+3.31%"
+          "value": "+3.41%"
         },
         {
           "metric": "Avg MAE (max drawdown)",
-          "value": "-7.91%"
+          "value": "-7.71%"
         },
         {
           "metric": "Avg days held",
@@ -731,7 +759,7 @@
         },
         {
           "metric": "Closed by flip",
-          "value": "86 (100%)"
+          "value": "90 (100%)"
         },
         {
           "metric": "Closed by timeout",
@@ -742,7 +770,7 @@
     },
     {
       "title": "MFI Grade 分級",
-      "insight": "MFI Grade: 最佳組 [Normal] 勝率 3.2% (n=63, 平均 -5.97%); 最差組 [Strong] 勝率 0.0% (n=20)。 ⮕ 勝率差距僅 3.2pp,此特徵預測力弱。",
+      "insight": "MFI Grade: 最佳組 [Normal] 勝率 4.6% (n=65, 平均 -5.85%); 最差組 [Strong] 勝率 0.0% (n=20)。 ⮕ 勝率差距僅 4.6pp,此特徵預測力弱。",
       "insight_zh": "",
       "stats": [
         {
@@ -754,38 +782,38 @@
           "avg_mfe": 3.83,
           "avg_mae": -8.78,
           "avg_days": 10.4,
-          "wr_edge": -3.5,
-          "ret_edge": -1.1,
+          "wr_edge": -4.4,
+          "ret_edge": -1.32,
           "insufficient": false
         },
         {
           "group": "Normal",
-          "n": 63,
-          "win_rate": 3.2,
-          "avg_return": -5.97,
-          "median_return": -5.98,
-          "avg_mfe": 3.25,
-          "avg_mae": -7.86,
-          "avg_days": 8.6,
-          "wr_edge": -0.3,
-          "ret_edge": 0.06,
+          "n": 65,
+          "win_rate": 4.6,
+          "avg_return": -5.85,
+          "median_return": -5.91,
+          "avg_mfe": 3.36,
+          "avg_mae": -7.73,
+          "avg_days": 8.8,
+          "wr_edge": 0.2,
+          "ret_edge": -0.04,
           "insufficient": false
         },
         {
           "group": "Weak",
-          "n": 3,
-          "win_rate": 33.3,
-          "avg_return": -0.03,
+          "n": 5,
+          "win_rate": 20.0,
+          "avg_return": -0.02,
           "median_return": 0.0,
-          "avg_mfe": 1.05,
-          "avg_mae": -3.03,
-          "avg_days": 0.3,
-          "wr_edge": 29.8,
-          "ret_edge": 6.0,
+          "avg_mfe": 2.49,
+          "avg_mae": -3.08,
+          "avg_days": 0.2,
+          "wr_edge": 15.6,
+          "ret_edge": 5.8,
           "insufficient": true
         }
       ],
-      "spread": 3.2
+      "spread": 4.6
     },
     {
       "title": "MFI 五等分 (連續值 quintile)",
@@ -793,120 +821,120 @@
       "insight_zh": "",
       "stats": [
         {
-          "group": "Q1",
-          "n": 18,
-          "win_rate": 16.7,
-          "avg_return": -5.01,
-          "median_return": -5.86,
-          "avg_mfe": 4.14,
-          "avg_mae": -7.37,
-          "avg_days": 8.2,
-          "wr_edge": 13.2,
-          "ret_edge": 1.02,
+          "group": "Q2",
+          "n": 19,
+          "win_rate": 10.5,
+          "avg_return": -3.75,
+          "median_return": -2.23,
+          "avg_mfe": 4.7,
+          "avg_mae": -6.05,
+          "avg_days": 9.5,
+          "wr_edge": 6.1,
+          "ret_edge": 2.06,
           "insufficient": true,
-          "range": "[37.40, 55.90]"
+          "range": "[55.80, 60.40]"
         },
         {
-          "group": "Q2",
+          "group": "Q1",
+          "n": 18,
+          "win_rate": 11.1,
+          "avg_return": -4.79,
+          "median_return": -3.04,
+          "avg_mfe": 3.5,
+          "avg_mae": -7.0,
+          "avg_days": 6.7,
+          "wr_edge": 6.7,
+          "ret_edge": 1.02,
+          "insufficient": true,
+          "range": "[37.40, 55.70]"
+        },
+        {
+          "group": "Q4",
           "n": 18,
           "win_rate": 0.0,
-          "avg_return": -4.0,
-          "median_return": -2.82,
-          "avg_mfe": 3.77,
-          "avg_mae": -6.49,
-          "avg_days": 8.2,
-          "wr_edge": -3.5,
-          "ret_edge": 2.03,
+          "avg_return": -6.54,
+          "median_return": -6.72,
+          "avg_mfe": 2.36,
+          "avg_mae": -7.94,
+          "avg_days": 9.6,
+          "wr_edge": -4.4,
+          "ret_edge": -0.72,
           "insufficient": true,
-          "range": "[56.30, 60.50]"
+          "range": "[65.10, 71.40]"
+        },
+        {
+          "group": "Q5",
+          "n": 18,
+          "win_rate": 0.0,
+          "avg_return": -7.1,
+          "median_return": -6.18,
+          "avg_mfe": 3.73,
+          "avg_mae": -8.88,
+          "avg_days": 10.4,
+          "wr_edge": -4.4,
+          "ret_edge": -1.28,
+          "insufficient": true,
+          "range": "[71.60, 85.70]"
         },
         {
           "group": "Q3",
           "n": 17,
           "win_rate": 0.0,
-          "avg_return": -8.07,
-          "median_return": -7.97,
-          "avg_mfe": 2.26,
-          "avg_mae": -9.19,
-          "avg_days": 7.8,
-          "wr_edge": -3.5,
-          "ret_edge": -2.04,
+          "avg_return": -7.07,
+          "median_return": -6.3,
+          "avg_mfe": 2.66,
+          "avg_mae": -8.82,
+          "avg_days": 7.1,
+          "wr_edge": -4.4,
+          "ret_edge": -1.26,
           "insufficient": true,
-          "range": "[60.60, 65.10]"
-        },
-        {
-          "group": "Q5",
-          "n": 17,
-          "win_rate": 0.0,
-          "avg_return": -7.51,
-          "median_return": -6.79,
-          "avg_mfe": 3.93,
-          "avg_mae": -8.99,
-          "avg_days": 11.0,
-          "wr_edge": -3.5,
-          "ret_edge": -1.48,
-          "insufficient": true,
-          "range": "[71.80, 85.70]"
-        },
-        {
-          "group": "Q4",
-          "n": 16,
-          "win_rate": 0.0,
-          "avg_return": -5.73,
-          "median_return": -6.46,
-          "avg_mfe": 2.32,
-          "avg_mae": -7.59,
-          "avg_days": 8.5,
-          "wr_edge": -3.5,
-          "ret_edge": 0.3,
-          "insufficient": true,
-          "range": "[65.30, 71.60]"
+          "range": "[60.50, 64.90]"
         }
       ],
       "spread": null
     },
     {
       "title": "RS Rank 分組 (IBD 式切法)",
-      "insight": "RS Rank: 最佳組 [<50 (弱)] 勝率 3.7% (n=54, 平均 -6.38%); 最差組 [<50 (弱)] 勝率 3.7% (n=54)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
+      "insight": "RS Rank: 最佳組 [<50 (弱)] 勝率 3.6% (n=56, 平均 -6.24%); 最差組 [<50 (弱)] 勝率 3.6% (n=56)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
       "insight_zh": "",
       "stats": [
         {
           "group": "<50 (弱)",
-          "n": 54,
-          "win_rate": 3.7,
-          "avg_return": -6.38,
-          "median_return": -6.54,
-          "avg_mfe": 3.78,
-          "avg_mae": -8.12,
-          "avg_days": 10.1,
-          "wr_edge": 0.2,
-          "ret_edge": -0.28,
+          "n": 56,
+          "win_rate": 3.6,
+          "avg_return": -6.24,
+          "median_return": -6.46,
+          "avg_mfe": 3.85,
+          "avg_mae": -8.04,
+          "avg_days": 10.2,
+          "wr_edge": -0.9,
+          "ret_edge": -0.36,
           "insufficient": false
         },
         {
           "group": "70-80",
-          "n": 11,
-          "win_rate": 9.1,
-          "avg_return": -4.53,
-          "median_return": -5.32,
-          "avg_mfe": 1.88,
-          "avg_mae": -6.96,
-          "avg_days": 6.2,
-          "wr_edge": 5.6,
-          "ret_edge": 1.57,
+          "n": 12,
+          "win_rate": 16.7,
+          "avg_return": -4.12,
+          "median_return": -4.68,
+          "avg_mfe": 2.56,
+          "avg_mae": -6.5,
+          "avg_days": 6.5,
+          "wr_edge": 12.2,
+          "ret_edge": 1.76,
           "insufficient": true
         },
         {
           "group": "50-70",
-          "n": 10,
+          "n": 11,
           "win_rate": 0.0,
-          "avg_return": -5.96,
-          "median_return": -5.96,
-          "avg_mfe": 2.61,
-          "avg_mae": -7.8,
-          "avg_days": 7.8,
-          "wr_edge": -3.5,
-          "ret_edge": 0.14,
+          "avg_return": -5.42,
+          "median_return": -5.57,
+          "avg_mfe": 2.45,
+          "avg_mae": -7.14,
+          "avg_days": 7.1,
+          "wr_edge": -4.5,
+          "ret_edge": 0.46,
           "insufficient": true
         },
         {
@@ -918,8 +946,8 @@
           "avg_mfe": 3.25,
           "avg_mae": -9.79,
           "avg_days": 5.1,
-          "wr_edge": -3.5,
-          "ret_edge": -1.89,
+          "wr_edge": -4.5,
+          "ret_edge": -2.12,
           "insufficient": true
         },
         {
@@ -931,8 +959,8 @@
           "avg_mfe": 1.75,
           "avg_mae": -4.52,
           "avg_days": 6.7,
-          "wr_edge": -3.5,
-          "ret_edge": 3.19,
+          "wr_edge": -4.5,
+          "ret_edge": 2.97,
           "insufficient": true
         }
       ],
@@ -940,33 +968,33 @@
     },
     {
       "title": "EMA 結構",
-      "insight": "EMA 結構: 最佳組 [full_bull] 勝率 5.0% (n=40, 平均 -5.46%); 最差組 [above_50_only] 勝率 3.4% (n=29)。 ⮕ 勝率差距僅 1.6pp,此特徵預測力弱。",
+      "insight": "EMA 結構: 最佳組 [full_bull] 勝率 7.0% (n=43, 平均 -5.06%); 最差組 [above_50_only] 勝率 3.3% (n=30)。 ⮕ 勝率差距僅 3.7pp,此特徵預測力弱。",
       "insight_zh": "",
       "stats": [
         {
           "group": "full_bull",
-          "n": 40,
-          "win_rate": 5.0,
-          "avg_return": -5.46,
-          "median_return": -5.68,
-          "avg_mfe": 2.79,
-          "avg_mae": -7.4,
-          "avg_days": 8.2,
-          "wr_edge": 1.5,
-          "ret_edge": 0.57,
+          "n": 43,
+          "win_rate": 7.0,
+          "avg_return": -5.06,
+          "median_return": -5.42,
+          "avg_mfe": 3.05,
+          "avg_mae": -7.06,
+          "avg_days": 7.9,
+          "wr_edge": 2.5,
+          "ret_edge": 0.75,
           "insufficient": false
         },
         {
           "group": "above_50_only",
-          "n": 29,
-          "win_rate": 3.4,
-          "avg_return": -7.16,
-          "median_return": -6.54,
-          "avg_mfe": 4.07,
-          "avg_mae": -8.81,
-          "avg_days": 9.8,
-          "wr_edge": -0.0,
-          "ret_edge": -1.13,
+          "n": 30,
+          "win_rate": 3.3,
+          "avg_return": -7.09,
+          "median_return": -6.44,
+          "avg_mfe": 4.04,
+          "avg_mae": -8.71,
+          "avg_days": 10.2,
+          "wr_edge": -1.1,
+          "ret_edge": -1.27,
           "insufficient": false
         },
         {
@@ -978,8 +1006,8 @@
           "avg_mfe": 3.8,
           "avg_mae": -8.41,
           "avg_days": 9.9,
-          "wr_edge": -3.5,
-          "ret_edge": -0.55,
+          "wr_edge": -4.4,
+          "ret_edge": -0.76,
           "insufficient": true
         },
         {
@@ -991,12 +1019,12 @@
           "avg_mfe": 0.59,
           "avg_mae": -3.63,
           "avg_days": 0.0,
-          "wr_edge": -3.5,
-          "ret_edge": 5.79,
+          "wr_edge": -4.4,
+          "ret_edge": 5.57,
           "insufficient": true
         }
       ],
-      "spread": 1.6
+      "spread": 3.7
     },
     {
       "title": "Sector 產業 (n≥20)",
@@ -1007,81 +1035,81 @@
     },
     {
       "title": "波動率 ATR/Price%",
-      "insight": "ATR/Price %: 最佳組 [Q2] 勝率 4.8% (n=21, 平均 -6.40%); 最差組 [低波動 Q1] 勝率 0.0% (n=22)。 ⮕ 勝率差距僅 4.8pp,此特徵預測力弱。 勝率呈單調上升 ⮕ 此特徵值越高越好。",
+      "insight": "ATR/Price %: 最佳組 [Q2] 勝率 4.5% (n=22, 平均 -6.56%); 最差組 [低波動 Q1] 勝率 4.3% (n=23)。 ⮕ 勝率差距僅 0.2pp,此特徵預測力弱。 勝率呈單調上升 ⮕ 此特徵值越高越好。",
       "insight_zh": "",
       "stats": [
         {
           "group": "低波動 Q1",
-          "n": 22,
-          "win_rate": 0.0,
-          "avg_return": -4.31,
-          "median_return": -5.48,
-          "avg_mfe": 1.93,
-          "avg_mae": -5.59,
+          "n": 23,
+          "win_rate": 4.3,
+          "avg_return": -3.76,
+          "median_return": -5.32,
+          "avg_mfe": 2.3,
+          "avg_mae": -5.01,
           "avg_days": 8.9,
-          "wr_edge": -3.5,
-          "ret_edge": 1.72,
+          "wr_edge": -0.1,
+          "ret_edge": 2.06,
           "insufficient": false,
-          "range": "[1.58, 2.53]"
+          "range": "[1.58, 2.51]"
         },
         {
           "group": "高波動 Q4",
-          "n": 22,
-          "win_rate": 4.5,
-          "avg_return": -7.01,
-          "median_return": -7.02,
-          "avg_mfe": 4.32,
-          "avg_mae": -9.69,
-          "avg_days": 7.5,
-          "wr_edge": 1.1,
-          "ret_edge": -0.98,
+          "n": 23,
+          "win_rate": 4.3,
+          "avg_return": -6.71,
+          "median_return": -5.91,
+          "avg_mfe": 4.5,
+          "avg_mae": -9.52,
+          "avg_days": 7.1,
+          "wr_edge": -0.1,
+          "ret_edge": -0.89,
           "insufficient": false,
           "range": "[3.69, 11.46]"
         },
         {
           "group": "Q2",
-          "n": 21,
-          "win_rate": 4.8,
-          "avg_return": -6.4,
-          "median_return": -6.53,
-          "avg_mfe": 3.71,
-          "avg_mae": -8.16,
-          "avg_days": 10.0,
-          "wr_edge": 1.3,
-          "ret_edge": -0.37,
+          "n": 22,
+          "win_rate": 4.5,
+          "avg_return": -6.56,
+          "median_return": -6.82,
+          "avg_mfe": 3.38,
+          "avg_mae": -8.23,
+          "avg_days": 9.6,
+          "wr_edge": 0.1,
+          "ret_edge": -0.75,
           "insufficient": false,
-          "range": "[2.56, 3.05]"
+          "range": "[2.53, 3.01]"
         },
         {
           "group": "Q3",
-          "n": 21,
-          "win_rate": 4.8,
-          "avg_return": -6.43,
-          "median_return": -5.98,
-          "avg_mfe": 3.29,
-          "avg_mae": -8.22,
-          "avg_days": 8.6,
-          "wr_edge": 1.3,
-          "ret_edge": -0.4,
+          "n": 22,
+          "win_rate": 4.5,
+          "avg_return": -6.28,
+          "median_return": -5.93,
+          "avg_mfe": 3.47,
+          "avg_mae": -8.11,
+          "avg_days": 9.1,
+          "wr_edge": 0.1,
+          "ret_edge": -0.46,
           "insufficient": false,
-          "range": "[3.18, 3.60]"
+          "range": "[3.05, 3.60]"
         }
       ],
-      "spread": 4.8
+      "spread": 0.2
     },
     {
       "title": "大盤環境 (SPY vs 200MA)",
-      "insight": "大盤環境: 最佳組 [SPY 在 200MA 上] 勝率 3.5% (n=86, 平均 -6.03%); 最差組 [SPY 在 200MA 上] 勝率 3.5% (n=86)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。。這告訴你這個策略適不適合逆勢用。",
+      "insight": "大盤環境: 最佳組 [SPY 在 200MA 上] 勝率 4.4% (n=90, 平均 -5.81%); 最差組 [SPY 在 200MA 上] 勝率 4.4% (n=90)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。。這告訴你這個策略適不適合逆勢用。",
       "insight_zh": "",
       "stats": [
         {
           "group": "SPY 在 200MA 上",
-          "n": 86,
-          "win_rate": 3.5,
-          "avg_return": -6.03,
-          "median_return": -5.89,
-          "avg_mfe": 3.31,
-          "avg_mae": -7.91,
+          "n": 90,
+          "win_rate": 4.4,
+          "avg_return": -5.81,
+          "median_return": -5.7,
+          "avg_mfe": 3.41,
+          "avg_mae": -7.71,
           "avg_days": 8.7,
           "wr_edge": 0.0,
           "ret_edge": 0.0,
@@ -1092,17 +1120,17 @@
     },
     {
       "title": "VIX 恐慌指數",
-      "insight": "VIX 水準: 最佳組 [15-20] 勝率 3.5% (n=86, 平均 -6.03%); 最差組 [15-20] 勝率 3.5% (n=86)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
+      "insight": "VIX 水準: 最佳組 [15-20] 勝率 4.4% (n=90, 平均 -5.81%); 最差組 [15-20] 勝率 4.4% (n=90)。 ⮕ 勝率差距僅 0.0pp,此特徵預測力弱。",
       "insight_zh": "",
       "stats": [
         {
           "group": "15-20",
-          "n": 86,
-          "win_rate": 3.5,
-          "avg_return": -6.03,
-          "median_return": -5.89,
-          "avg_mfe": 3.31,
-          "avg_mae": -7.91,
+          "n": 90,
+          "win_rate": 4.4,
+          "avg_return": -5.81,
+          "median_return": -5.7,
+          "avg_mfe": 3.41,
+          "avg_mae": -7.71,
           "avg_days": 8.7,
           "wr_edge": 0.0,
           "ret_edge": 0.0,
@@ -1118,41 +1146,41 @@
       "stats": [
         {
           "group": "0",
-          "n": 22,
+          "n": 23,
           "win_rate": 0.0,
-          "avg_return": -6.16,
-          "median_return": -6.08,
-          "avg_mfe": 2.88,
-          "avg_mae": -7.9,
-          "avg_days": 8.0,
-          "wr_edge": -3.5,
-          "ret_edge": -0.13,
+          "avg_return": -6.12,
+          "median_return": -5.87,
+          "avg_mfe": 2.89,
+          "avg_mae": -7.82,
+          "avg_days": 8.6,
+          "wr_edge": -4.4,
+          "ret_edge": -0.3,
           "insufficient": false
         },
         {
           "group": "1",
-          "n": 34,
-          "win_rate": 5.9,
-          "avg_return": -6.66,
-          "median_return": -6.72,
-          "avg_mfe": 3.91,
-          "avg_mae": -8.36,
-          "avg_days": 10.4,
-          "wr_edge": 2.4,
-          "ret_edge": -0.63,
+          "n": 35,
+          "win_rate": 5.7,
+          "avg_return": -6.47,
+          "median_return": -6.54,
+          "avg_mfe": 4.04,
+          "avg_mae": -8.29,
+          "avg_days": 10.1,
+          "wr_edge": 1.3,
+          "ret_edge": -0.66,
           "insufficient": false
         },
         {
           "group": "2",
-          "n": 22,
-          "win_rate": 4.5,
-          "avg_return": -5.37,
-          "median_return": -5.33,
-          "avg_mfe": 3.56,
-          "avg_mae": -7.66,
-          "avg_days": 8.0,
-          "wr_edge": 1.1,
-          "ret_edge": 0.66,
+          "n": 24,
+          "win_rate": 8.3,
+          "avg_return": -4.9,
+          "median_return": -5.12,
+          "avg_mfe": 3.72,
+          "avg_mae": -7.1,
+          "avg_days": 7.8,
+          "wr_edge": 3.9,
+          "ret_edge": 0.91,
           "insufficient": false
         },
         {
@@ -1164,12 +1192,12 @@
           "avg_mfe": 1.27,
           "avg_mae": -6.67,
           "avg_days": 5.4,
-          "wr_edge": -3.5,
-          "ret_edge": 1.25,
+          "wr_edge": -4.4,
+          "ret_edge": 1.03,
           "insufficient": true
         }
       ],
-      "spread": 5.9
+      "spread": 8.3
     },
     {
       "title": "MFI Grade × EMA 多頭排列",
@@ -1178,28 +1206,28 @@
       "stats": [
         {
           "group": "Normal × EMA多頭",
-          "n": 32,
-          "win_rate": 3.1,
-          "avg_return": -5.3,
-          "median_return": -5.68,
-          "avg_mfe": 2.66,
-          "avg_mae": -7.42,
-          "avg_days": 8.0,
-          "wr_edge": -0.4,
-          "ret_edge": 0.73,
+          "n": 33,
+          "win_rate": 6.1,
+          "avg_return": -5.12,
+          "median_return": -5.54,
+          "avg_mfe": 2.88,
+          "avg_mae": -7.24,
+          "avg_days": 8.1,
+          "wr_edge": 1.6,
+          "ret_edge": 0.69,
           "insufficient": false
         },
         {
           "group": "Normal × EMA非多頭",
-          "n": 31,
-          "win_rate": 3.2,
-          "avg_return": -6.66,
-          "median_return": -6.54,
-          "avg_mfe": 3.87,
-          "avg_mae": -8.32,
-          "avg_days": 9.2,
-          "wr_edge": -0.3,
-          "ret_edge": -0.63,
+          "n": 32,
+          "win_rate": 3.1,
+          "avg_return": -6.61,
+          "median_return": -6.44,
+          "avg_mfe": 3.85,
+          "avg_mae": -8.24,
+          "avg_days": 9.5,
+          "wr_edge": -1.3,
+          "ret_edge": -0.8,
           "insufficient": false
         },
         {
@@ -1211,8 +1239,8 @@
           "avg_mfe": 3.91,
           "avg_mae": -9.2,
           "avg_days": 10.6,
-          "wr_edge": -3.5,
-          "ret_edge": -1.17,
+          "wr_edge": -4.4,
+          "ret_edge": -1.39,
           "insufficient": true
         },
         {
@@ -1224,8 +1252,21 @@
           "avg_mfe": 3.67,
           "avg_mae": -8.01,
           "avg_days": 10.1,
-          "wr_edge": -3.5,
-          "ret_edge": -0.96,
+          "wr_edge": -4.4,
+          "ret_edge": -1.18,
+          "insufficient": true
+        },
+        {
+          "group": "Weak × EMA多頭",
+          "n": 3,
+          "win_rate": 33.3,
+          "avg_return": 0.06,
+          "median_return": 0.0,
+          "avg_mfe": 3.42,
+          "avg_mae": -2.94,
+          "avg_days": 0.3,
+          "wr_edge": 28.9,
+          "ret_edge": 5.87,
           "insufficient": true
         },
         {
@@ -1237,25 +1278,12 @@
           "avg_mfe": 1.09,
           "avg_mae": -3.3,
           "avg_days": 0.0,
-          "wr_edge": -3.5,
-          "ret_edge": 5.9,
-          "insufficient": true
-        },
-        {
-          "group": "Weak × EMA多頭",
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_return": 0.17,
-          "median_return": 0.17,
-          "avg_mfe": 0.96,
-          "avg_mae": -2.5,
-          "avg_days": 1.0,
-          "wr_edge": 96.5,
-          "ret_edge": 6.2,
+          "wr_edge": -4.4,
+          "ret_edge": 5.68,
           "insufficient": true
         }
       ],
-      "spread": 0.1
+      "spread": 3.0
     },
     {
       "title": "持有天數分佈",
@@ -1271,8 +1299,8 @@
           "avg_mfe": 1.41,
           "avg_mae": -11.83,
           "avg_days": 2.4,
-          "wr_edge": 3.7,
-          "ret_edge": -3.69,
+          "wr_edge": 2.7,
+          "ret_edge": -3.91,
           "insufficient": true
         },
         {
@@ -1284,8 +1312,8 @@
           "avg_mfe": 4.26,
           "avg_mae": -8.55,
           "avg_days": 13.0,
-          "wr_edge": -3.5,
-          "ret_edge": -1.41,
+          "wr_edge": -4.4,
+          "ret_edge": -1.63,
           "insufficient": true
         },
         {
@@ -1297,34 +1325,34 @@
           "avg_mfe": 5.04,
           "avg_mae": -8.74,
           "avg_days": 17.5,
-          "wr_edge": 3.2,
-          "ret_edge": -0.51,
+          "wr_edge": 2.2,
+          "ret_edge": -0.73,
           "insufficient": true
         },
         {
           "group": "21-30",
-          "n": 5,
+          "n": 6,
           "win_rate": 0.0,
-          "avg_return": -6.4,
-          "median_return": -4.99,
-          "avg_mfe": 7.07,
-          "avg_mae": -8.29,
-          "avg_days": 21.8,
-          "wr_edge": -3.5,
+          "avg_return": -6.18,
+          "median_return": -5.03,
+          "avg_mfe": 6.42,
+          "avg_mae": -7.9,
+          "avg_days": 21.7,
+          "wr_edge": -4.4,
           "ret_edge": -0.37,
           "insufficient": true
         },
         {
           "group": "6-10",
-          "n": 17,
-          "win_rate": 0.0,
-          "avg_return": -7.76,
-          "median_return": -7.1,
-          "avg_mfe": 3.33,
-          "avg_mae": -9.09,
-          "avg_days": 8.1,
-          "wr_edge": -3.5,
-          "ret_edge": -1.73,
+          "n": 18,
+          "win_rate": 5.6,
+          "avg_return": -7.3,
+          "median_return": -6.72,
+          "avg_mfe": 3.7,
+          "avg_mae": -8.67,
+          "avg_days": 8.2,
+          "wr_edge": 1.1,
+          "ret_edge": -1.49,
           "insufficient": true
         }
       ],
@@ -1332,7 +1360,7 @@
     },
     {
       "title": "報酬率分布",
-      "insight": "報酬率分布 | 勝率 3.5% | 平均獲利 +1.87% | 平均虧損 -7.49% | Profit Factor 0.01",
+      "insight": "報酬率分布 | 勝率 4.4% | 平均獲利 +1.52% | 平均虧損 -7.45% | Profit Factor 0.01",
       "insight_zh": "",
       "stats": [],
       "spread": null,
@@ -1350,17 +1378,17 @@
         },
         {
           "range": "-10~-5%",
-          "count": 31,
+          "count": 32,
           "is_positive": false
         },
         {
           "range": "-5~0%",
-          "count": 33,
+          "count": 35,
           "is_positive": false
         },
         {
           "range": "0~5%",
-          "count": 2,
+          "count": 3,
           "is_positive": true
         },
         {
@@ -1382,7 +1410,7 @@
     },
     {
       "title": "累積報酬曲線 (Equity Curve)",
-      "insight": "Equity curve | 起始 100 → 最終 0.4 | 峰值 100.0 | 峰谷回撤 99.6% | 共 86 筆結案訊號",
+      "insight": "Equity curve | 起始 100 → 最終 0.4 | 峰值 92.0 | 峰谷回撤 99.6% | 共 90 筆結案訊號",
       "insight_zh": "",
       "stats": [],
       "spread": null,
@@ -1390,49 +1418,28 @@
       "_points": [
         {
           "date": "2026-04-19",
-          "equity": 100.0,
-          "ticker": "PHM",
-          "ret": 0.0,
+          "equity": 92.03,
+          "ticker": "SCHW",
+          "ret": -7.97,
           "cumulative_wr": 0.0
         },
         {
           "date": "2026-04-19",
-          "equity": 100.0,
-          "ticker": "LUV",
-          "ret": 0.0,
-          "cumulative_wr": 0.0
-        },
-        {
-          "date": "2026-04-19",
-          "equity": 98.63,
-          "ticker": "JCI",
-          "ret": -1.37,
-          "cumulative_wr": 0.0
-        },
-        {
-          "date": "2026-04-19",
-          "equity": 98.63,
-          "ticker": "HAS",
-          "ret": 0.0,
-          "cumulative_wr": 0.0
-        },
-        {
-          "date": "2026-04-19",
-          "equity": 98.63,
-          "ticker": "SHOP",
-          "ret": 0.0,
-          "cumulative_wr": 0.0
-        },
-        {
-          "date": "2026-04-19",
-          "equity": 98.63,
+          "equity": 92.03,
           "ticker": "AMT",
           "ret": 0.0,
           "cumulative_wr": 0.0
         },
         {
           "date": "2026-04-19",
-          "equity": 98.63,
+          "equity": 90.77,
+          "ticker": "JCI",
+          "ret": -1.37,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 90.77,
           "ticker": "TPR",
           "ret": 0.0,
           "cumulative_wr": 0.0
@@ -1440,8 +1447,29 @@
         {
           "date": "2026-04-19",
           "equity": 90.77,
-          "ticker": "SCHW",
-          "ret": -7.97,
+          "ticker": "PHM",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 90.77,
+          "ticker": "LUV",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 90.77,
+          "ticker": "SHOP",
+          "ret": 0.0,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-19",
+          "equity": 90.77,
+          "ticker": "HAS",
+          "ret": 0.0,
           "cumulative_wr": 0.0
         },
         {
@@ -1460,163 +1488,163 @@
         },
         {
           "date": "2026-04-23",
-          "equity": 90.06,
+          "equity": 88.32,
+          "ticker": "DGX",
+          "ret": -2.04,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 75.89,
+          "ticker": "GE",
+          "ret": -14.07,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 70.74,
+          "ticker": "PRU",
+          "ret": -6.79,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 66.91,
+          "ticker": "WELL",
+          "ret": -5.42,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 66.73,
+          "ticker": "ISRG",
+          "ret": -0.26,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 66.66,
           "ticker": "PLTR",
           "ret": -0.11,
           "cumulative_wr": 0.0
         },
         {
           "date": "2026-04-23",
-          "equity": 79.66,
+          "equity": 58.96,
           "ticker": "NRG",
           "ret": -11.55,
           "cumulative_wr": 0.0
         },
         {
           "date": "2026-04-23",
-          "equity": 79.68,
-          "ticker": "IVZ",
-          "ret": 0.02,
-          "cumulative_wr": 7.7
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 75.36,
-          "ticker": "WELL",
-          "ret": -5.42,
-          "cumulative_wr": 7.1
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 75.09,
-          "ticker": "NOW",
-          "ret": -0.36,
-          "cumulative_wr": 6.7
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 73.55,
-          "ticker": "DGX",
-          "ret": -2.04,
-          "cumulative_wr": 6.2
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 73.36,
-          "ticker": "ISRG",
-          "ret": -0.26,
-          "cumulative_wr": 5.9
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 63.04,
-          "ticker": "GE",
-          "ret": -14.07,
-          "cumulative_wr": 5.6
-        },
-        {
-          "date": "2026-04-23",
-          "equity": 62.81,
+          "equity": 58.74,
           "ticker": "CRM",
           "ret": -0.37,
+          "cumulative_wr": 0.0
+        },
+        {
+          "date": "2026-04-23",
+          "equity": 58.75,
+          "ticker": "IVZ",
+          "ret": 0.02,
           "cumulative_wr": 5.3
         },
         {
           "date": "2026-04-23",
           "equity": 58.54,
-          "ticker": "PRU",
-          "ret": -6.79,
+          "ticker": "NOW",
+          "ret": -0.36,
           "cumulative_wr": 5.0
         },
         {
           "date": "2026-04-24",
-          "equity": 54.85,
-          "ticker": "ADSK",
-          "ret": -6.3,
+          "equity": 53.13,
+          "ticker": "TMO",
+          "ret": -9.24,
           "cumulative_wr": 4.8
         },
         {
           "date": "2026-04-24",
-          "equity": 52.58,
-          "ticker": "WAT",
-          "ret": -4.15,
+          "equity": 47.77,
+          "ticker": "TDG",
+          "ret": -10.09,
           "cumulative_wr": 4.5
         },
         {
           "date": "2026-04-24",
-          "equity": 46.87,
-          "ticker": "EFX",
-          "ret": -10.85,
+          "equity": 43.76,
+          "ticker": "LVS",
+          "ret": -8.39,
           "cumulative_wr": 4.3
         },
         {
           "date": "2026-04-24",
-          "equity": 41.71,
-          "ticker": "TECH",
-          "ret": -11.01,
+          "equity": 41.01,
+          "ticker": "ADSK",
+          "ret": -6.3,
           "cumulative_wr": 4.2
         },
         {
           "date": "2026-04-24",
-          "equity": 38.21,
-          "ticker": "LVS",
-          "ret": -8.39,
+          "equity": 36.49,
+          "ticker": "TECH",
+          "ret": -11.01,
           "cumulative_wr": 4.0
         },
         {
           "date": "2026-04-24",
-          "equity": 34.68,
-          "ticker": "TMO",
-          "ret": -9.24,
+          "equity": 34.98,
+          "ticker": "WAT",
+          "ret": -4.15,
           "cumulative_wr": 3.8
         },
         {
           "date": "2026-04-24",
           "equity": 31.18,
-          "ticker": "TDG",
-          "ret": -10.09,
+          "ticker": "EFX",
+          "ret": -10.85,
           "cumulative_wr": 3.7
         },
         {
           "date": "2026-04-25",
-          "equity": 29.45,
-          "ticker": "ZBH",
-          "ret": -5.57,
+          "equity": 31.18,
+          "ticker": "CEG",
+          "ret": 0.0,
           "cumulative_wr": 3.6
         },
         {
           "date": "2026-04-25",
-          "equity": 27.36,
+          "equity": 28.97,
           "ticker": "NVR",
           "ret": -7.1,
           "cumulative_wr": 3.4
         },
         {
           "date": "2026-04-25",
-          "equity": 24.53,
-          "ticker": "CMCSA",
-          "ret": -10.32,
+          "equity": 28.9,
+          "ticker": "PG",
+          "ret": -0.25,
           "cumulative_wr": 3.3
         },
         {
           "date": "2026-04-25",
-          "equity": 24.47,
-          "ticker": "PG",
-          "ret": -0.25,
+          "equity": 27.29,
+          "ticker": "ZBH",
+          "ret": -5.57,
           "cumulative_wr": 3.2
+        },
+        {
+          "date": "2026-04-25",
+          "equity": 24.47,
+          "ticker": "CMCSA",
+          "ret": -10.32,
+          "cumulative_wr": 3.1
         },
         {
           "date": "2026-04-25",
           "equity": 18.54,
           "ticker": "CHTR",
           "ret": -24.23,
-          "cumulative_wr": 3.1
-        },
-        {
-          "date": "2026-04-25",
-          "equity": 18.54,
-          "ticker": "CEG",
-          "ret": 0.0,
           "cumulative_wr": 3.0
         },
         {
@@ -1635,112 +1663,112 @@
         },
         {
           "date": "2026-04-29",
-          "equity": 16.4,
-          "ticker": "VLTO",
-          "ret": -7.35,
+          "equity": 17.0,
+          "ticker": "GPC",
+          "ret": -3.99,
           "cumulative_wr": 2.8
         },
         {
           "date": "2026-04-29",
-          "equity": 13.63,
-          "ticker": "ARE",
-          "ret": -16.9,
+          "equity": 15.13,
+          "ticker": "ALNY",
+          "ret": -10.99,
           "cumulative_wr": 2.7
         },
         {
           "date": "2026-04-29",
-          "equity": 13.01,
+          "equity": 14.44,
           "ticker": "POOL",
           "ret": -4.55,
           "cumulative_wr": 2.6
         },
         {
           "date": "2026-04-29",
-          "equity": 11.58,
-          "ticker": "ALNY",
-          "ret": -10.99,
+          "equity": 13.59,
+          "ticker": "CMG",
+          "ret": -5.87,
           "cumulative_wr": 2.6
         },
         {
           "date": "2026-04-29",
-          "equity": 11.12,
-          "ticker": "GPC",
-          "ret": -3.99,
+          "equity": 11.29,
+          "ticker": "ARE",
+          "ret": -16.9,
           "cumulative_wr": 2.5
         },
         {
           "date": "2026-04-29",
-          "equity": 11.12,
-          "ticker": "KO",
-          "ret": 0.0,
+          "equity": 10.46,
+          "ticker": "VLTO",
+          "ret": -7.35,
           "cumulative_wr": 2.4
         },
         {
           "date": "2026-04-29",
           "equity": 10.46,
-          "ticker": "CMG",
-          "ret": -5.87,
+          "ticker": "KO",
+          "ret": 0.0,
           "cumulative_wr": 2.4
         },
         {
           "date": "2026-04-30",
-          "equity": 10.11,
-          "ticker": "COF",
-          "ret": -3.4,
-          "cumulative_wr": 2.3
-        },
-        {
-          "date": "2026-04-30",
-          "equity": 10.11,
+          "equity": 10.46,
           "ticker": "MPC",
           "ret": 0.0,
           "cumulative_wr": 2.3
         },
         {
           "date": "2026-04-30",
-          "equity": 9.23,
+          "equity": 9.56,
           "ticker": "A",
           "ret": -8.67,
-          "cumulative_wr": 2.2
+          "cumulative_wr": 2.3
         },
         {
           "date": "2026-04-30",
-          "equity": 8.59,
-          "ticker": "MMM",
-          "ret": -6.91,
-          "cumulative_wr": 2.2
-        },
-        {
-          "date": "2026-04-30",
-          "equity": 7.71,
+          "equity": 8.57,
           "ticker": "WSM",
           "ret": -10.32,
+          "cumulative_wr": 2.2
+        },
+        {
+          "date": "2026-04-30",
+          "equity": 7.72,
+          "ticker": "HOOD",
+          "ret": -9.98,
+          "cumulative_wr": 2.2
+        },
+        {
+          "date": "2026-04-30",
+          "equity": 7.45,
+          "ticker": "COF",
+          "ret": -3.4,
           "cumulative_wr": 2.1
         },
         {
           "date": "2026-04-30",
-          "equity": 7.08,
-          "ticker": "CRL",
-          "ret": -8.13,
+          "equity": 6.98,
+          "ticker": "HSIC",
+          "ret": -6.38,
           "cumulative_wr": 2.1
         },
         {
           "date": "2026-04-30",
-          "equity": 6.25,
+          "equity": 6.5,
+          "ticker": "MMM",
+          "ret": -6.91,
+          "cumulative_wr": 2.0
+        },
+        {
+          "date": "2026-04-30",
+          "equity": 5.74,
           "ticker": "IR",
           "ret": -11.67,
           "cumulative_wr": 2.0
         },
         {
           "date": "2026-04-30",
-          "equity": 5.86,
-          "ticker": "HSIC",
-          "ret": -6.38,
-          "cumulative_wr": 2.0
-        },
-        {
-          "date": "2026-04-30",
-          "equity": 5.55,
+          "equity": 5.44,
           "ticker": "CPAY",
           "ret": -5.24,
           "cumulative_wr": 2.0
@@ -1748,155 +1776,155 @@
         {
           "date": "2026-04-30",
           "equity": 4.99,
-          "ticker": "HOOD",
-          "ret": -9.98,
+          "ticker": "CRL",
+          "ret": -8.13,
           "cumulative_wr": 1.9
         },
         {
           "date": "2026-05-04",
-          "equity": 4.61,
-          "ticker": "SW",
-          "ret": -7.66,
-          "cumulative_wr": 1.9
-        },
-        {
-          "date": "2026-05-04",
-          "equity": 4.62,
-          "ticker": "VZ",
-          "ret": 0.17,
-          "cumulative_wr": 3.7
-        },
-        {
-          "date": "2026-05-04",
-          "equity": 4.62,
+          "equity": 4.99,
           "ticker": "AIG",
           "ret": 0.0,
-          "cumulative_wr": 3.6
+          "cumulative_wr": 1.9
         },
         {
           "date": "2026-05-04",
-          "equity": 4.57,
-          "ticker": "REG",
-          "ret": -1.16,
-          "cumulative_wr": 3.6
+          "equity": 4.67,
+          "ticker": "F",
+          "ret": -6.53,
+          "cumulative_wr": 1.9
         },
         {
           "date": "2026-05-04",
-          "equity": 4.81,
+          "equity": 4.92,
           "ticker": "ORCL",
           "ret": 5.42,
+          "cumulative_wr": 3.6
+        },
+        {
+          "date": "2026-05-04",
+          "equity": 4.54,
+          "ticker": "SW",
+          "ret": -7.66,
+          "cumulative_wr": 3.6
+        },
+        {
+          "date": "2026-05-04",
+          "equity": 4.55,
+          "ticker": "VZ",
+          "ret": 0.17,
           "cumulative_wr": 5.3
         },
         {
           "date": "2026-05-04",
-          "equity": 4.38,
-          "ticker": "MRSH",
-          "ret": -8.98,
+          "equity": 4.16,
+          "ticker": "BKNG",
+          "ret": -8.65,
           "cumulative_wr": 5.2
         },
         {
           "date": "2026-05-04",
-          "equity": 4.0,
-          "ticker": "BKNG",
-          "ret": -8.65,
+          "equity": 3.79,
+          "ticker": "MRSH",
+          "ret": -8.98,
           "cumulative_wr": 5.1
         },
         {
           "date": "2026-05-04",
           "equity": 3.74,
-          "ticker": "F",
-          "ret": -6.53,
+          "ticker": "REG",
+          "ret": -1.16,
           "cumulative_wr": 5.0
         },
         {
           "date": "2026-05-06",
-          "equity": 3.53,
-          "ticker": "L",
-          "ret": -5.54,
+          "equity": 3.72,
+          "ticker": "DIS",
+          "ret": -0.69,
           "cumulative_wr": 4.9
         },
         {
           "date": "2026-05-06",
-          "equity": 3.33,
+          "equity": 3.47,
+          "ticker": "FISV",
+          "ret": -6.54,
+          "cumulative_wr": 4.8
+        },
+        {
+          "date": "2026-05-06",
+          "equity": 3.27,
           "ticker": "APH",
           "ret": -5.91,
           "cumulative_wr": 4.8
         },
         {
           "date": "2026-05-06",
-          "equity": 3.3,
-          "ticker": "DIS",
-          "ret": -0.69,
-          "cumulative_wr": 4.8
-        },
-        {
-          "date": "2026-05-06",
-          "equity": 2.98,
-          "ticker": "HD",
-          "ret": -9.73,
+          "equity": 3.09,
+          "ticker": "L",
+          "ret": -5.54,
           "cumulative_wr": 4.7
         },
         {
           "date": "2026-05-06",
-          "equity": 2.83,
-          "ticker": "UPS",
-          "ret": -4.99,
+          "equity": 2.92,
+          "ticker": "CCEP",
+          "ret": -5.32,
           "cumulative_wr": 4.6
         },
         {
           "date": "2026-05-06",
-          "equity": 2.61,
+          "equity": 2.69,
           "ticker": "CHRW",
           "ret": -7.97,
           "cumulative_wr": 4.5
         },
         {
           "date": "2026-05-06",
-          "equity": 2.44,
-          "ticker": "FISV",
-          "ret": -6.54,
+          "equity": 2.39,
+          "ticker": "ALGN",
+          "ret": -11.24,
           "cumulative_wr": 4.5
         },
         {
           "date": "2026-05-06",
-          "equity": 2.31,
-          "ticker": "CCEP",
-          "ret": -5.32,
+          "equity": 2.14,
+          "ticker": "BAX",
+          "ret": -10.48,
           "cumulative_wr": 4.4
         },
         {
           "date": "2026-05-06",
-          "equity": 2.05,
-          "ticker": "ALGN",
-          "ret": -11.24,
-          "cumulative_wr": 4.3
-        },
-        {
-          "date": "2026-05-06",
-          "equity": 1.83,
-          "ticker": "BAX",
-          "ret": -10.48,
-          "cumulative_wr": 4.3
-        },
-        {
-          "date": "2026-05-06",
-          "equity": 1.79,
+          "equity": 2.09,
           "ticker": "DHI",
           "ret": -2.23,
+          "cumulative_wr": 4.3
+        },
+        {
+          "date": "2026-05-06",
+          "equity": 1.87,
+          "ticker": "LOW",
+          "ret": -10.52,
+          "cumulative_wr": 4.3
+        },
+        {
+          "date": "2026-05-06",
+          "equity": 1.69,
+          "ticker": "HD",
+          "ret": -9.73,
           "cumulative_wr": 4.2
         },
         {
           "date": "2026-05-06",
-          "equity": 1.6,
-          "ticker": "LOW",
-          "ret": -10.52,
+          "equity": 1.64,
+          "ticker": "CBRE",
+          "ret": -3.06,
           "cumulative_wr": 4.2
         },
         {
           "date": "2026-05-06",
           "equity": 1.55,
-          "ticker": "CBRE",
-          "ret": -3.06,
+          "ticker": "UPS",
+          "ret": -4.99,
           "cumulative_wr": 4.1
         },
         {
@@ -1908,21 +1936,21 @@
         },
         {
           "date": "2026-05-07",
-          "equity": 1.21,
-          "ticker": "CDW",
-          "ret": -17.36,
+          "equity": 1.37,
+          "ticker": "MA",
+          "ret": -6.35,
           "cumulative_wr": 4.0
         },
         {
           "date": "2026-05-07",
           "equity": 1.13,
-          "ticker": "CTRA",
-          "ret": -5.98,
+          "ticker": "CDW",
+          "ret": -17.36,
           "cumulative_wr": 3.9
         },
         {
           "date": "2026-05-07",
-          "equity": 1.07,
+          "equity": 1.06,
           "ticker": "DVN",
           "ret": -5.82,
           "cumulative_wr": 3.9
@@ -1930,71 +1958,99 @@
         {
           "date": "2026-05-07",
           "equity": 1.0,
-          "ticker": "MA",
-          "ret": -6.35,
+          "ticker": "CTRA",
+          "ret": -5.98,
           "cumulative_wr": 3.8
         },
         {
           "date": "2026-05-08",
-          "equity": 0.95,
-          "ticker": "FANG",
-          "ret": -4.8,
-          "cumulative_wr": 3.8
-        },
-        {
-          "date": "2026-05-08",
-          "equity": 0.73,
-          "ticker": "NICE",
-          "ret": -22.99,
-          "cumulative_wr": 3.8
-        },
-        {
-          "date": "2026-05-08",
-          "equity": 0.66,
+          "equity": 0.9,
           "ticker": "J",
           "ret": -10.1,
-          "cumulative_wr": 3.7
+          "cumulative_wr": 3.8
         },
         {
           "date": "2026-05-08",
-          "equity": 0.57,
+          "equity": 0.78,
           "ticker": "APA",
           "ret": -13.76,
+          "cumulative_wr": 3.8
+        },
+        {
+          "date": "2026-05-08",
+          "equity": 0.72,
+          "ticker": "EOG",
+          "ret": -7.57,
           "cumulative_wr": 3.7
         },
         {
           "date": "2026-05-08",
-          "equity": 0.53,
-          "ticker": "EOG",
-          "ret": -7.57,
-          "cumulative_wr": 3.6
-        },
-        {
-          "date": "2026-05-08",
-          "equity": 0.53,
+          "equity": 0.72,
           "ticker": "GLWG",
           "ret": 0.0,
+          "cumulative_wr": 3.7
+        },
+        {
+          "date": "2026-05-08",
+          "equity": 0.69,
+          "ticker": "CGEM",
+          "ret": -4.04,
           "cumulative_wr": 3.6
         },
         {
           "date": "2026-05-08",
-          "equity": 0.5,
-          "ticker": "CGEM",
-          "ret": -4.04,
+          "equity": 0.53,
+          "ticker": "NICE",
+          "ret": -22.99,
+          "cumulative_wr": 3.6
+        },
+        {
+          "date": "2026-05-08",
+          "equity": 0.43,
+          "ticker": "ERII",
+          "ret": -18.78,
           "cumulative_wr": 3.5
         },
         {
           "date": "2026-05-08",
           "equity": 0.41,
-          "ticker": "ERII",
-          "ret": -18.78,
+          "ticker": "FANG",
+          "ret": -4.8,
           "cumulative_wr": 3.5
+        },
+        {
+          "date": "2026-05-09",
+          "equity": 0.41,
+          "ticker": "MO",
+          "ret": 0.47,
+          "cumulative_wr": 4.6
+        },
+        {
+          "date": "2026-05-09",
+          "equity": 0.41,
+          "ticker": "PTCT",
+          "ret": 0.0,
+          "cumulative_wr": 4.5
+        },
+        {
+          "date": "2026-05-09",
+          "equity": 0.39,
+          "ticker": "SPGI",
+          "ret": -5.07,
+          "cumulative_wr": 4.5
+        },
+        {
+          "date": "2026-05-09",
+          "equity": 0.39,
+          "ticker": "SBRA",
+          "ret": 0.0,
+          "cumulative_wr": 4.4
         }
       ]
     },
     {
       "title": "Profit Factor by MFI Grade",
-      "insight": "Profit Factor = (勝率 × 平均獲利) / (敗率 × |平均虧損|)，> 1.5 為合格，> 2.0 為優秀。 最佳: Normal PF=0.01 (n=63)。",
+      "insight": "Profit Factor = (勝率 × 平均獲利) / (敗率 × |平均虧損|)，> 1.5 為合格，> 2.0 為優秀。 最佳: Normal PF=0.02 (n=65)。",
       "insight_zh": "",
       "stats": [
         {
@@ -2008,45 +2064,101 @@
         },
         {
           "group": "Normal",
-          "n": 63,
-          "win_rate": 3.2,
-          "avg_win": 2.72,
-          "avg_loss": -6.25,
-          "profit_factor": 0.01,
+          "n": 65,
+          "win_rate": 4.6,
+          "avg_win": 1.97,
+          "avg_loss": -6.23,
+          "profit_factor": 0.02,
           "insufficient": false
         },
         {
           "group": "Weak",
-          "n": 3,
-          "win_rate": 33.3,
+          "n": 5,
+          "win_rate": 20.0,
           "avg_win": 0.17,
-          "avg_loss": -0.13,
+          "avg_loss": -0.06,
           "profit_factor": 0.65,
           "insufficient": true
         }
       ],
-      "spread": 3.2
+      "spread": 4.6
     },
     {
       "title": "最佳雙條件組合 Top 15",
-      "insight": "Top 雙條件組合 | 最佳: [full_bull × 0] 勝率 8.7% (n=23, avg -5.90%)",
+      "insight": "Top 雙條件組合 | 最佳: [full_bull × 0] 勝率 8.3% (n=24, avg -5.65%)",
       "insight_zh": "",
       "stats": [
         {
           "combo": "full_bull × 0",
-          "n": 23,
-          "win_rate": 8.7,
-          "avg_return": -5.9,
+          "n": 24,
+          "win_rate": 8.3,
+          "avg_return": -5.65,
+          "insufficient": false,
+          "group": "full_bull × 0"
+        },
+        {
+          "combo": "full_bull × 0",
+          "n": 24,
+          "win_rate": 8.3,
+          "avg_return": -5.47,
           "insufficient": false,
           "group": "full_bull × 0"
         },
         {
           "combo": "full_bull × 1",
-          "n": 34,
-          "win_rate": 5.9,
-          "avg_return": -5.9,
+          "n": 37,
+          "win_rate": 8.1,
+          "avg_return": -5.41,
           "insufficient": false,
           "group": "full_bull × 1"
+        },
+        {
+          "combo": "full_bull × 0",
+          "n": 42,
+          "win_rate": 7.1,
+          "avg_return": -5.15,
+          "insufficient": false,
+          "group": "full_bull × 0"
+        },
+        {
+          "combo": "full_bull × 1",
+          "n": 43,
+          "win_rate": 7.0,
+          "avg_return": -5.06,
+          "insufficient": false,
+          "group": "full_bull × 1"
+        },
+        {
+          "combo": "Normal × 0",
+          "n": 32,
+          "win_rate": 6.2,
+          "avg_return": -6.01,
+          "insufficient": false,
+          "group": "Normal × 0"
+        },
+        {
+          "combo": "0 × 1",
+          "n": 32,
+          "win_rate": 6.2,
+          "avg_return": -6.36,
+          "insufficient": false,
+          "group": "0 × 1"
+        },
+        {
+          "combo": "Normal × full_bull",
+          "n": 33,
+          "win_rate": 6.1,
+          "avg_return": -5.12,
+          "insufficient": false,
+          "group": "Normal × full_bull"
+        },
+        {
+          "combo": "1 × 1",
+          "n": 49,
+          "win_rate": 6.1,
+          "avg_return": -5.5,
+          "insufficient": false,
+          "group": "1 × 1"
         },
         {
           "combo": "1 × 0",
@@ -2065,95 +2177,39 @@
           "group": "1 × 1"
         },
         {
+          "combo": "Normal × 1",
+          "n": 56,
+          "win_rate": 5.4,
+          "avg_return": -6.08,
+          "insufficient": false,
+          "group": "Normal × 1"
+        },
+        {
           "combo": "0 × 1",
-          "n": 36,
-          "win_rate": 5.6,
-          "avg_return": -5.69,
+          "n": 37,
+          "win_rate": 5.4,
+          "avg_return": -5.53,
           "insufficient": false,
           "group": "0 × 1"
         },
         {
-          "combo": "1 × 0",
+          "combo": "0 × 1",
           "n": 56,
           "win_rate": 5.4,
-          "avg_return": -6.17,
+          "avg_return": -5.51,
           "insufficient": false,
-          "group": "1 × 0"
+          "group": "0 × 1"
         },
         {
-          "combo": "full_bull × 0",
-          "n": 39,
-          "win_rate": 5.1,
-          "avg_return": -5.56,
+          "combo": "0 × 1",
+          "n": 77,
+          "win_rate": 5.2,
+          "avg_return": -5.93,
           "insufficient": false,
-          "group": "full_bull × 0"
-        },
-        {
-          "combo": "Normal × above_50_only",
-          "n": 20,
-          "win_rate": 5.0,
-          "avg_return": -7.0,
-          "insufficient": false,
-          "group": "Normal × above_50_only"
-        },
-        {
-          "combo": "full_bull × 1",
-          "n": 40,
-          "win_rate": 5.0,
-          "avg_return": -5.46,
-          "insufficient": false,
-          "group": "full_bull × 1"
-        },
-        {
-          "combo": "1 × 0",
-          "n": 41,
-          "win_rate": 4.9,
-          "avg_return": -5.53,
-          "insufficient": false,
-          "group": "1 × 0"
-        },
-        {
-          "combo": "full_bull × 0",
-          "n": 21,
-          "win_rate": 4.8,
-          "avg_return": -6.28,
-          "insufficient": false,
-          "group": "full_bull × 0"
-        },
-        {
-          "combo": "0 × 0",
-          "n": 66,
-          "win_rate": 4.5,
-          "avg_return": -5.87,
-          "insufficient": false,
-          "group": "0 × 0"
-        },
-        {
-          "combo": "Normal × 0",
-          "n": 23,
-          "win_rate": 4.3,
-          "avg_return": -6.12,
-          "insufficient": false,
-          "group": "Normal × 0"
-        },
-        {
-          "combo": "Normal × 0",
-          "n": 47,
-          "win_rate": 4.3,
-          "avg_return": -5.48,
-          "insufficient": false,
-          "group": "Normal × 0"
-        },
-        {
-          "combo": "1 × 1",
-          "n": 46,
-          "win_rate": 4.3,
-          "avg_return": -5.86,
-          "insufficient": false,
-          "group": "1 × 1"
+          "group": "0 × 1"
         }
       ],
-      "spread": 4.4
+      "spread": 3.1
     }
   ]
 }
