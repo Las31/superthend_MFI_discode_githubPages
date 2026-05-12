@@ -1,31 +1,31 @@
 {
   "overall": {
-    "n": 90,
-    "avg_return": -5.81,
-    "median_return": -5.7,
-    "win_rate": 4.4,
-    "avg_days_held": 8.7,
-    "avg_mfe": 3.41,
-    "avg_mae": -7.71
+    "n": 95,
+    "avg_return": -6.49,
+    "median_return": -5.87,
+    "win_rate": 4.2,
+    "avg_days_held": 8.9,
+    "avg_mfe": 3.92,
+    "avg_mae": -8.61
   },
   "by_mfi_grade": {
     "Strong": {
-      "n": 20,
-      "avg_return": -7.13,
-      "median_return": -6.18,
+      "n": 23,
+      "avg_return": -9.31,
+      "median_return": -6.79,
       "win_rate": 0.0,
-      "avg_days_held": 10.4,
-      "avg_mfe": 3.83,
-      "avg_mae": -8.78
+      "avg_days_held": 9.9,
+      "avg_mfe": 5.77,
+      "avg_mae": -12.04
     },
     "Normal": {
-      "n": 65,
-      "avg_return": -5.85,
-      "median_return": -5.91,
-      "win_rate": 4.6,
-      "avg_days_held": 8.8,
-      "avg_mfe": 3.36,
-      "avg_mae": -7.73
+      "n": 67,
+      "avg_return": -6.0,
+      "median_return": -5.98,
+      "win_rate": 4.5,
+      "avg_days_held": 9.3,
+      "avg_mfe": 3.39,
+      "avg_mae": -7.85
     },
     "Weak": {
       "n": 5,
@@ -48,13 +48,13 @@
       "avg_mae": -6.55
     },
     "Technology": {
-      "n": 13,
-      "avg_return": -4.95,
-      "median_return": -4.53,
-      "win_rate": 7.7,
-      "avg_days_held": 8.7,
-      "avg_mfe": 4.39,
-      "avg_mae": -7.15
+      "n": 14,
+      "avg_return": -5.47,
+      "median_return": -4.88,
+      "win_rate": 7.1,
+      "avg_days_held": 8.9,
+      "avg_mfe": 4.29,
+      "avg_mae": -7.62
     },
     "Communication Services": {
       "n": 4,
@@ -66,31 +66,31 @@
       "avg_mae": -10.23
     },
     "Consumer Cyclical": {
-      "n": 14,
-      "avg_return": -5.79,
-      "median_return": -6.81,
+      "n": 16,
+      "avg_return": -6.41,
+      "median_return": -7.38,
       "win_rate": 0.0,
-      "avg_days_held": 10.7,
-      "avg_mfe": 3.58,
-      "avg_mae": -8.0
+      "avg_days_held": 12.5,
+      "avg_mfe": 3.68,
+      "avg_mae": -8.45
     },
     "Industrials": {
-      "n": 14,
-      "avg_return": -7.81,
-      "median_return": -7.66,
+      "n": 15,
+      "avg_return": -11.23,
+      "median_return": -7.97,
       "win_rate": 0.0,
-      "avg_days_held": 9.4,
-      "avg_mfe": 2.53,
-      "avg_mae": -9.47
+      "avg_days_held": 9.3,
+      "avg_mfe": 5.51,
+      "avg_mae": -14.59
     },
     "Healthcare": {
-      "n": 14,
-      "avg_return": -6.59,
-      "median_return": -7.26,
+      "n": 15,
+      "avg_return": -6.15,
+      "median_return": -6.38,
       "win_rate": 0.0,
-      "avg_days_held": 9.6,
-      "avg_mfe": 4.08,
-      "avg_mae": -8.89
+      "avg_days_held": 8.9,
+      "avg_mfe": 4.2,
+      "avg_mae": -8.39
     },
     "Consumer Defensive": {
       "n": 5,
@@ -140,24 +140,24 @@
       "avg_mae": -7.06
     },
     "not_aligned": {
-      "n": 47,
-      "avg_return": -6.5,
-      "median_return": -6.3,
-      "win_rate": 2.1,
-      "avg_days_held": 9.4,
-      "avg_mfe": 3.75,
-      "avg_mae": -8.3
+      "n": 52,
+      "avg_return": -7.66,
+      "median_return": -6.45,
+      "win_rate": 1.9,
+      "avg_days_held": 9.8,
+      "avg_mfe": 4.64,
+      "avg_mae": -9.89
     }
   },
   "by_rs_bucket": {
     "top_20": {
-      "n": 10,
-      "avg_return": -6.47,
+      "n": 12,
+      "avg_return": -10.32,
       "median_return": -5.31,
       "win_rate": 0.0,
-      "avg_days_held": 5.6,
-      "avg_mfe": 2.8,
-      "avg_mae": -8.21
+      "avg_days_held": 5.2,
+      "avg_mfe": 6.77,
+      "avg_mae": -14.15
     },
     "50_80": {
       "n": 25,
@@ -169,21 +169,21 @@
       "avg_mae": -6.51
     },
     "below_50": {
-      "n": 54,
-      "avg_return": -6.38,
-      "median_return": -6.54,
-      "win_rate": 3.7,
-      "avg_days_held": 10.3,
+      "n": 57,
+      "avg_return": -6.63,
+      "median_return": -6.79,
+      "win_rate": 3.5,
+      "avg_days_held": 10.8,
       "avg_mfe": 3.87,
-      "avg_mae": -8.22
+      "avg_mae": -8.43
     }
   },
   "meta": {
-    "total_closed": 90,
+    "total_closed": 95,
     "date_range": {
       "earliest": "2026-04-13",
-      "latest": "2026-05-08"
+      "latest": "2026-05-11"
     },
-    "generated_at": "2026-05-09T05:06:06.904780"
+    "generated_at": "2026-05-12T07:05:33.062479"
   }
 }
