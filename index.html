@@ -1110,7 +1110,8 @@ footer a:hover{color:var(--accent)}
   <div class="controls-inner">
     <!-- 指數 Tab -->
     <div class="tabs" id="index-tabs">
-      <button class="tab active" data-idx="all"    onclick="setIndexTab(this)">ALL</button>
+      <button class="tab active" data-idx="all"    onclick="setIndexTab(this)">全部</button>
+      <button class="tab"        data-idx="CORE"   onclick="setIndexTab(this)">NDX100+SP500</button>
       <button class="tab"        data-idx="NDX100" onclick="setIndexTab(this)">NASDAQ 100</button>
       <button class="tab"        data-idx="SP500"  onclick="setIndexTab(this)">S&P 500</button>
     </div>
@@ -1481,7 +1482,7 @@ let ALL = [], meta = {};
 let _langZh = true;       // 預設顯示中文
 let _currentInfo = {};    // 目前顯示的股票 info
 let curSort = 'mfi', sortAsc = false;
-let curIndex = 'all';  /* 指數篩選：'all' | 'NDX100' | 'SP500' */
+let curIndex = 'all';  /* 指數篩選：'all' | 'CORE'（NDX100+SP500 合併）| 'NDX100' | 'SP500' */
 let curSt    = 'all';  /* K線模式：'all' | 'day' | '3day' */
 let curPage = 1;
 const PAGE_SIZE = 20;
@@ -2012,7 +2013,11 @@ function render() {
 
   let rows=ALL.filter(r => {
     if (q && !r.ticker.includes(q)) return false;
-    if (curIndex !== 'all') {
+    if (curIndex === 'CORE') {
+      const idxs = r.indices || [];
+      // NDX100+SP500 合併：只要屬於其中一個就算，排除只在 Nasdaq Composite（NCOMP）裡的股票
+      if (!idxs.includes('NDX100') && !idxs.includes('SP500')) return false;
+    } else if (curIndex !== 'all') {
       const idxs = r.indices || [];
       if (!idxs.includes(curIndex)) return false;
     }
